@@ -1,0 +1,5 @@
+# Skill Forge — the only third-party packages this project needs.
+# (Most of the CLI is pure stdlib; these two support tests + optional LLM mode.)
+requests>=2.31
+python-dotenv>=1.0
+pytest>=8.0

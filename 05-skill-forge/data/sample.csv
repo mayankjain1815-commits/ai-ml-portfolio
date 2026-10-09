@@ -1,0 +1,25 @@
+date,product,units,unit_price,revenue,region,channel
+2026-01-05,Notebook,42,4.50,189.00,North,online
+2026-01-05,Desk Lamp,18,24.99,449.82,South,retail
+2026-01-06,Notebook,37,4.50,166.50,North,online
+2026-01-06,Mug,55,9.75,536.25,East,retail
+2026-01-07,Backpack,12,49.99,599.88,West,online
+2026-01-08,Desk Lamp,,24.99,,South,retail
+2026-01-08,Mug,48,9.75,468.00,East,online
+2026-01-09,Notebook,61,4.50,274.50,North,retail
+2026-01-10,Backpack,9,49.99,449.91,West,retail
+2026-01-10,Mug,44,9.75,429.00,East,online
+2026-01-12,Desk Lamp,21,24.99,524.79,South,online
+2026-01-13,Backpack,14,49.99,4999.00,West,online
+2026-01-14,Notebook,53,4.50,238.50,North,online
+2026-01-15,Mug,60,9.75,585.00,East,retail
+2026-01-16,Desk Lamp,19,24.99,474.81,South,retail
+2026-01-16,Backpack,11,49.99,549.89,West,online
+2026-01-19,Notebook,47,4.50,211.50,North,retail
+2026-01-20,Mug,51,9.75,497.25,East,online
+2026-01-21,Desk Lamp,23,24.99,574.77,South,online
+2026-01-22,Backpack,8,49.99,399.92,West,retail
+2026-01-23,Notebook,58,4.50,261.00,North,online
+2026-01-24,Mug,46,9.75,448.50,East,retail
+2026-01-26,Desk Lamp,20,24.99,499.80,South,retail
+2026-01-27,Backpack,10,49.99,499.90,West,online
