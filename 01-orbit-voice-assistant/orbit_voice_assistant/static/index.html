@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orbit — voice assistant</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🛰️</span>
+      <h1>Orbit</h1>
+      <span id="mode-badge" class="badge">checking…</span>
+    </div>
+    <button id="notes-btn" class="ghost">📝 notes</button>
+  </header>
+
+  <main>
+    <section id="chat" class="chat" aria-live="polite">
+      <div class="bubble assistant">
+        Hi, I'm Orbit. Tap the mic and talk, or type below.
+        Say <em>"help"</em> to see what I can do.
+      </div>
+    </section>
+
+    <section id="notes-panel" class="notes hidden">
+      <h2>Saved notes</h2>
+      <ul id="notes-list"></ul>
+    </section>
+
+    <section class="composer">
+      <div class="chips">
+        <button class="chip" data-text="what time is it?">time</button>
+        <button class="chip" data-text="what is 12*8?">math</button>
+        <button class="chip" data-text="remember that Friday is the demo">remember</button>
+        <button class="chip" data-text="list my notes">notes</button>
+        <button class="chip" data-text="read quick-tips">read a file</button>
+        <button class="chip" data-text="open calculator">open an app</button>
+      </div>
+      <div class="inputrow">
+        <input id="text-input" type="text" placeholder="Type a message…"
+               autocomplete="off" />
+        <button id="mic-btn" class="mic" title="Talk (needs Chrome/Edge/Safari)">🎤</button>
+        <button id="send-btn" class="send">Send</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
