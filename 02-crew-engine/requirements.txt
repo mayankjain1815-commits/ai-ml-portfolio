@@ -1,0 +1,5 @@
+# Crew Engine — the only third-party packages this project needs.
+# The framework core is pure stdlib; these three support tests + optional LLM mode.
+requests>=2.31
+python-dotenv>=1.0
+pytest>=8.0
