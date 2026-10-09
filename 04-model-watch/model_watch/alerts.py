@@ -142,10 +142,17 @@ class AlertManager:
             since = datetime.fromisoformat(active.last_seen)
             if since.tzinfo is None:
                 since = since.replace(tzinfo=timezone.utc)
-            if now - since < self.window:
+            # Within the window → this is the *same* ongoing condition, not a
+            # new one: bump the count and stay silent. `<=` (not `<`) so a
+            # condition that persists daily never "re-pages"—it pages once and
+            # counts its duration. After `window` of silence, a repeat is a
+            # fresh alert and opens a new record.
+            if now - since <= self.window:
                 active.count += 1
                 active.last_seen = stamp
                 active.value = detection.value
+                active.metric = detection.metric
+                active.message = message
                 self._save()
                 return active
 

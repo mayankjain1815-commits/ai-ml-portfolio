@@ -43,7 +43,8 @@ SHIFT_SPEC: dict[str, tuple[float, float]] = {
     "contract_annual": (-0.20, 0.00),
     "avg_latency_ms": (0.90, 0.30),        # service slows down
     "usage_ratio": (-0.60, 0.20),          # customers engage less
-    "payment_failures": (0.45, 0.40),
+    # payment_failures deliberately absent: not every feature drifts, and a
+    # stable feature is part of the story (PSI says "hold", KS stays small).
 }
 
 
@@ -179,7 +180,8 @@ def shift(
     for column, (mean_shift, std_shift) in spec.items():
         if column not in out.columns:
             continue
-        values = out[column].to_numpy(dtype=float)
+        # np.array() guarantees a writable copy (pandas may hand back read-only).
+        values = np.array(out[column], dtype=float)
         if stats is not None and column in stats:
             ref_mean, ref_std = stats[column]
         else:

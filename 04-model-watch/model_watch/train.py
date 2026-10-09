@@ -139,11 +139,11 @@ def train(seed: int = 42, n_rows: int = 12_000) -> TrainResult:
     )
 
 
-def reference_frame(result: TrainResult) -> pd.DataFrame:
+def reference_frame(seed: int = 42, n_rows: int = 12_000) -> pd.DataFrame:
     """Regenerate the exact training frame the model was fitted on.
 
     Deterministic generation plus the stored seed means the monitor rebuilds the
     PSI reference distribution without shipping a 12k-row CSV — and the hash in
     the manifest proves it is the same data the model saw.
     """
-    return generate(result.n_rows, seed=result.dataset_seed).frame
+    return generate(n_rows, seed=seed).frame

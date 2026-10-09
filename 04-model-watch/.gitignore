@@ -1,0 +1,13 @@
+# runtime artifacts (regenerated deterministically by the CLI)
+registry/
+runs/
+static/*.png
+
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# env / tooling
+.venv/
+.env

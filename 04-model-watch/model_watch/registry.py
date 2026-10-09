@@ -60,12 +60,16 @@ class ModelRegistry:
         metrics: dict[str, float],
         dataset_hash: str,
         feature_names: list[str],
+        dataset_seed: int | None = None,
+        n_rows: int | None = None,
         notes: str = "",
     ) -> int:
         """Freeze ``model`` as the next version and return its version number.
 
         ``dataset_hash`` is the SHA-256 of the training frame, so a future run
         can verify (or rebuild) the exact distribution the model learned on.
+        ``dataset_seed``/``n_rows`` let the monitor and dashboard regenerate
+        that distribution offline instead of shipping a 12k-row CSV.
         """
         manifest = self._read_manifest()
         version = manifest["latest_version"] + 1
@@ -77,6 +81,8 @@ class ModelRegistry:
             "hyperparams": hyperparams,
             "metrics": metrics,
             "dataset_hash": dataset_hash,
+            "dataset_seed": dataset_seed,
+            "n_rows": n_rows,
             "feature_names": feature_names,
             "notes": notes,
         }
