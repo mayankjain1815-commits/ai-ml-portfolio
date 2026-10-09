@@ -1,0 +1,2 @@
+# Runtime dependencies: none — Python 3.13 standard library only.
+pytest>=8.0

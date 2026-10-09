@@ -66,6 +66,23 @@ def test_git_script_only_written_when_explicitly_requested(tmp_path) -> None:
     assert not (tmp_path / "fake_commits.sh").exists()
 
 
+def test_regenerating_without_opt_in_removes_our_own_stale_script(tmp_path) -> None:
+    activities = generate_activity(
+        date(2026, 1, 1), date(2026, 2, 1), "custom", seed=1
+    )
+    write_outputs(tmp_path, activities, profile="custom", seed=1, emit_git_script=True)
+    assert (tmp_path / "fake_commits.sh").exists()
+
+    write_outputs(tmp_path, activities, profile="custom", seed=1)
+    assert not (tmp_path / "fake_commits.sh").exists()
+
+    # A same-named file we did NOT generate must survive untouched.
+    foreign = tmp_path / "fake_commits.sh"
+    foreign.write_text("#!/usr/bin/env bash\necho hello\n")
+    write_outputs(tmp_path, activities, profile="custom", seed=1)
+    assert foreign.exists()
+
+
 def test_month_totals_aggregate_per_calendar_month() -> None:
     activities = generate_activity(
         date(2026, 2, 10), date(2026, 3, 5), "custom", seed=3

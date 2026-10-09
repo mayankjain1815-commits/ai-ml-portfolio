@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+# Secrets (not used by this project, but never commit one if added)
+.env
+
+# Generated samples — recreate them with the README commands
+out*/
