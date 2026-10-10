@@ -126,9 +126,10 @@ enforced by the framework, not the prompt.
 
 **Two-minute story:** A retrieval-augmented generation pipeline built by hand:
 chunking, a TF-IDF index, retrieval, generation, and an eval harness with
-recall@k, MRR, and faithfulness — so I can *measure* whether retrieval helps.
-Demo mode uses the real index; a key upgrades generation to Gemini while
-retrieval stays mine.
+recall@k, MRR, and faithfulness. Demo mode runs the *real* index on the bundled
+corpus — recall@3 1.00 and faithfulness 1.00 over 15 labeled questions. Setting
+`GEMINI_API_KEY` upgrades query rewriting, embeddings, and generation to Gemini
+behind the same interfaces, with the extractive path as an automatic fallback.
 
 **Q: Why TF-IDF instead of vector embeddings?**
 A: Embeddings need a model — either an API call or a heavy local dependency —

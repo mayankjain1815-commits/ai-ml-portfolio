@@ -1,0 +1,96 @@
+{
+  "version": 1,
+  "description": "Labeled questions over the bundled sample docs. Each question names the source file that should answer it and a few keywords a correct answer is expected to contain.",
+  "questions": [
+    {
+      "id": "q01",
+      "question": "Why does the internet split data into packets instead of sending a file in one piece?",
+      "source": "01-packets-and-protocols.md",
+      "gold_keywords": ["packet", "header", "route"]
+    },
+    {
+      "id": "q02",
+      "question": "What is the difference between TCP and IP?",
+      "source": "01-packets-and-protocols.md",
+      "gold_keywords": ["tcp", "ip", "guarantee"]
+    },
+    {
+      "id": "q03",
+      "question": "What happens to a packet whose time to live reaches zero at a router?",
+      "source": "01-packets-and-protocols.md",
+      "gold_keywords": ["ttl", "thrown away", "router"]
+    },
+    {
+      "id": "q04",
+      "question": "How does DNS turn a domain name into an IP address?",
+      "source": "02-dns-and-websites.md",
+      "gold_keywords": ["dns", "resolver", "address"]
+    },
+    {
+      "id": "q05",
+      "question": "What do root servers and the servers below them do during a DNS lookup?",
+      "source": "02-dns-and-websites.md",
+      "gold_keywords": ["root", "domain", "resolver"]
+    },
+    {
+      "id": "q06",
+      "question": "Why does DNS cache records, and what does the time to live control?",
+      "source": "02-dns-and-websites.md",
+      "gold_keywords": ["cache", "ttl", "expire"]
+    },
+    {
+      "id": "q07",
+      "question": "What is the difference between HTTP and HTTPS?",
+      "source": "03-http-and-browsers.md",
+      "gold_keywords": ["https", "tls", "encrypt"]
+    },
+    {
+      "id": "q08",
+      "question": "What does a 404 status code mean?",
+      "source": "03-http-and-browsers.md",
+      "gold_keywords": ["404", "server", "address"]
+    },
+    {
+      "id": "q09",
+      "question": "What steps does a browser take to turn HTML into pixels on the screen?",
+      "source": "03-http-and-browsers.md",
+      "gold_keywords": ["render", "layout", "paint"]
+    },
+    {
+      "id": "q10",
+      "question": "How does fiber optic cable carry data across long distances?",
+      "source": "04-wires-and-datacenters.md",
+      "gold_keywords": ["fiber", "light", "glass"]
+    },
+    {
+      "id": "q11",
+      "question": "Which frequency bands does Wi-Fi use and how do they differ?",
+      "source": "04-wires-and-datacenters.md",
+      "gold_keywords": ["gigahertz", "radio", "band"]
+    },
+    {
+      "id": "q12",
+      "question": "What is a CDN and how does it reduce delays for users?",
+      "source": "04-wires-and-datacenters.md",
+      "gold_keywords": ["cdn", "content", "server"]
+    },
+    {
+      "id": "q13",
+      "question": "How do HTTPS certificates prove a website's identity?",
+      "source": "05-security-and-privacy.md",
+      "gold_keywords": ["certificate", "authority", "trust"]
+    },
+    {
+      "id": "q14",
+      "question": "What is the difference between symmetric and public key encryption?",
+      "source": "05-security-and-privacy.md",
+      "gold_keywords": ["symmetric", "public", "private"]
+    },
+    {
+      "id": "q15",
+      "question": "How can cookies track you across different websites?",
+      "source": "05-security-and-privacy.md",
+      "gold_keywords": ["cookie", "advertiser", "third-party"]
+    }
+  ]
+}
