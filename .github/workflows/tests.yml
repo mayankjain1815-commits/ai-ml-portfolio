@@ -1,0 +1,32 @@
+name: tests
+
+# Every project is self-contained and its suite runs fully offline, so the
+# portfolio can be verified in CI with no API keys and no network calls.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - 01-orbit-voice-assistant
+          - 02-crew-engine
+          - 03-rag-studio
+          - 04-model-watch
+          - 05-skill-forge
+          - 06-gh-activity-forge
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install dependencies
+        run: pip install -r "${{ matrix.project }}/requirements.txt"
+      - name: Run tests
+        working-directory: ${{ matrix.project }}
+        run: python -m pytest -q
