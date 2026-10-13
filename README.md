@@ -12,7 +12,7 @@ Built from scratch (no langchain, no streamlit, no SDK wrappers) so every design
 | 02 | **Crew Engine** | A multi-agent framework from scratch: sequential, supervisor, and reflective crews sharing a blackboard (cited facts + artifacts + audit trace). Deterministic demo brains; JSON tool-calling loop with Gemini. 4-doc corpus included. | `python -m crew_engine demo --trace` |
 | 03 | **RAG Studio** | Retrieval-augmented generation, hand-built: chunking, TF-IDF index, retrieval, generation, and an eval harness (recall@k, MRR, faithfulness). | `python -m rag_studio demo` |
 | 04 | **Model Watch** | MLOps monitoring: population-stability-index and KS drift detection by hand, sliding-window alerts, model registry, training + simulation + dashboard (Flask, port **5104**) + CLI reports. | `python -m model_watch demo` |
-| 05 | **Skill Forge** | An agent skill system: SKILL.md format, YAML-era parsing, selectors (exact/phrase/keyword), token-budget packing, and a CLI to create/verify/serve skills. 9 bundled skills, 57 tests. | `python -m skill_forge demo` |
+| 05 | **Skill Forge** | An agent skill system: `SKILL.md` frontmatter + body parsing (a tiny YAML-ish subset, no PyYAML), a keyword selector plus an LLM router, token-budget prompt packing, and a CLI to list, search, pick, pack, run, and install skills. 9 bundled skills, 57 tests. | `python -m skill_forge demo` |
 | 06 | **GH Activity Forge** | GitHub contribution-graph generator: seeded activity profiles (Poisson/streaks/vacations), a hand-built SVG renderer with GitHub's exact palette, report bundle, and an *opt-in, loudly-warned* fake-commit script emitter. | `python -m gh_activity_forge --year 2026` |
 
 ## The one idea that unifies them

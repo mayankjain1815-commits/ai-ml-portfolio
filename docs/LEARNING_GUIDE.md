@@ -48,15 +48,16 @@ exception".
 
 **Q: How did you handle the API key safety?**
 A: Keys live in `.env`, which is gitignored at the root *and* per project;
-`python-dotenv` loads them at runtime; `llm.py` raises `LLMUnavailable` when
-missing so callers take the demo path. No key is ever committed, and tests
-never make a real HTTP call.
+`python-dotenv` loads them at runtime; and the LLM layer has an explicit no-key
+contract — 01/02/05 raise a typed `LLMUnavailable` the caller catches to run the
+demo brain, while 03 returns an offline completion directly. No key is ever
+committed, and tests never make a real HTTP call.
 
 **Q: What's your testing philosophy?**
 A: Public behaviour over internals: rule coverage, safety guards (calculator
 can't evaluate `__import__`), termination guarantees (reflective crew ≤ 2
 revisions), and end-to-end CLI/Flask runs through a test client. All offline,
-all fast (< 1s per project). Tests encode the *claims* in each README.
+all fast (a few seconds per project). Tests encode the *claims* in each README.
 
 ---
 
@@ -154,11 +155,11 @@ ML team needs, rebuilt and testable offline.
 
 **Q: PSI vs KS — why implement both?**
 A: They answer different questions. PSI is a distribution-distance statistic
-with industry thresholds (interpretable bands: <0.1 stable, 0.1–0.25 moderate,
->0.25 shift); KS asks how different two cumulative distributions are
+with industry thresholds (interpretable bands: <0.10 stable, 0.10–0.25 warn,
+≥0.25 alert); KS asks how different two cumulative distributions are
 statistically. Using both catches drift that one might miss, and implementing
-both by hand meant I could verify against `scipy`-style definitions and explain
-exactly what each number means.
+both by hand meant I could check them against the textbook definitions and
+explain exactly what each number means.
 
 **Q: What makes drift detection hard in practice?**
 A: Three things: (1) *windows* — too short and noise alarms, too long and real
@@ -171,9 +172,10 @@ dashboard shows it.
 ### 05 — Skill Forge
 
 **Two-minute story:** An agent skill system from scratch: a `SKILL.md` format,
-a parser, selectors (exact/phrase/keyword), token-budget packing, and a CLI to
-create, verify, and serve skills — nine bundled skills and 57 tests. It's the
-"tools for agents" idea made inspectable.
+a parser (a tiny YAML-ish subset, no PyYAML), a keyword selector plus an LLM
+router, token-budget prompt packing, and a CLI to list, search, pick, pack, run,
+and install skills — nine bundled skills and 57 tests. It's the "tools for
+agents" idea made inspectable.
 
 **Q: What is a skill architecturally?**
 A: A skill is a small, self-describing unit — instructions plus metadata in a
