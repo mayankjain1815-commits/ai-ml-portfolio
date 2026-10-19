@@ -1,5 +1,7 @@
 # AI/ML Project Portfolio
 
+[![tests](https://github.com/mayankjain1815-commits/ai-ml-portfolio/actions/workflows/tests.yml/badge.svg)](https://github.com/mayankjain1815-commits/ai-ml-portfolio/actions/workflows/tests.yml)
+
 > Six self-contained AI/ML projects — complex enough to impress, simple enough to explain out loud in two minutes. Every project runs **fully offline in demo mode** and upgrades to real LLM calls the moment a `GEMINI_API_KEY` is set.
 
 Built from scratch (no langchain, no streamlit, no SDK wrappers) so every design decision is mine to explain and defend — the mechanics are the point.
@@ -29,6 +31,7 @@ Built from scratch (no langchain, no streamlit, no SDK wrappers) so every design
 ├── 04-model-watch/             drift detection + model registry (port 5104)
 ├── 05-skill-forge/             agent skill system
 ├── 06-gh-activity-forge/       contribution-graph generator
+├── .github/workflows/tests.yml CI: all six offline suites, Python 3.13
 ├── docs/
 │   ├── BUILD_SPEC.md           shared conventions every project follows
 │   └── LEARNING_GUIDE.md       interview prep: Q&A per project
