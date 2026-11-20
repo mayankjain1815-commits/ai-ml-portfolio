@@ -2,11 +2,29 @@
 
 [![tests](https://github.com/mayankjain1815-commits/ai-ml-portfolio/actions/workflows/tests.yml/badge.svg)](https://github.com/mayankjain1815-commits/ai-ml-portfolio/actions/workflows/tests.yml)
 
+<p align="center">
+  <img src="assets/portfolio-hero.gif" alt="Continuous 3D rotating type: RAG, AGENTS, MLOPS, FORECAST, SIGNALS, SKILLS, RISK, OFFLINE, DEMO and IOT orbiting a BUILD / EXPLAIN core" width="720">
+</p>
+
 > Eight self-contained AI/ML projects — complex enough to impress, simple enough to explain out loud in two minutes. Every project runs **fully offline in demo mode**; the Python projects upgrade to real LLM calls the moment a `GEMINI_API_KEY` is set.
 
-A 3D, continuously rotating [landing page](index.html) links to all eight projects.
-
 Built from scratch (no langchain, no streamlit, no SDK wrappers) so every design decision is mine to explain and defend — the mechanics are the point.
+
+### Under the hood
+
+<p align="center">
+  <img src="assets/portfolio-systems.gif" alt="Three live animated systems: an interactive particle constellation, a rotating wireframe threat globe with radar sweep, and a neural activation graph with signals propagating between layers" width="900">
+</p>
+
+| System | What it actually does |
+|--------|-----------------------|
+| **Particle constellation** | Depth-projected nodes with proximity links, front-layer glow and cursor parallax — O(n²) proximity pass on a 72-node field, no physics library. |
+| **Threat globe** | A lat/lon wireframe sphere projected in software, rotating with a radar sweep and six pulsing sensor positions. |
+| **Activation graph** | Signals travelling across weighted 4→6→6→3 layers with per-node activation pulses — the shape of every project in this repo. |
+
+All three are hand-written canvas systems: no WebGL, no libraries, no external assets. The palette is **aurora neon** — obsidian navy `#060918` / `#0D1430`, electric cyan `#2DE7FF`, hot magenta `#FF42C6`, acid lime `#C4FF4D`, violet `#8E64FF` and ice white `#E9F2FF`.
+
+The animated versions above are GIFs because GitHub strips `<script>` and `<canvas>` from Markdown. The real interactive versions — pointer parallax, offscreen pausing, reduced-motion support — live on the self-contained [landing page](index.html).
 
 ## The projects
 
@@ -41,6 +59,9 @@ Built from scratch (no langchain, no streamlit, no SDK wrappers) so every design
 ├── docs/
 │   ├── BUILD_SPEC.md           shared conventions for projects 01–06
 │   └── LEARNING_GUIDE.md       interview prep: Q&A per project
+├── assets/                     animated GIF showcase rendered inline on GitHub
+│   ├── portfolio-hero.gif       continuous 3D rotating type (48 frames)
+│   └── portfolio-systems.gif    three canvas systems (48 frames)
 ├── .venv/                      shared Python 3.13 environment (gitignored)
 ├── index.html                  3D rotating-type landing page (self-contained)
 └── README.md                   you are here
