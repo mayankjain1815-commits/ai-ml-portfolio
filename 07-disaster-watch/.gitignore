@@ -1,0 +1,8 @@
+.env
+__pycache__/
+.pytest_cache/
+*.pyc
+runs/*
+!runs/.gitkeep
+static/charts/*.png
+.DS_Store

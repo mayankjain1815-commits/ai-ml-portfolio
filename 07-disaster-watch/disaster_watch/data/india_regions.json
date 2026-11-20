@@ -1,0 +1,42 @@
+{
+  "states": [
+    {"id":"mh","name":"Maharashtra","lat":19.7515,"lon":75.7139},
+    {"id":"kl","name":"Kerala","lat":10.8505,"lon":76.2711},
+    {"id":"ap","name":"Andhra Pradesh","lat":15.9129,"lon":79.74},
+    {"id":"tn","name":"Tamil Nadu","lat":11.1271,"lon":78.6569},
+    {"id":"as","name":"Assam","lat":26.2006,"lon":92.9376},
+    {"id":"mp","name":"Madhya Pradesh","lat":22.9734,"lon":78.6569},
+    {"id":"rj","name":"Rajasthan","lat":27.0238,"lon":74.2179},
+    {"id":"wb","name":"West Bengal","lat":22.9868,"lon":87.855},
+    {"id":"od","name":"Odisha","lat":20.9517,"lon":85.0985},
+    {"id":"gj","name":"Gujarat","lat":22.2587,"lon":71.1924},
+    {"id":"up","name":"Uttar Pradesh","lat":26.8467,"lon":80.9462},
+    {"id":"br","name":"Bihar","lat":25.0961,"lon":85.3131}
+  ],
+  "districts": [
+    {"id":"mumbai","name":"Mumbai","state":"Maharashtra","lat":19.076,"lon":72.8777,"type":"metro"},
+    {"id":"pune","name":"Pune","state":"Maharashtra","lat":18.5204,"lon":73.8567,"type":"urban"},
+    {"id":"thiruvananthapuram","name":"Thiruvananthapuram","state":"Kerala","lat":8.5241,"lon":76.9366,"type":"coastal"},
+    {"id":"ernakulam","name":"Ernakulam","state":"Kerala","lat":9.9816,"lon":76.2999,"type":"coastal"},
+    {"id":"visakhapatnam","name":"Visakhapatnam","state":"Andhra Pradesh","lat":17.6868,"lon":83.2185,"type":"coastal"},
+    {"id":"vijayawada","name":"Vijayawada","state":"Andhra Pradesh","lat":16.5062,"lon":80.648,"type":"riverine"},
+    {"id":"chennai","name":"Chennai","state":"Tamil Nadu","lat":13.0827,"lon":80.2707,"type":"coastal"},
+    {"id":"kanchipuram","name":"Kanchipuram","state":"Tamil Nadu","lat":12.8342,"lon":79.7036,"type":"coastal"},
+    {"id":"kamrup","name":"Kamrup","state":"Assam","lat":26.1445,"lon":91.7362,"type":"valley"},
+    {"id":"dibrugarh","name":"Dibrugarh","state":"Assam","lat":27.4728,"lon":94.912,"type":"flood-prone"},
+    {"id":"bhopal","name":"Bhopal","state":"Madhya Pradesh","lat":23.2599,"lon":77.4126,"type":"inland"},
+    {"id":"indore","name":"Indore","state":"Madhya Pradesh","lat":22.7196,"lon":75.8577,"type":"urban"},
+    {"id":"jaisalmer","name":"Jaisalmer","state":"Rajasthan","lat":26.9157,"lon":70.9083,"type":"arid"},
+    {"id":"jaipur","name":"Jaipur","state":"Rajasthan","lat":26.9124,"lon":75.7873,"type":"urban"},
+    {"id":"kolkata","name":"Kolkata","state":"West Bengal","lat":22.5726,"lon":88.3639,"type":"coastal"},
+    {"id":"howrah","name":"Howrah","state":"West Bengal","lat":22.5958,"lon":88.2636,"type":"riverine"},
+    {"id":"bhubaneswar","name":"Bhubaneswar","state":"Odisha","lat":20.2961,"lon":85.8245,"type":"coastal"},
+    {"id":"cuttack","name":"Cuttack","state":"Odisha","lat":20.4625,"lon":85.883,"type":"riverine"},
+    {"id":"ahmedabad","name":"Ahmedabad","state":"Gujarat","lat":23.0225,"lon":72.5714,"type":"urban"},
+    {"id":"surat","name":"Surat","state":"Gujarat","lat":21.1702,"lon":72.8311,"type":"coastal"},
+    {"id":"lucknow","name":"Lucknow","state":"Uttar Pradesh","lat":26.8467,"lon":80.9462,"type":"inland"},
+    {"id":"varanasi","name":"Varanasi","state":"Uttar Pradesh","lat":25.3176,"lon":82.9739,"type":"riverine"},
+    {"id":"patna","name":"Patna","state":"Bihar","lat":25.5941,"lon":85.1376,"type":"riverine"},
+    {"id":"gaya","name":"Gaya","state":"Bihar","lat":24.7914,"lon":85.0002,"type":"inland"}
+  ]
+}

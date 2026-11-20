@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Sanket · Incidents{% endblock %}
+{% block breadcrumbs %}Monitoring / Incidents{% endblock %}
+{% block content %}
+<div class="panel">
+  <div class="panel-header"><div class="panel-title">Incident Log — Warnings • Sensor Events • Emergency Reports</div></div>
+  <div class="panel-body no-pad">
+    <table class="table">
+      <thead><tr><th>Timestamp</th><th>Type</th><th>Category</th><th>Location</th><th>Severity</th><th>Source</th><th>Status</th><th>Description</th></tr></thead>
+      <tbody>
+        {% for inc in recent_incidents %}
+        <tr>
+          <td class="mono">{{ inc.timestamp }}</td>
+          <td>{{ inc.type|replace('_',' ')|title }}</td>
+          <td>{{ inc.category|replace('_',' ')|title }}</td>
+          <td>{{ inc.location }}</td>
+          <td><span class="pill {{ inc.severity }}">{{ inc.severity }}</span></td>
+          <td>{{ inc.source }}</td>
+          <td>{{ inc.status }}</td>
+          <td>{{ inc.description }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

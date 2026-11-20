@@ -9,16 +9,17 @@ the rest is ammunition you reach for when asked.
 
 ## 1. The 10-second framing
 
-> "I built six AI/ML projects from scratch — no langchain, no SDK wrappers —
+> "I built eight AI/ML projects from scratch — no langchain, no SDK wrappers —
 > so I understand every layer of what they do. A voice assistant, a multi-agent
 > framework, a RAG pipeline, a model-monitoring system, an agent skill system,
-> and a contribution-graph generator. Every one runs offline in a deterministic
-> demo mode and upgrades to real Gemini calls when a key is set, and every one
-> has tests. The unifying idea: the demo brain is a *parallel implementation* of
-> the same pipeline, not a stub — so the whole portfolio works with zero API
+> a contribution-graph generator, a disaster-forecast dashboard, and an IoT
+> early-warning command platform. Every one runs offline in a deterministic
+> demo mode and has tests; the Python ones upgrade to real Gemini calls when a
+> key is set. The unifying idea: the demo brain is a *parallel implementation*
+> of the same pipeline, not a stub — so the whole portfolio works with zero API
 > keys, in CI, and in a live demo."
 
-Two minutes, one idea, six proofs. Then let them pick a project.
+Two minutes, one idea, eight proofs. Then let them pick a project.
 
 ---
 
@@ -213,6 +214,54 @@ A: Zero-commit days, quieter weekends, whole blank vacation weeks, occasional
 data (per-profile parameters), not hardcoded noise, so a test can assert
 weekday/weekend behaviour deterministically.
 
+### 07 — Disaster Watch
+
+**Two-minute story:** An authority-facing view of an approaching disaster. A
+seeded forecast generator produces 72 hours of hourly weather for six areas; a
+rule model scores flood / cyclone / heat / storm risk from weighted thresholds
+into a 0–100 index and a band; alerts are issued and deduplicated by
+`(area, type)`; incidents are appended to a chronological log; and a Flask
+dashboard (port 5107) exposes panels plus JSON APIs. Everything is deterministic,
+so the same seed reproduces the same emergency.
+
+**Q: Why rules instead of a trained risk model?**
+A: Because this is the layer an operator has to audit at 2 a.m. Every point in
+the score is a named contribution from rainfall, wind, humidity and pressure,
+so "why is this area critical?" has a numeric answer. A black-box classifier
+would be easier to claim accuracy for and impossible to defend in the room.
+The rule weights are data, so they are unit-tested at their boundaries.
+
+**Q: What stops the dashboard from spamming warnings?**
+A: Alert deduplication on `(area, type)` while an alert is active, plus a validity
+window and a single issuing authority channel. The incident log records state
+changes separately, so deduplicating an alert never loses the audit trail.
+
+### 08 — SENTINEL · IoT Command
+
+**Two-minute story:** A complete early-warning loop for a three-node ESP32/LoRa
+network. Validated telemetry lands in `node:sqlite`; a transparent risk engine
+scores flood, landslide, air quality and heat continuously on 0–100, adds a
+compound-hazard bonus and an SOS override, and explains each factor. Alerts
+dedup by `(node, hazard)`, escalate, and auto-resolve only after two
+sub-threshold packets. A WebSocket pushes snapshots to a React/Leaflet dashboard
+with a fully offline vector basemap, and an authority console can acknowledge,
+override with an expiry, order evacuation, sound the siren and write an
+immutable incident record. Node 22+, 38 tests, production build verified in CI.
+
+**Q: Why `node:sqlite` instead of a service?**
+A: The whole system is a single-process demo that must boot with `npm start`
+and no infrastructure. `node:sqlite` is built into the runtime, so the store,
+the risk engine and the API share one transaction boundary with zero setup.
+The store sits behind a small interface (`createStore`), so swapping in Postgres
+later is a change at that boundary, not a rewrite of the services.
+
+**Q: How do you avoid alert flapping on noisy sensors?**
+A: Hysteresis: a hazard needs sustained evidence to open an alert and two clean
+packets to resolve it, and dedup keys on `(node, hazard)` so repeats escalate
+the existing record instead of creating new ones. The simulator deliberately
+produces correlated readings — a river rising over time, not random spikes —
+so the tests can assert that behaviour deterministically.
+
 ---
 
 ## 4. The "what's next" answers
@@ -234,11 +283,13 @@ Have one polished answer per theme; interviewers love a road map:
 
 ## 5. Answering the meta questions
 
-**"Why these six projects?"**
+**"Why these eight projects?"**
 They cover the AI surface an interviewer actually probes: agents (01, 02, 05),
-retrieval/LLM apps (03), production/MLOps (04), and data/creative tooling (06).
-All of them share the *demo-or-real* architecture, so answering one project
-deeply answers all of them structurally.
+retrieval/LLM apps (03), production/MLOps (04), data/creative tooling (06), and
+real-world operations where the model is only one component (07, 08). The
+Python projects share the *demo-or-real* architecture, so answering one deeply
+answers six of them structurally; the two operations projects add the systems
+story — streaming telemetry, risk explainability and an authority loop.
 
 **"What was the hardest debugging moment?"**
 Have a real one ready, with the fix. Good candidates from this build: the

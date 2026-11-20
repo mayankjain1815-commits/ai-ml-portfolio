@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Sanket{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block head %}{% endblock %}
+</head>
+<body class="sanket-body">
+  <header class="sanket-header">
+    <div class="sanket-header-inner">
+      <div class="sanket-brand">
+        <div class="sanket-mark">S</div>
+        <div class="sanket-brand-text">
+          <div class="sanket-title">SANKET</div>
+          <div class="sanket-sub">India Disaster Intelligence</div>
+        </div>
+      </div>
+      <nav class="sanket-nav">
+        <a href="/" class="{% if request.path == '/' %}active{% endif %}">Dashboard</a>
+        <a href="/india-map" class="{% if request.path == '/india-map' %}active{% endif %}">Map</a>
+        <a href="/alerts-center">Alerts</a>
+        <a href="/incidents">Incidents</a>
+        <a href="/forecasts">Forecasts</a>
+        <a href="/sensors">Sensors</a>
+        <a href="/subdivisions">Subdivisions</a>
+        <a href="/reports">Reports</a>
+        <a href="/api-docs">API</a>
+        <a href="/about">About</a>
+      </nav>
+      <div class="sanket-header-right">
+        <span class="sanket-pill"><span class="dot"></span>LIVE</span>
+        <span class="sanket-time mono">{{ now_utc }}</span>
+      </div>
+    </div>
+  </header>
+  <main class="sanket-main">
+    {% block content %}{% endblock %}
+  </main>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

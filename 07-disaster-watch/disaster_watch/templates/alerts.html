@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Sanket · Alerts Center{% endblock %}
+{% block breadcrumbs %}Monitoring / Alerts Center{% endblock %}
+{% block content %}
+<div class="panel">
+  <div class="panel-header"><div class="panel-title">Alerts Center — IMD-style Advisories</div><div class="panel-actions"><span class="pill">{{ active_alerts|length }} Active</span></div></div>
+  <div class="panel-body">
+    <div class="filter-row">
+      <select class="select"><option>All Severities</option><option>Critical</option><option>High</option><option>Moderate</option></select>
+      <select class="select"><option>All Types</option><option>Flood Warning</option><option>Cyclone Warning</option><option>Evacuation Advisory</option><option>Heat Alert</option></select>
+      <input class="input" placeholder="Filter by location/state...">
+    </div>
+  </div>
+  <div class="panel-body no-pad">
+    {% for a in active_alerts %}
+    <div class="alert-detail">
+      <div class="ad-head"><span class="pill {{ a.severity }}">{{ a.severity|upper }}</span><span class="ad-type">{{ a.alert_type|replace('_',' ')|title }}</span><span class="mono">{{ a.alert_id }}</span></div>
+      <div class="ad-body"><strong>{{ a.location }}</strong> — {{ a.message }}</div>
+      <div class="ad-meta">Issued: {{ a.issued_at }} • Valid to: {{ a.valid_to }} • Issued by: {{ a.issued_by }} • Max Rain {{ a.conditions.max_rain_mm_h }}mm/h • Max Wind {{ a.conditions.max_wind_kph }}kph</div>
+    </div>
+    {% endfor %}
+    {% if not active_alerts %}<div class="empty">No active alerts</div>{% endif %}
+  </div>
+</div>
+{% endblock %}

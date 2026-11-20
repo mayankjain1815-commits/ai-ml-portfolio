@@ -2,6 +2,7 @@ name: tests
 
 # Every project is self-contained and its suite runs fully offline, so the
 # portfolio can be verified in CI with no API keys and no network calls.
+# The seven Python projects share Python 3.13; SENTINEL (08) is a Node app.
 on:
   push:
     branches: [main]
@@ -20,6 +21,7 @@ jobs:
           - 04-model-watch
           - 05-skill-forge
           - 06-gh-activity-forge
+          - 07-disaster-watch
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -30,3 +32,23 @@ jobs:
       - name: Run tests
         working-directory: ${{ matrix.project }}
         run: python -m pytest -q
+
+  sentinel:
+    name: 08-sentinel-iot (node)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 08-sentinel-iot
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: 08-sentinel-iot/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Run tests
+        run: npm test
+      - name: Build frontend
+        run: npm run build

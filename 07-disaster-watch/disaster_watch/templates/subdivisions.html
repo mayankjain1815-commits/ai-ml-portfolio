@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Sanket · Subdivisions & Blocks{% endblock %}
+{% block breadcrumbs %}Intelligence / Subdivisions & Blocks{% endblock %}
+{% block content %}
+<div class="panel">
+  <div class="panel-header"><div class="panel-title">Hierarchical Drilldown — India Administrative Structure</div></div>
+  <div class="panel-body">
+    <div class="hierarchy">
+      <div class="h-level"><span class="h-badge">Level 1</span> India</div>
+      <div class="h-level indent"><span class="h-badge">Level 2</span> State / Union Territory (36)</div>
+      <div class="h-level indent2"><span class="h-badge">Level 3</span> District (766) • Revenue District</div>
+      <div class="h-level indent3"><span class="h-badge">Level 4</span> Subdivision / Tehsil / Taluka (5,924)</div>
+      <div class="h-level indent4"><span class="h-badge">Level 5</span> Community Development Block / Mandal / Circle (6,742)</div>
+      <div class="h-level indent5"><span class="h-badge">Level 6</span> Gram Panchayat / Municipality Ward (250,000+)</div>
+      <div class="h-level indent6"><span class="h-badge">Level 7</span> Village / Habitation / Urban Ward (597,608+)</div>
+    </div>
+    <div class="note">Impact radius, population exposure, evacuation zones computed at Block/Village level for precision response.</div>
+  </div>
+</div>
+<div class="panel">
+  <div class="panel-header"><div class="panel-title">Major & Minor Subdivisions — Sample View</div></div>
+  <div class="panel-body no-pad">
+    <table class="table">
+      <thead><tr><th>State</th><th>District</th><th>Major Subdivision</th><th>Minor Blocks/Talukas</th><th>Villages</th><th>Risk</th></tr></thead>
+      <tbody>
+        <tr><td>Kerala</td><td>Ernakulam</td><td>Kochi Subdivision</td><td>Aluva, Kanayannur, Paravur</td><td>~150</td><td><span class="pill high">high</span></td></tr>
+        <tr><td>Andhra Pradesh</td><td>Visakhapatnam</td><td>Visakhapatnam Subdivision</td><td>Gajuwaka, Bheemunipatnam</td><td>~120</td><td><span class="pill high">high</span></td></tr>
+        <tr><td>Tamil Nadu</td><td>Chennai</td><td>Chennai District Subdivision</td><td>Egmore-Nungambakkam, Mylapore-Triplicane</td><td>~0 (Urban)</td><td><span class="pill high">high</span></td></tr>
+        <tr><td>Assam</td><td>Kamrup</td><td>Guwahati Subdivision</td><td>Dispur, Boko, Chandrapur</td><td>~200</td><td><span class="pill moderate">moderate</span></td></tr>
+        <tr><td>West Bengal</td><td>Kolkata/Howrah</td><td>Kolkata Subdivision</td><td>Howrah, Bally, Uluberia</td><td>~80</td><td><span class="pill moderate">moderate</span></td></tr>
+        <tr><td>Odisha</td><td>Bhubaneswar/Cuttack</td><td>Cuttack Subdivision</td><td>Salipur, Nischintakoili</td><td>~180</td><td><span class="pill moderate">moderate</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

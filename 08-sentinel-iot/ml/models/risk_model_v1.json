@@ -1,0 +1,87 @@
+{
+  "version": "1.0.0",
+  "trained_at": "2026-10-30T00:00:00Z",
+  "weights": {
+    "flood": {
+      "water": 0.55,
+      "rain": 0.3,
+      "humidity": 0.08,
+      "trend": 0.07
+    },
+    "landslide": {
+      "rain": 0.5,
+      "vibration": 0.2,
+      "humidity": 0.1,
+      "slope": 0.2
+    },
+    "air": {
+      "aqi": 0.85,
+      "humidity": 0.05,
+      "heat": 0.1
+    },
+    "heat": {
+      "temp": 0.8,
+      "humidity": 0.2
+    }
+  },
+  "terrain_multipliers": {
+    "riverine": {
+      "flood": 1.12,
+      "landslide": 0.9
+    },
+    "reservoir": {
+      "flood": 1.08,
+      "landslide": 1.0
+    },
+    "slope": {
+      "flood": 0.92,
+      "landslide": 1.12
+    },
+    "urban": {
+      "flood": 1.02,
+      "landslide": 0.9
+    }
+  },
+  "thresholds": {
+    "low": 25,
+    "moderate": 50,
+    "high": 75
+  },
+  "compound_boost": 6,
+  "calibration": {
+    "bias": -0.021086,
+    "scale": 1.0
+  },
+  "metrics": {
+    "mae": 2.379142,
+    "rmse": 2.977663231461879,
+    "mse": 8.86647832
+  },
+  "confusion_matrix": {
+    "low": {
+      "low": 1372,
+      "moderate": 2,
+      "high": 0,
+      "severe": 0
+    },
+    "moderate": {
+      "low": 0,
+      "moderate": 5498,
+      "high": 1,
+      "severe": 0
+    },
+    "high": {
+      "low": 0,
+      "moderate": 0,
+      "high": 2788,
+      "severe": 0
+    },
+    "severe": {
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "severe": 339
+    }
+  },
+  "samples": 10000
+}

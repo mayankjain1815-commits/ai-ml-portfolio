@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Sanket · India Map{% endblock %}
+{% block breadcrumbs %}Overview / India Map{% endblock %}
+{% block content %}
+<div class="grid-map">
+  <div class="panel map-panel">
+    <div class="panel-header">
+      <div class="panel-title">India Operational Map — District Level</div>
+      <div class="panel-actions"><span class="pill">District • Subdivision • Block • Village/Ward</span></div>
+    </div>
+    <div class="panel-body map-body">
+      <svg id="indiaMap" viewBox="0 0 600 650" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <filter id="glow"><feGaussianBlur stdDeviation="2" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <rect width="600" height="650" fill="#0a0810"/>
+        <g stroke="#f5b700" stroke-width="1" fill="none" opacity="0.35">
+          <path d="M300 40 L420 90 L450 170 L430 290 L390 400 L330 490 L300 540 L270 490 L210 400 L170 290 L150 170 L180 90 Z"/>
+          <path d="M200 120 L250 110 L300 105 L350 110 L400 120 M150 200 L220 190 L300 185 L380 190 L450 200 M140 290 L210 280 L300 275 L390 280 L460 290 M170 380 L240 370 L300 365 L360 370 L430 380"/>
+        </g>
+        {% for cw in current_weather %}
+        {% set cx = 300 + ((cw.lon or 78)-78)*6 %}
+        {% set cy = 325 - ((cw.lat or 22)-22)*9 %}
+        {% if cx > 40 and cx < 560 and cy > 30 and cy < 620 %}
+        <g class="map-node" filter="url(#glow)">
+          <circle cx="{{ cx }}" cy="{{ cy }}" r="{{ 6 if cw.risk_level=='low' else 7 if cw.risk_level=='moderate' else 8 if cw.risk_level=='high' else 9 }}" 
+            fill="{{ '#22c55e' if cw.risk_level=='low' else '#f59e0b' if cw.risk_level=='moderate' else '#ef4444' if cw.risk_level=='high' else '#dc2626' }}" opacity="0.95"/>
+          <text x="{{ cx+10 }}" y="{{ cy+4 }}" fill="#f8fafc" font-size="8.5" font-family="Inter, sans-serif">{{ cw.district_name or cw.area_name }}</text>
+        </g>
+        {% endif %}
+        {% endfor %}
+      </svg>
+    </div>
+    <div class="panel-body">
+      <div class="legend">
+        <span class="leg"><span class="dot low"></span>Low</span>
+        <span class="leg"><span class="dot mod"></span>Moderate</span>
+        <span class="leg"><span class="dot high"></span>High</span>
+        <span class="leg"><span class="dot crit"></span>Critical</span>
+        <span class="leg">Drilldown: State → District → Subdivision → Block → GP/Ward → Village</span>
+      </div>
+    </div>
+  </div>
+  <div class="side-panels">
+    <div class="panel">
+      <div class="panel-header"><div class="panel-title">Affected Districts</div></div>
+      <div class="panel-body no-pad">
+        <div class="list">{% for af in affected_areas %}<div class="list-item"><div><div class="li-title">{{af.area_name}}, {{af.state}}</div><div class="li-sub">{{af.primary_threat}}</div></div><span class="pill {{af.risk_level}}">{{af.risk_level}}</span></div>{% endfor %}{% if not affected_areas %}<div class="empty sm">None</div>{% endif %}</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><div class="panel-title">Administrative Hierarchy</div></div>
+      <div class="panel-body">
+        <div class="hier-list">
+          <div>India (1)</div><div class="i1">States/UTs (36)</div><div class="i2">Districts (766)</div><div class="i3">Subdivisions/Tehsils/Talukas (5,924)</div><div class="i4">Blocks/CD Blocks/Mandals (6,742)</div><div class="i5">Gram Panchayats/Municipalities (262,000+)</div><div class="i6">Villages/Wards (695,000+)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

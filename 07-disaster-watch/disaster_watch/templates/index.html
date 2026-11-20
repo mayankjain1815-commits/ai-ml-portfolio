@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Sanket · Dashboard{% endblock %}
+{% block content %}
+{% if not has_run %}
+<div class="panel"><div class="panel-head"><div class="panel-title">No Data</div></div><div class="panel-body"><div class="empty">Run <code>python -m disaster_watch demo-india</code></div></div></div>
+{% else %}
+<div class="grid-kpi">
+  <div class="kpi"><div class="kpi-label">Districts Monitored</div><div class="kpi-value">{{ areas_monitored or current_weather|length }}</div><div class="kpi-sub">Pan-India</div></div>
+  <div class="kpi"><div class="kpi-label">Active Alerts</div><div class="kpi-value">{{ active_alerts|length }}</div><div class="kpi-sub">Advisories</div></div>
+  <div class="kpi"><div class="kpi-label">Affected Districts</div><div class="kpi-value">{{ affected_areas|length }}</div><div class="kpi-sub">At Risk</div></div>
+  <div class="kpi"><div class="kpi-label">Incidents (24-72h)</div><div class="kpi-value">{{ recent_incidents|length }}</div><div class="kpi-sub">Logged</div></div>
+</div>
+<div class="grid-main">
+  <div class="panel">
+    <div class="panel-head"><div class="panel-title">India — Forecast Bust / Risk Map</div></div>
+    <div class="panel-body map-wrap"><div id="sanketMap"></div></div>
+    <div class="legend">
+      <span class="leg"><span class="dot low"></span>Low</span>
+      <span class="leg"><span class="dot mod"></span>Moderate</span>
+      <span class="leg"><span class="dot high"></span>High</span>
+      <span class="leg"><span class="dot crit"></span>Critical</span>
+      <span class="leg">District • Subdivision • Block • Village/Ward</span>
+    </div>
+  </div>
+  <div>
+    <div class="panel" style="margin-bottom:12px;">
+      <div class="panel-head"><div class="panel-title">Active Alerts</div></div>
+      <div class="panel-body no-pad"><div class="list">{% for a in active_alerts[:6] %}<div class="list-item"><div><div class="li-title">[{{a.severity|upper}}] {{a.alert_type|replace('_',' ')|title}}</div><div class="li-sub">{{a.location}}</div></div><span class="pill {{a.severity}}">{{a.severity}}</span></div>{% endfor %}{% if not active_alerts %}<div class="empty">None</div>{% endif %}</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">Affected Districts</div></div>
+      <div class="panel-body no-pad"><div class="list">{% for af in affected_areas %}<div class="list-item"><div><div class="li-title">{{af.area_name}}</div><div class="li-sub">{{af.state}} • {{af.primary_threat}}</div></div><span class="pill {{af.risk_level}}">{{af.risk_level}}</span></div>{% endfor %}</div></div>
+    </div>
+  </div>
+</div>
+<div class="grid-2">
+  <div class="panel">
+    <div class="panel-head"><div class="panel-title">District Risk Matrix</div></div>
+    <div class="panel-body no-pad">
+      <table class="table">
+        <thead><tr><th>District</th><th>State</th><th>Risk Index</th><th>Level</th><th>Threat</th></tr></thead>
+        <tbody>{% for cw in current_weather %}<tr><td>{{cw.district_name or cw.area_name}}</td><td>{{cw.state}}</td><td class="mono">{{cw.risk_index}}</td><td><span class="pill {{cw.risk_level}}">{{cw.risk_level}}</span></td><td>{{cw.triggers|join(', ') if cw.triggers else '-'}}</td></tr>{% endfor %}</tbody>
+      </table>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-title">Recent Incidents</div></div>
+    <div class="panel-body no-pad">
+      <table class="table">
+        <thead><tr><th>Time</th><th>Type</th><th>Location</th><th>Severity</th></tr></thead>
+        <tbody>{% for inc in recent_incidents[:10] %}<tr><td class="mono">{{inc.timestamp[11:16]}}Z</td><td>{{inc.type|replace('_',' ')|title}}</td><td>{{inc.location}}</td><td><span class="pill {{inc.severity}}">{{inc.severity}}</span></td></tr>{% endfor %}</tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+{% block scripts %}
+<script>
+const points = [
+{% for cw in current_weather %}{name:'{{cw.district_name or cw.area_name}}',state:'{{cw.state}}',lat:{{cw.lat or 20}},lon:{{cw.lon or 78}},risk:'{{cw.risk_level}}',idx:{{cw.risk_index}}},{% endfor %}
+];
+const map = L.map('sanketMap',{zoomControl:true,attributionControl:false}).setView([22.5,82],4);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:7,minZoom:3}).addTo(map);
+const color={low:'#22c55e',moderate:'#f59e0b',high:'#ef4444',critical:'#dc2626'};
+points.forEach(p=>{
+  const m=L.circleMarker([p.lat,p.lon],{radius:5,color:color[p.risk],fillColor:color[p.risk],fillOpacity:0.9,weight:1}).addTo(map);
+  m.bindPopup('<b>'+p.name+'</b><br>'+p.state+'<br>Risk: '+p.risk+' ('+p.idx+')');
+});
+</script>
+{% endblock %}

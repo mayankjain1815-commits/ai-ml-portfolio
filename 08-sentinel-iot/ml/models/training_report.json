@@ -1,0 +1,35 @@
+{
+  "model_version": "1.0.0",
+  "metrics": {
+    "mae": 2.379142,
+    "rmse": 2.977663231461879,
+    "mse": 8.86647832
+  },
+  "confusion_matrix": {
+    "low": {
+      "low": 1372,
+      "moderate": 2,
+      "high": 0,
+      "severe": 0
+    },
+    "moderate": {
+      "low": 0,
+      "moderate": 5498,
+      "high": 1,
+      "severe": 0
+    },
+    "high": {
+      "low": 0,
+      "moderate": 0,
+      "high": 2788,
+      "severe": 0
+    },
+    "severe": {
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "severe": 339
+    }
+  },
+  "timestamp": "2026-10-30T00:00:00Z"
+}

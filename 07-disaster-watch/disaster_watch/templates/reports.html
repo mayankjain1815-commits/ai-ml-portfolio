@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Sanket · Reports{% endblock %}
+{% block breadcrumbs %}Intelligence / Reports{% endblock %}
+{% block content %}
+<div class="panel">
+  <div class="panel-header"><div class="panel-title">Report Center — Bulletins, SitReps, Impact Assessments</div></div>
+  <div class="panel-body">
+    <div class="grid-3">
+      <div class="card"><div class="card-title">IMD-style Nowcast Bulletin</div><div class="card-sub">District/Subdivision level</div><button class="btn">Generate</button></div>
+      <div class="card"><div class="card-title">Situation Report (SitRep)</div><div class="card-sub">State/District consolidated</div><button class="btn">Generate</button></div>
+      <div class="card"><div class="card-title">Block-level Impact Assessment</div><div class="card-sub">Population/exposure/villages</div><button class="btn">Generate</button></div>
+    </div>
+  </div>
+</div>
+{% endblock %}

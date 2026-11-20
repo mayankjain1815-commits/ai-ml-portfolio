@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Sanket · API Docs{% endblock %}
+{% block breadcrumbs %}Intelligence / API Docs{% endblock %}
+{% block content %}
+<div class="panel">
+  <div class="panel-header"><div class="panel-title">REST API — India Disaster Intelligence</div></div>
+  <div class="panel-body no-pad">
+    <table class="table">
+      <thead><tr><th>Endpoint</th><th>Method</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">/api/overview</td><td>GET</td><td>High-level KPIs</td></tr>
+        <tr><td class="mono">/api/weather</td><td>GET</td><td>Current weather by district</td></tr>
+        <tr><td class="mono">/api/risk</td><td>GET</td><td>Risk matrix</td></tr>
+        <tr><td class="mono">/api/alerts</td><td>GET</td><td>Active alerts</td></tr>
+        <tr><td class="mono">/api/affected</td><td>GET</td><td>Affected districts with exposure</td></tr>
+        <tr><td class="mono">/api/incidents</td><td>GET</td><td>Incident timeline</td></tr>
+        <tr><td class="mono">/api/forecast</td><td>GET</td><td>Forecast data</td></tr>
+        <tr><td class="mono">/api/sensors</td><td>GET</td><td>Sensor network status</td></tr>
+        <tr><td class="mono">/api/system/health</td><td>GET</td><td>System health</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

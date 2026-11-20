@@ -1,0 +1,68 @@
+[
+  {
+    "id": "kochi-coast",
+    "name": "Kochi Coast",
+    "district": "Ernakulam",
+    "state": "Kerala",
+    "lat": 9.97,
+    "lon": 76.28,
+    "population": 612000,
+    "terrain": "coastal_lowland",
+    "exposure": ["flood", "cyclone"]
+  },
+  {
+    "id": "vizag-port",
+    "name": "Visakhapatnam Port",
+    "district": "Visakhapatnam",
+    "state": "Andhra Pradesh",
+    "lat": 17.69,
+    "lon": 83.30,
+    "population": 1728000,
+    "terrain": "coastal_harbor",
+    "exposure": ["cyclone", "storm_surge"]
+  },
+  {
+    "id": "chennai-north",
+    "name": "Chennai North",
+    "district": "Chennai",
+    "state": "Tamil Nadu",
+    "lat": 13.09,
+    "lon": 80.27,
+    "population": 4680000,
+    "terrain": "urban_coastal",
+    "exposure": ["flood", "cyclone"]
+  },
+  {
+    "id": "guwahati-valley",
+    "name": "Guwahati Valley",
+    "district": "Kamrup",
+    "state": "Assam",
+    "lat": 26.14,
+    "lon": 91.74,
+    "population": 957000,
+    "terrain": "river_valley",
+    "exposure": ["flood", "landslide"]
+  },
+  {
+    "id": "bhopal-plain",
+    "name": "Bhopal Outskirts",
+    "district": "Bhopal",
+    "state": "Madhya Pradesh",
+    "lat": 23.26,
+    "lon": 77.41,
+    "population": 1796000,
+    "terrain": "inland_plain",
+    "exposure": ["heat", "storm"]
+  },
+  {
+    "id": "jaisalmer-west",
+    "name": "Jaisalmer West",
+    "district": "Jaisalmer",
+    "state": "Rajasthan",
+    "lat": 26.92,
+    "lon": 70.90,
+    "population": 78000,
+    "terrain": "desert",
+    "exposure": ["heat", "dust_storm"]
+  }
+]

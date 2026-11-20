@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Sanket · Forecasts{% endblock %}
+{% block breadcrumbs %}Monitoring / Forecasts{% endblock %}
+{% block content %}
+<div class="panel">
+  <div class="panel-header"><div class="panel-title">72-120h Outlook — District Level</div></div>
+  <div class="panel-body no-pad">
+    <table class="table">
+      <thead><tr><th>District</th><th>State</th><th>Time</th><th>Rain (mm/h)</th><th>Temp (°C)</th><th>Humidity</th><th>Wind (kph)</th><th>Pres (hPa)</th><th>Risk</th></tr></thead>
+      <tbody>
+        {% for cw in current_weather %}
+        <tr>
+          <td><strong>{{ cw.district_name or cw.area_name }}</strong></td>
+          <td>{{ cw.state }}</td>
+          <td class="mono">{{ cw.timestamp[11:16] }}Z</td>
+          <td class="mono">{{ cw.rain_mm_h }}</td>
+          <td class="mono">{{ cw.temperature_c }}</td>
+          <td class="mono">{{ cw.humidity_pct }}%</td>
+          <td class="mono">{{ cw.wind_kph }}</td>
+          <td class="mono">{{ cw.pressure_hpa }}</td>
+          <td><span class="pill {{ cw.risk_level }}">{{ cw.risk_level }} {{ cw.risk_index }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
