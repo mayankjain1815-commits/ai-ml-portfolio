@@ -26,6 +26,19 @@ All three are hand-written canvas systems: no WebGL, no libraries, no external a
 
 The animated versions above are GIFs because GitHub strips `<script>` and `<canvas>` from Markdown. The real interactive versions — pointer parallax, offscreen pausing, reduced-motion support — live on the self-contained [landing page](index.html).
 
+### Word Atlas — the backend behind the rotating words
+
+Click any word on the [landing page](index.html) (or use the **Word atlas** chips) and a detail panel opens: definition, why it matters, the pipeline, real code anchors, runnable commands, an interview answer, pitfalls and related words. A read-only Flask API in [`backend/`](backend/README.md) owns all ten records; the page carries the same records as embedded JSON so it still works with the server off or on a static host.
+
+```bash
+cd backend && python -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/python -m word_atlas           # http://127.0.0.1:5110
+.venv/bin/python -m pytest -q            # 36 offline tests
+curl -s http://127.0.0.1:5110/api/words/rag
+```
+
+`GET /api/words` supports `?q=` search, `?category=` filtering and `?limit=`. `GET /api/words/<slug>` returns the full record plus related words; `/api/categories`, `/api/stats` and `/api/health` round out the service. CORS is open so the page works from `file://` too.
+
 ## The projects
 
 | # | Project | What it is | Demo command |
@@ -55,7 +68,9 @@ The animated versions above are GIFs because GitHub strips `<script>` and `<canv
 ├── 06-gh-activity-forge/       contribution-graph generator
 ├── 07-disaster-watch/          forecast + risk scoring dashboard (port 5107)
 ├── 08-sentinel-iot/            ESP32/LoRa command platform (Node 22, ports 5108/5109)
-├── .github/workflows/tests.yml CI: 7 Python suites (3.13) + SENTINEL tests/build (Node 22)
+├── backend/                    Flask word-details API + 36 offline tests
+│   └── word_atlas/data.py       single source of truth for all 10 rotating words
+├── .github/workflows/tests.yml CI: 8 Python suites (3.13) + SENTINEL tests/build (Node 22)
 ├── docs/
 │   ├── BUILD_SPEC.md           shared conventions for projects 01–06
 │   └── LEARNING_GUIDE.md       interview prep: Q&A per project
@@ -63,7 +78,7 @@ The animated versions above are GIFs because GitHub strips `<script>` and `<canv
 │   ├── portfolio-hero.gif       continuous 3D rotating type (48 frames)
 │   └── portfolio-systems.gif    three canvas systems (48 frames)
 ├── .venv/                      shared Python 3.13 environment (gitignored)
-├── index.html                  3D rotating-type landing page (self-contained)
+├── index.html                  3D rotating-type landing page + word-detail panel
 └── README.md                   you are here
 ```
 
@@ -85,7 +100,7 @@ cd ../07-disaster-watch && ../.venv/bin/python -m disaster_watch demo
 cd ../08-sentinel-iot && npm ci && npm test && npm run dev
 ```
 
-CI runs every suite on push/PR: seven Python suites on 3.13 and SENTINEL's tests plus production build on Node 22.
+CI runs every suite on push/PR: eight Python suites on 3.13 (including the Word Atlas backend) and SENTINEL's tests plus production build on Node 22.
 
 ## Interview framing
 

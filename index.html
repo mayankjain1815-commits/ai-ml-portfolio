@@ -216,8 +216,106 @@
     display: flex; justify-content: space-between; flex-wrap: wrap; gap: .6rem;
   }
 
+  /* ---------- word atlas + detail panel ---------- */
+  .ring span[data-word] { cursor: pointer; }
+  .ring span[data-word]:hover,
+  .ring span[data-word]:focus-visible {
+    outline: none; filter: brightness(1.4);
+    text-decoration: underline; text-underline-offset: 6px;
+  }
+  .stage:hover .ring { animation-play-state: paused; }
+
+  .atlas { padding: 2.8rem 0 .2rem; }
+  .atlas-chips { display: flex; flex-wrap: wrap; gap: .55rem; }
+  .word-chip {
+    font-family: var(--mono); font-size: .73rem; letter-spacing: .07em; text-transform: uppercase;
+    color: var(--ice); background: var(--panel); border: 1px solid var(--line);
+    padding: .5rem .75rem; border-radius: 8px; cursor: pointer;
+    transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+  }
+  .word-chip::before { content: "▸ "; color: var(--chip, var(--cyan)); }
+  .word-chip:hover { transform: translateY(-2px); border-color: var(--chip, var(--cyan)); box-shadow: 0 0 18px rgba(45,231,255,.18); }
+
+  .detail-backdrop {
+    position: fixed; inset: 0; z-index: 60; display: none;
+    background: rgba(3, 5, 14, .8); -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px);
+    padding: 1rem; overflow-y: auto;
+  }
+  .detail-backdrop.open { display: grid; place-items: start center; }
+  .detail {
+    width: min(900px, 100%); margin: 2vh auto; position: relative;
+    background: linear-gradient(155deg, #121b42, #070b1d 72%);
+    border: 1px solid var(--accent, var(--cyan)); border-radius: 18px;
+    box-shadow: var(--shadow), 0 0 44px rgba(45,231,255,.14);
+    padding: 1.55rem 1.7rem 1.8rem;
+  }
+  .detail__head { display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
+  .detail__eyebrow {
+    font-family: var(--mono); font-size: .65rem; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--accent, var(--cyan));
+  }
+  .detail h2 {
+    font-family: var(--mono); font-size: clamp(1.9rem, 5vw, 3rem); letter-spacing: .02em;
+    margin: .3rem 0 0; color: var(--accent, var(--cyan)); text-shadow: 0 0 22px currentColor;
+  }
+  .detail__subtitle { margin: .1rem 0 0; font-size: .95rem; color: var(--ice); font-weight: 600; }
+  .detail__tagline { margin: .55rem 0 0; color: var(--muted); font-size: .92rem; }
+  .detail__close {
+    flex: none; width: 38px; height: 38px; border-radius: 9px; cursor: pointer;
+    background: var(--panel); color: var(--ice); border: 1px solid var(--line);
+    font-size: 1.3rem; line-height: 1;
+  }
+  .detail__close:hover { border-color: var(--magenta); color: var(--magenta); }
+  .detail__source {
+    display: inline-block; margin-top: .9rem; font-family: var(--mono); font-size: .62rem;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--lime);
+    background: rgba(196,255,77,.09); border: 1px solid rgba(196,255,77,.28);
+    padding: .2rem .5rem; border-radius: 99px;
+  }
+  .detail__source[data-source="embedded"] { color: var(--muted); border-color: var(--line); background: rgba(233,242,255,.04); }
+  .detail__grid { display: grid; grid-template-columns: 1.25fr .85fr; gap: 1.6rem; margin-top: 1.5rem; }
+  .detail h4 {
+    margin: 1.35rem 0 .45rem; font-family: var(--mono); font-size: .68rem;
+    letter-spacing: .13em; text-transform: uppercase; color: var(--cyan);
+  }
+  .detail h4:first-child { margin-top: 0; }
+  .detail p { margin: 0; font-size: .88rem; color: var(--muted); }
+  .detail ol, .detail ul { margin: 0; padding-left: 1.2rem; font-size: .86rem; color: var(--muted); }
+  .detail li { margin: .32rem 0; }
+  .detail blockquote {
+    margin: 0; padding: .8rem 1rem; border-left: 3px solid var(--magenta);
+    background: rgba(255,66,198,.06); border-radius: 0 8px 8px 0;
+    font-size: .88rem; color: var(--ice);
+  }
+  .detail__chips { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .detail__chips span {
+    font-family: var(--mono); font-size: .66rem; color: var(--cyan);
+    background: rgba(45,231,255,.09); border: 1px solid rgba(45,231,255,.2);
+    padding: .2rem .45rem; border-radius: 5px;
+  }
+  .detail__list { list-style: none; padding: 0; }
+  .detail__list li { padding: .45rem 0; border-bottom: 1px solid var(--line); }
+  .detail__list b { color: var(--ice); font-size: .84rem; }
+  .detail__list small { display: block; color: var(--muted); font-size: .76rem; }
+  .detail code {
+    font-family: var(--mono); font-size: .78rem; color: var(--lime);
+    background: rgba(196,255,77,.07); padding: .1rem .3rem; border-radius: 4px;
+  }
+  .detail pre {
+    margin: .35rem 0; padding: .6rem .7rem; overflow-x: auto;
+    background: rgba(6,9,24,.8); border: 1px solid var(--line); border-radius: 8px;
+  }
+  .detail pre code { background: none; padding: 0; }
+  .detail__related button {
+    font-family: var(--mono); font-size: .7rem; color: var(--ice); cursor: pointer;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 6px;
+    padding: .3rem .55rem; margin: 0 .3rem .3rem 0;
+  }
+  .detail__related button:hover { border-color: var(--magenta); color: var(--magenta); }
+  .detail__foot { margin-top: 1.5rem; font-family: var(--mono); font-size: .68rem; color: var(--muted); }
+
   @media (max-width: 820px) {
-    .hero { grid-template-columns: 1fr; padding-top: 2rem; }
+    .detail__grid { grid-template-columns: 1fr; gap: .4rem; }
     .stage { height: 300px; }
     .panels { grid-template-columns: 1fr; }
     .panel { min-height: 280px; }
@@ -258,18 +356,18 @@
       </div>
     </div>
 
-    <div class="stage" aria-label="Continuously rotating 3D word ring">
-      <div class="ring" aria-hidden="true">
-        <span style="--i:0">RAG</span>
-        <span style="--i:1">AGENTS</span>
-        <span style="--i:2">MLOPS</span>
-        <span style="--i:3">FORECAST</span>
-        <span style="--i:4">SIGNALS</span>
-        <span style="--i:5">SKILLS</span>
-        <span style="--i:6">RISK</span>
-        <span style="--i:7">OFFLINE</span>
-        <span style="--i:8">DEMO</span>
-        <span style="--i:9">IOT</span>
+    <div class="stage" aria-label="Continuously rotating 3D word ring — click any word for details">
+      <div class="ring" role="group" aria-label="Ten words, one explanation each">
+        <span style="--i:0" data-word="rag" role="button" tabindex="0" title="Open RAG details">RAG</span>
+        <span style="--i:1" data-word="agents" role="button" tabindex="0" title="Open AGENTS details">AGENTS</span>
+        <span style="--i:2" data-word="mlops" role="button" tabindex="0" title="Open MLOPS details">MLOPS</span>
+        <span style="--i:3" data-word="forecast" role="button" tabindex="0" title="Open FORECAST details">FORECAST</span>
+        <span style="--i:4" data-word="signals" role="button" tabindex="0" title="Open SIGNALS details">SIGNALS</span>
+        <span style="--i:5" data-word="skills" role="button" tabindex="0" title="Open SKILLS details">SKILLS</span>
+        <span style="--i:6" data-word="risk" role="button" tabindex="0" title="Open RISK details">RISK</span>
+        <span style="--i:7" data-word="offline" role="button" tabindex="0" title="Open OFFLINE details">OFFLINE</span>
+        <span style="--i:8" data-word="demo" role="button" tabindex="0" title="Open DEMO details">DEMO</span>
+        <span style="--i:9" data-word="iot" role="button" tabindex="0" title="Open IOT details">IOT</span>
       </div>
       <div class="core">BUILD<br><b>·</b> EXPLAIN<br><b>·</b> DEFEND</div>
     </div>
@@ -288,6 +386,25 @@
 </div>
 
 <div class="wrap">
+  <section class="atlas" aria-label="Word atlas">
+    <div class="section-head">
+      <h2>Word atlas</h2>
+      <p>Every rotating word, fully explained</p>
+    </div>
+    <div class="atlas-chips">
+      <button type="button" class="word-chip" style="--chip:#2de7ff" data-word="rag">RAG</button>
+      <button type="button" class="word-chip" style="--chip:#ff42c6" data-word="agents">Agents</button>
+      <button type="button" class="word-chip" style="--chip:#c4ff4d" data-word="mlops">MLOps</button>
+      <button type="button" class="word-chip" style="--chip:#8e64ff" data-word="forecast">Forecast</button>
+      <button type="button" class="word-chip" style="--chip:#2de7ff" data-word="signals">Signals</button>
+      <button type="button" class="word-chip" style="--chip:#ff42c6" data-word="skills">Skills</button>
+      <button type="button" class="word-chip" style="--chip:#ff42c6" data-word="risk">Risk</button>
+      <button type="button" class="word-chip" style="--chip:#c4ff4d" data-word="offline">Offline</button>
+      <button type="button" class="word-chip" style="--chip:#8e64ff" data-word="demo">Demo</button>
+      <button type="button" class="word-chip" style="--chip:#2de7ff" data-word="iot">IoT</button>
+    </div>
+  </section>
+
   <section class="showcase" aria-label="Animated systems showcase">
     <div class="section-head">
       <h2>Under the hood</h2>
@@ -412,6 +529,13 @@
     <span><a href="README.md">README</a> · <a href="docs/LEARNING_GUIDE.md">Learning guide</a> · <a href="https://github.com/mayankjain1815-commits/ai-ml-portfolio">GitHub</a></span>
   </footer>
 </div>
+
+<div class="detail-backdrop" id="word-detail-backdrop" role="dialog" aria-modal="true" aria-labelledby="word-detail-term">
+  <div class="detail" id="word-detail"></div>
+</div>
+
+<!-- Same ten records as backend/word_atlas/data.py, embedded for offline use. -->
+<script type="application/json" id="word-atlas-data">[{"slug":"rag","term":"RAG","title":"Retrieval-Augmented Generation","category":"Retrieval","color":"#2DE7FF","tagline":"Ground the answer in text you can actually inspect.","definition":"Retrieval-augmented generation retrieves relevant passages from a corpus and conditions the answer on them. The model is an open-book reader, not a closed-book guesser, so every claim can be traced to a chunk.","why_it_matters":"It converts an unverifiable paragraph into a grading problem: recall@k measures whether the right evidence was found, and faithfulness measures whether the answer stayed inside that evidence.","how_it_works":["Ingest text and split it on paragraph/sentence boundaries with a measured overlap.","Build a TF-IDF index over chunks; expand queries with a small hand-built thesaurus.","Retrieve the top-k chunks by cosine similarity, then apply MMR to drop near-duplicates.","Generate the answer from the selected context; the offline brain does extractive scoring.","Score the pipeline with recall@k, MRR and faithfulness against a fixed question set."],"concepts":["chunking","TF-IDF","cosine similarity","MMR","recall@k","faithfulness"],"projects":[{"id":"03","name":"RAG Studio","path":"03-rag-studio","readme":"03-rag-studio/README.md","role":"The whole pipeline: chunk → index → retrieve → generate → evaluate."}],"code_anchors":[{"path":"03-rag-studio/rag_studio/chunker.py","symbol":"chunk_document","note":"Boundary scoring with overlap."},{"path":"03-rag-studio/rag_studio/index.py","symbol":"TfidfIndex","note":"Hand-built sparse index and query vector."},{"path":"03-rag-studio/rag_studio/retriever.py","symbol":"retrieve","note":"Top-k plus MMR diversification."}],"commands":["cd 03-rag-studio && ../.venv/bin/python -m rag_studio demo","cd 03-rag-studio && ../.venv/bin/python -m pytest -q"],"interview_answer":"I built RAG without a framework so the retrieval maths is mine: my own chunker, TF-IDF index, query expansion, MMR selection and an eval harness. The demo brain does extractive scoring, which is the same pipeline shape as the Gemini path — that is why it runs with zero keys and why recall@k is a real number, not a vibe.","pitfalls":["A chunk that cuts a sentence in half makes a correct passage unretrievable.","Plain top-k returns five copies of the same paragraph; MMR fixes that.","Faithfulness has to be scored against retrieved context, not model confidence."],"tests":["03-rag-studio/tests/test_chunker.py","03-rag-studio/tests/test_retrieval.py","03-rag-studio/tests/test_evals.py"],"systems":["neural"]},{"slug":"agents","term":"AGENTS","title":"Multi-Agent Crews","category":"Agents","color":"#FF42C6","tagline":"Several bounded reasoners, one shared blackboard, one audit trace.","definition":"An agent is a loop that observes, decides, calls a tool and records the result. A crew composes those loops — sequentially, under a supervisor, or with a critic that forces reflection — while sharing state instead of passing prose around.","why_it_matters":"The interesting failure is not a wrong tool call; it is a crew that never converges or a critic that grades a draft its writer never saw. A shared blackboard plus a trace makes both failures inspectable.","how_it_works":["Define agents with a role, goal and a bounded set of tools.","Route tasks through SequentialCrew, SupervisorCrew or ReflectiveCrew.","Write facts, artifacts and messages to one Blackboard so nobody works from stale memory.","Record every thought/tool/observation in a trace for replay.","In LLM mode call Gemini with JSON tool-calling; offline mode runs the same state machine."],"concepts":["ReAct","tool registry","blackboard","supervisor","reflection","trace"],"projects":[{"id":"02","name":"Crew Engine","path":"02-crew-engine","readme":"02-crew-engine/README.md","role":"The crew engine: agents, task routing, blackboard and trace."},{"id":"01","name":"Orbit Voice Assistant","path":"01-orbit-voice-assistant","readme":"01-orbit-voice-assistant/README.md","role":"A single bounded ReAct loop over browser tools."}],"code_anchors":[{"path":"02-crew-engine/crew_engine/crew.py","symbol":"ReflectiveCrew","note":"Writer/critic loop with a convergence cap."},{"path":"02-crew-engine/crew_engine/blackboard.py","symbol":"Blackboard","note":"Shared facts, artifacts and audit messages."},{"path":"01-orbit-voice-assistant/orbit_voice_assistant/chat.py","symbol":"ReAct loop","note":"Bounded reason-act-observe cycle."}],"commands":["cd 02-crew-engine && ../.venv/bin/python -m crew_engine demo --trace","cd 02-crew-engine && ../.venv/bin/python -m pytest -q"],"interview_answer":"I implemented the orchestration myself: three crew topologies, a blackboard and a trace. The reflective crew was the hard one — it kept failing because the critic checked citations against a different fact subset than the writer used. I fixed it by scoring citations against the draft's own bullets, then encoded that as a test.","pitfalls":["Unbounded ReAct loops burn tokens without ever converging.","A critic evaluating different evidence from the writer produces endless false negatives.","Passing full history between agents hides which fact came from where."],"tests":["02-crew-engine/tests/test_crew.py","02-crew-engine/tests/test_blackboard.py","02-crew-engine/tests/test_brain.py"],"systems":["neural","particles"]},{"slug":"mlops","term":"MLOPS","title":"Model Operations & Drift","category":"Operations","color":"#C4FF4D","tagline":"Notice the model going stale before the users do.","definition":"MLOps is the monitoring and registry layer around a deployed model: track input distributions, compute drift statistics, raise severity-scaled alerts and keep a versioned record of what was shipped.","why_it_matters":"Accuracy on a frozen test set says nothing about next week's traffic. PSI and KS are cheap, explainable checks that run on every window without a label.","how_it_works":["Generate a seeded reference and live stream so the demo is reproducible.","Compute population stability index per bucket and KS distance on numeric features.","Layer a regression-slope check for gradual trend, not just sudden jumps.","Escalate through the AlertManager with warn/alert thresholds and cooldowns.","Serve a Flask dashboard plus a registry that lists model versions and metrics."],"concepts":["PSI","KS statistic","sliding window","severity","registry","cooldown"],"projects":[{"id":"04","name":"Model Watch","path":"04-model-watch","readme":"04-model-watch/README.md","role":"Drift detection, alerting, registry and the monitoring dashboard."}],"code_anchors":[{"path":"04-model-watch/model_watch/drift.py","symbol":"psi","note":"Bucketed population stability index."},{"path":"04-model-watch/model_watch/drift.py","symbol":"ks_statistic","note":"Two-sample KS distance."},{"path":"04-model-watch/model_watch/alerts.py","symbol":"AlertManager","note":"Threshold, dedup and cooldown logic."}],"commands":["cd 04-model-watch && ../.venv/bin/python -m model_watch demo","cd 04-model-watch && ../.venv/bin/python -m pytest -q"],"interview_answer":"I implemented PSI and KS from the formulae rather than calling a library, so I can explain the bucket choices and what each number means. A sliding window feeds a severity classifier, and the alert manager deduplicates and cools down so a single noisy batch cannot page anyone.","pitfalls":["PSI with empty reference buckets explodes; the implementation smooths them.","KS flags any large sample; thresholds must account for window size.","Alert spam is worse than a missed warning — dedup and cooldown are part of the design."],"tests":["04-model-watch/tests/test_core.py","04-model-watch/tests/test_monitoring.py"],"systems":["globe","particles"]},{"slug":"forecast","term":"FORECAST","title":"Deterministic Forecasting","category":"Operations","color":"#8E64FF","tagline":"Same seed, same emergency, every single demo.","definition":"A seeded forecast generator produces hourly weather for six monitored areas. It is not a weather service: it is a reproducible input stream that makes risk logic testable and the dashboard demo honest.","why_it_matters":"You cannot unit-test a risk model against live weather. A deterministic forecast lets a test assert the exact hour at which a flood warning should be issued.","how_it_works":["Seed a generator once and derive 72 hourly points per area.","Model a diurnal cycle plus correlated rain, wind, humidity and pressure-driven events.","Feed each hour into the rule-based risk model for flood/cyclone/heat/storm.","Run the monitor orchestrator to produce forecasts, risks, alerts and incidents.","Expose the resulting snapshot through JSON APIs and a Flask dashboard on port 5107."],"concepts":["seeded PRNG","hourly horizon","diurnal cycle","scenario replay","risk scoring"],"projects":[{"id":"07","name":"Disaster Watch","path":"07-disaster-watch","readme":"07-disaster-watch/README.md","role":"Forecast generator, risk rules, alerts and the authority dashboard."}],"code_anchors":[{"path":"07-disaster-watch/disaster_watch/forecast_gen.py","symbol":"generate_forecast","note":"Seeded 72-hour hourly stream."},{"path":"07-disaster-watch/disaster_watch/monitor.py","symbol":"run_monitor","note":"Forecast → risk → alerts → incidents."}],"commands":["cd 07-disaster-watch && ../.venv/bin/python -m disaster_watch demo","cd 07-disaster-watch && ../.venv/bin/python -m pytest -q"],"interview_answer":"The forecast is deliberately seeded. That makes the entire disaster pipeline replayable — I can assert the exact hour a warning opens and that deduplication does not emit a second one. With live weather those tests would be flaky and unreviewable.","pitfalls":["Random noise without correlation looks nothing like a real storm.","A forecast that changes between runs makes alert tests meaningless.","Mixing forecast generation with risk logic couples two things that should be tested apart."],"tests":["07-disaster-watch/tests/test_forecast.py","07-disaster-watch/tests/test_risk.py","07-disaster-watch/tests/test_alerts.py"],"systems":["globe"]},{"slug":"signals","term":"SIGNALS","title":"Telemetry & Signal Processing","category":"Operations","color":"#2DE7FF","tagline":"Noisy sensor readings become evidence, not panic.","definition":"Signals are the validated telemetry frames arriving from sensors — temperature, rain, water level, vibration, AQI, battery and radio quality. Processing means validating, normalising, storing and turning them into a state a human can read.","why_it_matters":"A single spike is noise; a rising river over twelve packets is evidence. The processing layer is where that distinction is made before any alert exists.","how_it_works":["Validate each ingress packet against a schema; reject impossible ranges.","Persist to native node:sqlite with an index on node and timestamp.","Derive per-node history windows and a 0–100 risk score per hazard.","Push a compact snapshot over WebSocket so the UI never polls.","Keep the raw packet and the derived score side by side for audit."],"concepts":["ingress validation","sqlite","windowing","WebSocket","hysteresis"],"projects":[{"id":"08","name":"SENTINEL · IoT Command","path":"08-sentinel-iot","readme":"08-sentinel-iot/README.md","role":"Telemetry ingress, store, simulator and realtime snapshot."},{"id":"04","name":"Model Watch","path":"04-model-watch","readme":"04-model-watch/README.md","role":"Model input streams and drift signal windows."}],"code_anchors":[{"path":"08-sentinel-iot/server/app.js","symbol":"createApp","note":"Validated telemetry ingress and read APIs."},{"path":"08-sentinel-iot/server/realtime.js","symbol":"isAuthorizedGateway","note":"Authorised WebSocket upgrades."},{"path":"04-model-watch/model_watch/stream.py","symbol":"generate_stream","note":"Seeded live feature stream."}],"commands":["cd 08-sentinel-iot && npm ci && npm test","cd 08-sentinel-iot && npm run dev"],"interview_answer":"Signals are validated at the edge of the API and stored in node:sqlite so the risk engine and the UI read the same transaction boundary. I keep raw readings and derived scores together — that is what makes an alert explainable later.","pitfalls":["Trusting a sensor packet without range checks poisons every downstream score.","Polling a dashboard wastes resources; WebSocket push keeps it honest.","Correlated readings must be simulated or hysteresis can never be tested."],"tests":["08-sentinel-iot/tests/telemetry.test.js","08-sentinel-iot/tests/validation.test.js","08-sentinel-iot/tests/realtime.test.js"],"systems":["particles","globe"]},{"slug":"skills","term":"SKILLS","title":"Agent Skill Packaging","category":"Agents","color":"#FF42C6","tagline":"Capabilities as small, routable, budgeted documents.","definition":"A skill is a SKILL.md file with frontmatter and a body. A selector chooses which skills matter for a prompt, a packer fits them into a token budget, and a runner executes the chosen procedure.","why_it_matters":"It turns 'the model knows tools' into a versioned, inspectable catalogue. Token budgets are explicit, so a prompt cannot silently blow past its context window.","how_it_works":["Parse frontmatter with a tiny YAML-ish subset — no PyYAML dependency.","Score skills with a keyword selector; upgrade to an LLM router when a key exists.","Estimate tokens and pack selected skills into a fixed budget with a priority order.","Run the packed prompt through the same executor in demo and live mode.","Expose everything through a CLI: list, search, pick, pack, run, install."],"concepts":["frontmatter","keyword routing","token budget","prompt packing","CLI"],"projects":[{"id":"05","name":"Skill Forge","path":"05-skill-forge","readme":"05-skill-forge/README.md","role":"Skill loader, selector, packer, runner and CLI."}],"code_anchors":[{"path":"05-skill-forge/skill_forge/loader.py","symbol":"load_skill","note":"Frontmatter + body parsing."},{"path":"05-skill-forge/skill_forge/selector.py","symbol":"KeywordSelector","note":"Offline skill routing."},{"path":"05-skill-forge/skill_forge/packer.py","symbol":"pack","note":"Token-budget prompt assembly."}],"commands":["cd 05-skill-forge && ../.venv/bin/python -m skill_forge demo","cd 05-skill-forge && ../.venv/bin/python -m pytest -q"],"interview_answer":"Skills are files, not registry code. I parse the frontmatter myself, route with keywords offline or an LLM when a key is present, and pack under an explicit token budget. Nine bundled skills and fifty-seven tests cover the whole path.","pitfalls":["A greedy packer can fill the budget with one verbose skill.","Frontmatter parsers that accept too much syntax become a security surface.","Routing must degrade to keywords when the LLM is unavailable."],"tests":["05-skill-forge/tests/test_selector.py","05-skill-forge/tests/test_packer.py","05-skill-forge/tests/test_skill.py"],"systems":["neural"]},{"slug":"risk","term":"RISK","title":"Explainable Risk Scoring","category":"Operations","color":"#FF42C6","tagline":"Every point in the score has a name and a number.","definition":"Risk scoring converts several continuous signals into a 0–100 index and a band. The implementation is transparent: each hazard contributes named points, a compound-hazard bonus applies when several fire together, and SOS overrides.","why_it_matters":"An operator at 2 a.m. needs to know why an area is critical. A black-box classifier might be more accurate on paper, but it cannot answer that question in the room.","how_it_works":["Ramp each raw measurement from an onset to a saturation threshold.","Turn ramps into named point contributions per hazard (flood, landslide, air, heat).","Add a compound bonus when multiple hazards cross their onset together.","Clamp to 0–100, map to a band, and keep the contribution breakdown for the API.","Open, escalate and resolve alerts with hysteresis on (node, hazard) keys."],"concepts":["ramp","weighted contribution","compound hazard","band","hysteresis"],"projects":[{"id":"07","name":"Disaster Watch","path":"07-disaster-watch","readme":"07-disaster-watch/README.md","role":"Rule-weighted risk index over forecast hours."},{"id":"08","name":"SENTINEL · IoT Command","path":"08-sentinel-iot","readme":"08-sentinel-iot/README.md","role":"Continuous per-node risk engine with breakdown and alerts."}],"code_anchors":[{"path":"07-disaster-watch/disaster_watch/risk_model.py","symbol":"score_forecast","note":"Weighted rule score over forecast hours."},{"path":"08-sentinel-iot/server/risk-engine.js","symbol":"assessRisk","note":"Transparent 0–100 score with factors."}],"commands":["cd 07-disaster-watch && ../.venv/bin/python -m disaster_watch demo","cd 08-sentinel-iot && npm test"],"interview_answer":"I chose rules over a trained model because the score has to be auditable. Every hazard contributes named points, the compound bonus is explicit, and the API returns the breakdown. The weights are data, so I can unit-test them at their boundaries instead of hoping a model behaves.","pitfalls":["Unclamped contributions produce nonsense scores outside the training range.","Without hysteresis a noisy sensor makes alerts flap every few packets.","A score without its breakdown is useless to an operator."],"tests":["07-disaster-watch/tests/test_risk.py","08-sentinel-iot/tests/risk-engine.test.js","08-sentinel-iot/tests/api.test.js"],"systems":["globe","neural"]},{"slug":"offline","term":"OFFLINE","title":"Zero-Key Operation","category":"Architecture","color":"#C4FF4D","tagline":"The whole portfolio runs with no network and no secrets.","definition":"Offline mode means every project has a deterministic local implementation of the same pipeline the live model runs. It is a parallel implementation, not a stub or a cached response.","why_it_matters":"CI can verify every claim without API keys, a reviewer can run the demo on a plane, and the fallback is never a dead end when a provider is down.","how_it_works":["Wrap model calls behind one interface with two implementations: live and deterministic.","Seed randomness and label every generated number as demo data.","Run the same tests against the offline path in CI on every push.","Upgrade with GEMINI_API_KEY; keep the offline brain as the honest fallback.","Vendor no runtime assets — no CDN fonts, scripts or external images in the demos."],"concepts":["demo mode","determinism","seeded data","CI without secrets","fallback"],"projects":[{"id":"01","name":"Orbit Voice Assistant","path":"01-orbit-voice-assistant","readme":"01-orbit-voice-assistant/README.md","role":"Runs fully offline with seeded data."},{"id":"02","name":"Crew Engine","path":"02-crew-engine","readme":"02-crew-engine/README.md","role":"Runs fully offline with seeded data."},{"id":"03","name":"RAG Studio","path":"03-rag-studio","readme":"03-rag-studio/README.md","role":"Runs fully offline with seeded data."},{"id":"04","name":"Model Watch","path":"04-model-watch","readme":"04-model-watch/README.md","role":"Runs fully offline with seeded data."},{"id":"05","name":"Skill Forge","path":"05-skill-forge","readme":"05-skill-forge/README.md","role":"Runs fully offline with seeded data."},{"id":"06","name":"GH Activity Forge","path":"06-gh-activity-forge","readme":"06-gh-activity-forge/README.md","role":"Runs fully offline with seeded data."},{"id":"07","name":"Disaster Watch","path":"07-disaster-watch","readme":"07-disaster-watch/README.md","role":"Runs fully offline with seeded data."},{"id":"08","name":"SENTINEL · IoT Command","path":"08-sentinel-iot","readme":"08-sentinel-iot/README.md","role":"Runs fully offline with seeded data."}],"code_anchors":[{"path":"docs/BUILD_SPEC.md","symbol":"Non-negotiables","note":"The zero-key rule written down."},{"path":".github/workflows/tests.yml","symbol":"test matrix","note":"Every suite runs in CI with no secrets."}],"commands":["for p in 0*; do (cd \"$p\" && ../.venv/bin/python -m pytest -q) 2>/dev/null; done","cd 08-sentinel-iot && npm test"],"interview_answer":"Offline is an architectural constraint, not a feature flag. Each project has a real deterministic brain that performs the same steps as the live model, so the tests assert real behaviour with zero keys. Set a key and only the final call changes.","pitfalls":["A fallback that returns canned text proves nothing and fails under review.","Unseeded randomness makes CI flaky and demos unrepeatable.","Secrets in CI turn an offline suite into a network-dependent one."],"tests":[".github/workflows/tests.yml"],"systems":["particles","globe","neural"]},{"slug":"demo","term":"DEMO","title":"Demoable by Design","category":"Architecture","color":"#8E64FF","tagline":"Two minutes, one command, no setup ritual.","definition":"Every project ships a single demo command that produces a complete, satisfying run with visible intermediate state — a trace, a dashboard, a report — rather than a single answer.","why_it_matters":"A demo is the most compressed form of an explanation. If it needs a key, a database and three terminals, nobody will run it, and the project stops being evidence.","how_it_works":["Expose one obvious entry point per project: python -m <pkg> demo or npm run dev.","Seed the input so the output is identical on every machine.","Print or render the intermediate steps, not just the final result.","Ship a README command that can be copy-pasted from the landing page.","Keep the demo code on the same path as the real code, not a separate toy implementation."],"concepts":["entry point","seeded scenario","visible trace","copy-paste command","two-minute story"],"projects":[{"id":"01","name":"Orbit Voice Assistant","path":"01-orbit-voice-assistant","readme":"01-orbit-voice-assistant/README.md","role":"One-command demo with visible intermediate state."},{"id":"02","name":"Crew Engine","path":"02-crew-engine","readme":"02-crew-engine/README.md","role":"One-command demo with visible intermediate state."},{"id":"03","name":"RAG Studio","path":"03-rag-studio","readme":"03-rag-studio/README.md","role":"One-command demo with visible intermediate state."},{"id":"04","name":"Model Watch","path":"04-model-watch","readme":"04-model-watch/README.md","role":"One-command demo with visible intermediate state."},{"id":"05","name":"Skill Forge","path":"05-skill-forge","readme":"05-skill-forge/README.md","role":"One-command demo with visible intermediate state."},{"id":"06","name":"GH Activity Forge","path":"06-gh-activity-forge","readme":"06-gh-activity-forge/README.md","role":"One-command demo with visible intermediate state."},{"id":"07","name":"Disaster Watch","path":"07-disaster-watch","readme":"07-disaster-watch/README.md","role":"One-command demo with visible intermediate state."},{"id":"08","name":"SENTINEL · IoT Command","path":"08-sentinel-iot","readme":"08-sentinel-iot/README.md","role":"One-command demo with visible intermediate state."}],"code_anchors":[{"path":"docs/LEARNING_GUIDE.md","symbol":"Project-by-project Q&A","note":"A two-minute story for each project."},{"path":"index.html","symbol":"project cards","note":"Every card links to its own README."}],"commands":["cd 02-crew-engine && ../.venv/bin/python -m crew_engine demo --trace","cd 07-disaster-watch && ../.venv/bin/python -m disaster_watch demo"],"interview_answer":"I designed the demo first. Each project has one command, a seeded scenario and a visible trace, so I can hand an interviewer a run they can reproduce in two minutes. The demo path and the live path share the same code; only the final model call differs.","pitfalls":["A demo that hides its intermediate steps cannot be defended.","Different commands per project destroy the portfolio's rhythm.","A canned output looks impressive once and collapses under a follow-up question."],"tests":["docs/LEARNING_GUIDE.md"],"systems":["neural","particles"]},{"slug":"iot","term":"IOT","title":"IoT Early-Warning Command","category":"Operations","color":"#2DE7FF","tagline":"From a LoRa packet to an evacuation order, end to end.","definition":"An Internet-of-Things command system for a three-node ESP32/LoRa network: telemetry ingress, risk scoring, alert escalation, WebSocket push, an offline vector map and an authority console that can act on what it sees.","why_it_matters":"It is the only project where the model is just one component. The hard problems are state, authorisation, deduplication and an operator loop that never loses an audit trail.","how_it_works":["Validate telemetry from the gateway and persist it to native node:sqlite.","Score flood, landslide, air quality and heat continuously on 0–100 with factors.","Dedup alerts by (node, hazard), escalate and require two clean packets to resolve.","Push snapshots over WebSocket to a React/Leaflet dashboard with a bundled offline map.","Let an authorised operator acknowledge, override with expiry, evacuate, sound the siren and write an immutable incident record."],"concepts":["ESP32","LoRa","node:sqlite","WebSocket","authority console","incident log"],"projects":[{"id":"08","name":"SENTINEL · IoT Command","path":"08-sentinel-iot","readme":"08-sentinel-iot/README.md","role":"The complete command platform, Node 22 + React 19."}],"code_anchors":[{"path":"08-sentinel-iot/server/app.js","symbol":"createApp","note":"API, command routes and gateway auth."},{"path":"08-sentinel-iot/server/risk-engine.js","symbol":"assessRisk","note":"Transparent hazard scoring."},{"path":"08-sentinel-iot/tests/api.test.js","symbol":"api suite","note":"38 offline tests for the full loop."}],"commands":["cd 08-sentinel-iot && npm ci && npm test","cd 08-sentinel-iot && npm run dev"],"interview_answer":"SENTINEL is the systems project: node:sqlite gives one transaction boundary with no infrastructure, a WebSocket pushes snapshots instead of polling, and alerts use hysteresis so a noisy sensor cannot flap. The authority console closes the loop — acknowledge, override with an expiry, evacuate, and every action lands in an immutable incident log.","pitfalls":["Using a hosted map breaks the offline guarantee; the basemap is local vector data.","Command routes need real auth and role checks, not a trusting header.","Alert flapping on correlated sensor noise destroys operator trust."],"tests":["08-sentinel-iot/tests/api.test.js","08-sentinel-iot/tests/risk-engine.test.js","08-sentinel-iot/tests/telemetry.test.js"],"systems":["globe","particles"]}]</script>
 
 <script>
 (function () {
@@ -614,6 +738,230 @@
       });
     });
   }, [ns]);
+})();
+</script>
+
+<script>
+/* Word atlas: click any rotating word or chip for its full record.
+   The embedded JSON renders instantly; the Flask API upgrades it when reachable. */
+(function () {
+  'use strict';
+  var EMBEDDED = JSON.parse(document.getElementById('word-atlas-data').textContent);
+  var API = (window.WORD_ATLAS_API || 'http://127.0.0.1:5110').replace(/\/$/, '');
+  var apiAllowed = location.protocol !== 'https:' || !!window.WORD_ATLAS_API;
+  var backdrop = document.getElementById('word-detail-backdrop');
+  var host = document.getElementById('word-detail');
+  var bySlug = {}, cache = {}, active = null, opener = null, closeBtn = null, apiDown = false;
+
+  EMBEDDED.forEach(function (w) { bySlug[w.slug] = w; });
+
+  function el(tag, cls, text) {
+    var node = document.createElement(tag);
+    if (cls) node.className = cls;
+    if (text !== undefined && text !== null) node.textContent = String(text);
+    return node;
+  }
+
+  function section(title, build) {
+    var box = el('div');
+    box.appendChild(el('h4', null, title));
+    build(box);
+    return box;
+  }
+
+  function list(items, ordered) {
+    var node = el(ordered ? 'ol' : 'ul');
+    (items || []).forEach(function (item) { node.appendChild(el('li', null, item)); });
+    return node;
+  }
+
+  function relatedFor(word) {
+    var mine = {};
+    (word.projects || []).forEach(function (p) { mine[p.id] = true; });
+    return EMBEDDED.filter(function (w) {
+      if (w.slug === word.slug) return false;
+      if (w.category === word.category) return true;
+      return (w.projects || []).some(function (p) { return mine[p.id]; });
+    }).map(function (w) { return { slug: w.slug, term: w.term, color: w.color }; });
+  }
+
+  function fetchWord(slug) {
+    if (!apiAllowed || apiDown) return Promise.reject(new Error('API unavailable'));
+    if (cache[slug]) return Promise.resolve(cache[slug]);
+    var controller = 'AbortController' in window ? new AbortController() : null;
+    var timer = setTimeout(function () { if (controller) controller.abort(); }, 1800);
+    return fetch(API + '/api/words/' + encodeURIComponent(slug), {
+      signal: controller ? controller.signal : undefined,
+      headers: { Accept: 'application/json' }
+    }).then(function (response) {
+      if (!response.ok) throw new Error('http ' + response.status);
+      return response.json();
+    }).then(function (data) {
+      if (!data || !data.ok || !data.word) throw new Error('bad payload');
+      cache[slug] = data.word;
+      return data.word;
+    }).then(function (word) {
+      clearTimeout(timer);
+      return word;
+    }, function (error) {
+      clearTimeout(timer);
+      apiDown = true; // one failed probe is enough; stay on the embedded copy
+      throw error;
+    });
+  }
+
+  function render(word, source) {
+    var accent = word.color || '#2de7ff';
+    host.style.setProperty('--accent', accent);
+    host.textContent = '';
+
+    var head = el('div', 'detail__head');
+    var left = el('div');
+    left.appendChild(el('div', 'detail__eyebrow', 'Word atlas · ' + word.category));
+    var title = el('h2', null, word.term);
+    title.id = 'word-detail-term';
+    left.appendChild(title);
+    left.appendChild(el('p', 'detail__subtitle', word.title));
+    left.appendChild(el('p', 'detail__tagline', word.tagline));
+    var badge = el('span', 'detail__source', source === 'api'
+      ? '● live from Flask API · ' + API : '● embedded offline copy');
+    badge.setAttribute('data-source', source);
+    left.appendChild(badge);
+
+    closeBtn = el('button', 'detail__close', '×');
+    closeBtn.type = 'button';
+    closeBtn.setAttribute('aria-label', 'Close word details');
+    closeBtn.addEventListener('click', closePanel);
+    head.appendChild(left);
+    head.appendChild(closeBtn);
+    host.appendChild(head);
+
+    var grid = el('div', 'detail__grid');
+    var main = el('div'), side = el('div');
+    grid.appendChild(main);
+    grid.appendChild(side);
+    host.appendChild(grid);
+
+    main.appendChild(section('Definition', function (b) {
+      b.appendChild(el('p', null, word.definition));
+    }));
+    main.appendChild(section('Why it matters', function (b) {
+      b.appendChild(el('p', null, word.why_it_matters));
+    }));
+    main.appendChild(section('How it works', function (b) {
+      b.appendChild(list(word.how_it_works, true));
+    }));
+    main.appendChild(section('Interview answer', function (b) {
+      b.appendChild(el('blockquote', null, word.interview_answer));
+    }));
+    main.appendChild(section('Watch out for', function (b) {
+      b.appendChild(list(word.pitfalls, false));
+    }));
+
+    side.appendChild(section('Concepts', function (b) {
+      var chips = el('div', 'detail__chips');
+      word.concepts.forEach(function (c) { chips.appendChild(el('span', null, c)); });
+      b.appendChild(chips);
+    }));
+    side.appendChild(section('Where it lives', function (b) {
+      var ul = el('ul', 'detail__list');
+      word.projects.forEach(function (p) {
+        var li = el('li');
+        li.appendChild(el('b', null, p.id + ' · ' + p.name));
+        li.appendChild(el('small', null, p.role));
+        ul.appendChild(li);
+      });
+      b.appendChild(ul);
+    }));
+    side.appendChild(section('Code anchors', function (b) {
+      var ul = el('ul', 'detail__list');
+      word.code_anchors.forEach(function (a) {
+        var li = el('li');
+        li.appendChild(el('b', null, a.symbol));
+        var small = el('small');
+        small.appendChild(el('code', null, a.path));
+        small.appendChild(document.createTextNode(' — ' + a.note));
+        li.appendChild(small);
+        ul.appendChild(li);
+      });
+      b.appendChild(ul);
+    }));
+    side.appendChild(section('Try it', function (b) {
+      word.commands.forEach(function (cmd) {
+        var pre = el('pre');
+        pre.appendChild(el('code', null, cmd));
+        b.appendChild(pre);
+      });
+    }));
+    side.appendChild(section('Tests', function (b) {
+      var ul = el('ul', 'detail__list');
+      word.tests.forEach(function (t) { ul.appendChild(el('li', null, t)); });
+      b.appendChild(ul);
+    }));
+
+    var related = word.related && word.related.length ? word.related : relatedFor(word);
+    side.appendChild(section('Related words', function (b) {
+      var box = el('div', 'detail__related');
+      if (!related.length) box.appendChild(el('span', null, 'none'));
+      related.forEach(function (r) {
+        var btn = el('button', null, r.term);
+        btn.type = 'button';
+        btn.title = (r.reason ? r.reason + ' — ' : '') + 'open details';
+        btn.addEventListener('click', function () { open(r.slug); });
+        box.appendChild(btn);
+      });
+      b.appendChild(box);
+    }));
+
+    host.appendChild(el('p', 'detail__foot',
+      'Esc to close · click outside to dismiss · source of truth: backend/word_atlas/data.py'));
+  }
+
+  function show() {
+    backdrop.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function closePanel() {
+    backdrop.classList.remove('open');
+    document.body.style.overflow = '';
+    active = null;
+    if (opener && opener.focus) opener.focus();
+  }
+
+  function open(slug, node) {
+    var word = bySlug[slug];
+    if (!word) return;
+    active = slug;
+    if (node) opener = node;
+    render(word, 'embedded');
+    show();
+    fetchWord(slug).then(function (live) {
+      if (active !== slug) return;
+      render(live, 'api');
+      show();
+    }).catch(function () {
+      /* The embedded copy is already on screen — nothing to do. */
+    });
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-word]'), function (node) {
+    node.addEventListener('click', function () { open(node.getAttribute('data-word'), node); });
+    node.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        open(node.getAttribute('data-word'), node);
+      }
+    });
+  });
+
+  backdrop.addEventListener('click', function (event) {
+    if (event.target === backdrop) closePanel();
+  });
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && backdrop.classList.contains('open')) closePanel();
+  });
 })();
 </script>
 

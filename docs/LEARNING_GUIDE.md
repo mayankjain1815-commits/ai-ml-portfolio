@@ -264,6 +264,42 @@ so the tests can assert that behaviour deterministically.
 
 ---
 
+### Backend — Word Atlas (landing-page API)
+
+**Two-minute story:** The landing page rotates ten words. Clicking one opens a
+full record — definition, why it matters, the pipeline step by step, code
+anchors, commands, an interview answer, pitfalls and related words. A small
+Flask service in `backend/` owns those records as its single source of truth;
+the page renders an embedded copy instantly and upgrades to the API when it is
+reachable on `127.0.0.1:5110`. No keys, no database, no network calls.
+
+**Q: Why embed the data in HTML *and* serve it from an API?**
+A: The page has to work as a standalone `file://` page and on any static host,
+so the fallback cannot be optional. The API is the upgrade path: it makes the
+same records queryable (search, category filter, related words) and gives the
+UI a live source badge. The two copies are the same JSON object, and a test
+asserts they are byte-for-byte equivalent after parsing — drift fails CI.
+
+**Q: What makes this more than a dictionary of ten terms?**
+A: Every record names real repository files and symbols, and tests verify each
+path exists. An explanation that points at a deleted file fails the build.
+Records also carry the copy-paste demo command and the relevant test files, so
+"explain the word" and "show me the proof" are the same action.
+
+**Q: How do you handle the offline case without spamming errors?**
+A: The embedded copy renders synchronously on click; the fetch runs behind it
+with a timeout. If the probe fails once, a flag stops further attempts for that
+page load. On `https://` pages the fetch is skipped entirely (mixed content),
+so a hosted copy of the page is quiet.
+
+**Q: How is it tested?**
+A: 36 offline tests: API shape, every slug, case-insensitive lookup, search and
+filters, bad-input handling, CORS headers, 404 JSON, data completeness, real
+file anchors, ring-to-data match, symmetric related words and embedded-JSON
+parity. It runs as an eighth Python job in the CI matrix.
+
+---
+
 ## 4. The "what's next" answers
 
 Have one polished answer per theme; interviewers love a road map:

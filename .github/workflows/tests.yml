@@ -2,7 +2,7 @@ name: tests
 
 # Every project is self-contained and its suite runs fully offline, so the
 # portfolio can be verified in CI with no API keys and no network calls.
-# The seven Python projects share Python 3.13; SENTINEL (08) is a Node app.
+# The seven Python projects plus the backend share Python 3.13; SENTINEL (08) is a Node app.
 on:
   push:
     branches: [main]
@@ -22,6 +22,7 @@ jobs:
           - 05-skill-forge
           - 06-gh-activity-forge
           - 07-disaster-watch
+          - backend
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
