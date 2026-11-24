@@ -1,8 +1,8 @@
-"""Flask API behind the landing page's rotating rings.
+"""Flask API behind the landing page's solar-system atlas.
 
 Read-only and fully offline. CORS is open because the page works straight from
-disk (file://) as well as from a static host. The outer ring is the ten concept
-words; the counter-rotating inner ring is the public repository catalogue.
+disk (file://) as well as from a static host. Ten concept words are inner
+planets; 23 public repositories are outer planets around one deterministic sun.
 """
 
 from flask import Flask, jsonify, request
@@ -15,6 +15,10 @@ from .repos import (
 )
 from .themes import PALETTE as THEMES
 from .themes import all_themes, get_theme
+from .solar import (
+    SOLAR_REQUIRED_FIELDS, all_bodies, get_body, neighbours, solar_payload,
+    solar_stats,
+)
 
 
 def create_app():
@@ -38,12 +42,13 @@ def create_app():
             "version": __version__,
             "words": len(WORDS),
             "repos": len(REPOS),
+            "bodies": len(WORDS) + len(REPOS),
             "themes": len(THEMES),
             "snapshot": SNAPSHOT,
             "offline": True,
         })
 
-    # ---------- concept words (outer ring) ----------
+    # ---------- concept words (inner planets) ----------
 
     @app.get("/api/words")
     def words():
@@ -116,7 +121,7 @@ def create_app():
                            sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))],
         })
 
-    # ---------- repositories (inner ring) ----------
+    # ---------- repositories (outer planets) ----------
 
     @app.get("/api/repos")
     def repos():
@@ -207,6 +212,47 @@ def create_app():
             } for r in records],
         })
 
+    # ---------- solar system ----------
+
+    @app.get("/api/solar")
+    def solar_system():
+        return jsonify({"ok": True, **solar_payload()})
+
+    @app.get("/api/solar/stats")
+    def solar_summary():
+        return jsonify({"ok": True, **solar_stats()})
+
+    @app.get("/api/solar/<kind>/<slug>")
+    def solar_body_detail(kind, slug):
+        body = get_body(kind, slug)
+        if body is None:
+            return jsonify({
+                "ok": False, "error": "unknown solar body",
+                "kind": kind.lower(), "slug": slug.lower(),
+                "available": [b["slug"] for b in all_bodies()
+                              if b["kind"] == kind.lower().rstrip("s")],
+            }), 404
+        bodies = all_bodies()
+        if body["kind"] == "word":
+            record = get_word(slug)
+            record["related"] = related_words(slug)
+            record["repos"] = [{
+                "slug": r["slug"], "name": r["name"], "short": r["short"],
+                "color": r["color"], "description": r["description"],
+            } for r in repos_for_word(slug)]
+        else:
+            record = get_repo(slug)
+            record["related"] = related_repos(slug)
+            record["linked_words"] = [{
+                "slug": w["slug"], "term": w["term"], "color": w["color"],
+            } for w in WORDS if w["slug"] in record["words"]]
+            record["snapshot"] = SNAPSHOT
+        return jsonify({
+            "ok": True, "body": body, "record": record,
+            "neighbours": neighbours(body, bodies),
+            "note": "Orbital values are deterministic UI metadata, not astronomical facts.",
+        })
+
     # ---------- search, themes and stats ----------
 
     @app.get("/api/search")
@@ -267,6 +313,7 @@ def create_app():
         pitfalls = sum(len(w["pitfalls"]) for w in WORDS)
         languages = {r["language"] for r in REPOS}
         categories = {r["category"] for r in REPOS}
+        solar = solar_stats()
         return jsonify({
             "ok": True,
             "words": len(WORDS),
@@ -280,6 +327,10 @@ def create_app():
             "languages": len(languages),
             "stars": sum(r["stars"] for r in REPOS),
             "themes": len(THEMES),
+            "bodies": solar["bodies"],
+            "moons": solar["moons"],
+            "ring_worlds": solar["ring_worlds"],
+            "orbit_bands": solar["orbit_bands"],
             "snapshot": SNAPSHOT,
             "palette": PALETTE,
             "theme_colors": {t["id"]: t["colors"] for t in THEMES.values()},
@@ -291,6 +342,7 @@ def create_app():
             "ok": True,
             "service": "word-atlas",
             "docs": [
+                "/api/solar", "/api/solar/stats", "/api/solar/<kind>/<slug>",
                 "/api/words", "/api/words/<slug>", "/api/words/<slug>/repos",
                 "/api/repos", "/api/repos/<slug>", "/api/search",
                 "/api/timeline", "/api/languages", "/api/themes", "/api/stats",
@@ -310,6 +362,7 @@ def validate_data():
     for collection, fields, label in (
         (WORDS, REQUIRED_FIELDS, "word"),
         (REPOS, REPO_REQUIRED_FIELDS, "repo"),
+        (all_bodies(), SOLAR_REQUIRED_FIELDS, "solar body"),
     ):
         seen = set()
         for record in collection:

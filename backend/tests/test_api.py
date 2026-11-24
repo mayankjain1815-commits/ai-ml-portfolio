@@ -19,7 +19,8 @@ def test_health(client):
     assert r.json["service"] == "word-atlas"
     assert r.json["words"] == 10
     assert r.json["repos"] == 23
-    assert r.json["themes"] == 2
+    assert r.json["bodies"] == 33
+    assert r.json["themes"] == 1
     assert r.json["offline"] is True
 
 

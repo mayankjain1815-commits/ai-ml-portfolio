@@ -1,4 +1,8 @@
-"""Visual themes exposed by the API and consumed by index.html."""
+"""Visual palette exposed by the API and consumed by index.html.
+
+The previous festive skin is gone: one honest aurora palette now drives both
+the canvas systems and the new solar-system view.
+"""
 
 PALETTE = {
     "aurora": {
@@ -13,19 +17,6 @@ PALETTE = {
         "snow": False,
         "ornaments": False,
         "glyph": "✦",
-    },
-    "christmas": {
-        "id": "christmas",
-        "name": "Christmas 2026",
-        "tagline": "Snow, tree green, bauble red and gold — same systems, festive skin.",
-        "colors": {
-            "bg": "#07120d", "bg2": "#11291d", "primary": "#ff3b4e",
-            "secondary": "#ffd166", "accent": "#39d98a", "violet": "#ff8a5b",
-            "ice": "#f6fff8",
-        },
-        "snow": True,
-        "ornaments": True,
-        "glyph": "🎄",
     },
 }
 

@@ -1,8 +1,8 @@
-"""The public repositories orbiting the landing page's word ring.
+"""The public repositories orbiting the landing page's solar atlas.
 
 One record per repository, with the live metadata checked from the GitHub API
 on 2026-11-24. `word_atlas/data.py` stays the source of truth for the ten
-concept words; this module is the source of truth for the repository ring.
+concept words; this module is the source of truth for the repository planets.
 """
 
 from .data import PALETTE
@@ -180,9 +180,9 @@ REPOS = [
     _repo("portfolio", "ai-ml-portfolio", "PORTFOLIO",
           "Eight self-contained AI/ML projects plus a Flask word atlas — no langchain, no SDK wrappers, offline by design.",
           "Python", 0, "2026-11-21", "Portfolio", ["Python", "Flask", "pytest", "Node 22"],
-          ["Eight projects with one-command demos and 333 offline tests.",
-           "The rotating words and this repo ring are backed by the Word Atlas API.",
-           "Three hand-written canvas systems and a duplicate 3D word ring."],
+          ["Eight projects with one-command demos and hundreds of offline tests.",
+           "The solar system and this planet are backed by the Word Atlas API.",
+           "Three hand-written canvas systems and a 33-world solar atlas."],
           ["rag", "agents", "mlops", "forecast", "signals", "skills", "risk", "offline", "demo", "iot"],
           ["particles", "globe", "neural"],
           "cd ai-ml-portfolio && cd backend && python -m word_atlas"),

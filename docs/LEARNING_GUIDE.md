@@ -264,52 +264,55 @@ so the tests can assert that behaviour deterministically.
 
 ---
 
-### Backend — Word Atlas (landing-page API)
+### Backend — Solar Atlas (landing-page API)
 
-**Two-minute story:** The landing page rotates two 3D rings: ten concept words
-and a counter-rotating ring of 23 public repositories. Clicking either opens a
-full record — definition and code anchors for a word, stack, highlights and a
-clone command for a repo. A small Flask service in `backend/` owns all three
-data sets (words, repos and themes) as its single source of truth; the page
-renders embedded copies instantly and upgrades to the API when it is reachable
-on `127.0.0.1:5110`. No keys, no database, no network calls.
+**Two-minute story:** The landing page is a solar system: ten concept planets
+orbit near the core and 23 repository planets follow eight wider bands. Clicking
+any world opens a full record — definition and code anchors for a word, stack,
+highlights and a clone command for a repo — plus orbital results. A small Flask
+service in `backend/` owns four data sets (words, repos, solar layout and the
+aurora palette) as its single source of truth; the page renders embedded copies
+instantly and upgrades to the API when it is reachable on `127.0.0.1:5110`.
+No keys, no database, no network calls.
 
 **Q: Why embed the data in HTML *and* serve it from an API?**
 A: The page has to work as a standalone `file://` page and on any static host,
 so the fallback cannot be optional. The API is the upgrade path: it makes the
-records queryable (full-text search across both rings, filters, sorting,
-timeline, stats, theme palettes) and gives the UI a live source badge. Tests
+records queryable (full-text search across both classes, filters, sorting,
+timeline, stats and solar telemetry) and gives the UI a live source badge. Tests
 assert each embedded JSON object equals its API object after parsing, and that
-both HTML rings match their modules slug-for-slug — drift fails CI.
+the catalog has a button for every slug — drift fails CI.
 
 **Q: What makes this more than a dictionary of ten terms?**
 A: Word records name real repository files and symbols, and tests verify each
 path exists. Repo records carry the actual GitHub URL, a dated metadata
-snapshot, links to concept words and a clone command. Related records are
-computed from shared categories, words, projects or canvas systems instead of
-being hand-maintained, so the graph stays consistent as data changes.
+snapshot, links to concept words and a clone command. The solar layer derives
+orbit radius, period, inclination, eccentricity, texture, rings and moons from
+the slug with SHA-256, so the canvas, API and offline copy agree without state.
+Related records are computed from shared categories, words, projects or canvas
+systems instead of being hand-maintained, so the graph stays consistent.
 
-**Q: How do the theme and snow work without breaking the systems?**
-A: The theme is data: `/api/themes` returns aurora and Christmas palettes. CSS
-variables restyle the page; a custom `atlas-theme` event hands the new hex
-colours to the three canvas draw loops, so those systems keep their geometry
-but change their palette. Snow is a fourth canvas that only animates when the
-Christmas theme is active and reduced-motion is off. The preference is stored
-in the URL hash, which survives reloads even on `file://` pages where web
-storage may be cleared.
+**Q: Are those orbital numbers real astronomy?**
+A: No, and the payload says so explicitly. They are deterministic UI metadata
+used to lay out and describe 33 records. The important engineering point is
+that the values are reproducible, tested and served from one Python module
+rather than invented independently in the browser. The festive skin and snow
+canvas were removed; the aurora palette is the only theme now.
 
 **Q: How do you handle the offline case without spamming errors?**
 A: Embedded records render synchronously on click; API fetches run behind them
-with a timeout and never remove visible content. Stats and search use local
-data immediately and upgrade silently. On `https://` pages cross-origin fetches
-are skipped entirely (mixed content), so a hosted copy of the page is quiet.
+with a timeout and never remove visible content. Stats, search and the solar
+layout use local data immediately and upgrade silently. On `https://` pages
+cross-origin fetches are skipped entirely (mixed content), so a hosted copy of
+the page is quiet.
 
 **Q: How is it tested?**
-A: 76 offline tests: API shape, every word and repo slug, filters, sorts,
-bad-input handling, CORS headers, 404 JSON in both rings, reverse word↔repo
-links, search scoring, themes, stats, data completeness, real file anchors,
-ring-to-data match and embedded-JSON parity. It runs as an eighth Python job in
-the CI matrix.
+A: 116 offline tests: API shape, a solar detail endpoint for every world,
+deterministic layout and stats, every word and repo slug, filters, sorts,
+bad-input handling, CORS headers, JSON 404s, reverse word↔repo links, search
+scoring, the single theme, data completeness, real file anchors, catalog-to-data
+match and embedded-JSON parity. It runs as an eighth Python job in the CI
+matrix.
 
 ---
 

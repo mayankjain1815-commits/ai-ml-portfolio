@@ -99,21 +99,24 @@ def test_timeline_and_languages(client):
 def test_themes(client):
     r = client.get("/api/themes")
     assert r.status_code == 200
-    assert {t["id"] for t in r.json["themes"]} == {"aurora", "christmas"}
-    christmas = client.get("/api/themes/christmas").json["theme"]
-    assert christmas["snow"] is True
-    assert christmas["colors"]["primary"] == "#ff3b4e"
+    assert {t["id"] for t in r.json["themes"]} == {"aurora"}
+    aurora = client.get("/api/themes/aurora").json["theme"]
+    assert aurora["snow"] is False
+    assert aurora["colors"]["primary"].lower() == "#2de7ff"
+    assert client.get("/api/themes/christmas").status_code == 404
     assert client.get("/api/themes/nope").status_code == 404
     assert get_theme("NOPE") is None
 
 
-def test_stats_cover_both_rings(client):
+def test_stats_cover_the_solar_system(client):
     r = client.get("/api/stats").json
     assert r["words"] == 10
     assert r["repos"] == 23
     assert r["stars"] == sum(x["stars"] for x in REPOS)
-    assert r["themes"] == 2
-    assert "christmas" in r["theme_colors"]
+    assert r["themes"] == 1
+    assert set(r["theme_colors"]) == {"aurora"}
+    assert r["bodies"] == 33
+    assert r["moons"] >= 0
 
 
 def test_word_detail_includes_repo_links(client):

@@ -53,12 +53,9 @@ def test_unknown_word_helpers():
     assert related_words("missing") == []
 
 
-def test_landing_page_ring_matches_data():
+def test_landing_page_catalog_matches_data():
     html = (ROOT / "index.html").read_text()
-    ring = re.search(r'<div class="ring".*?</div>', html, re.S).group(0)
-    terms = [w.strip() for w in re.findall(r"<span[^>]*>([^<]+)</span>", ring)]
-    assert terms == [w["term"] for w in WORDS]
-    assert re.findall(r'data-word="([^"]+)"', ring) == [w["slug"] for w in WORDS]
+    assert re.findall(r'data-word="([^"]+)"', html)[:len(WORDS)] == [w["slug"] for w in WORDS]
 
 
 def test_embedded_fallback_json_matches_data():
@@ -70,12 +67,9 @@ def test_embedded_fallback_json_matches_data():
     assert json.loads(blob) == all_words()
 
 
-def test_landing_page_repo_ring_matches_data():
+def test_landing_page_repo_catalog_matches_data():
     html = (ROOT / "index.html").read_text()
-    ring = re.search(r'<div class="repo-ring".*?</div>', html, re.S).group(0)
-    shorts = [s.strip() for s in re.findall(r"<span[^>]*>([^<]+)</span>", ring)]
-    assert shorts == [r["short"] for r in REPOS]
-    assert re.findall(r'data-repo="([^"]+)"', ring) == [r["slug"] for r in REPOS]
+    assert re.findall(r'data-repo="([^"]+)"', html)[:len(REPOS)] == [r["slug"] for r in REPOS]
 
 
 def test_embedded_repo_fallback_json_matches_data():
@@ -105,11 +99,11 @@ def test_repo_links_and_colors_are_grounded():
         assert repo["short"] and repo["short"] == repo["short"].upper()
 
 
-def test_christmas_theme_has_every_swatch():
+def test_only_the_aurora_theme_remains():
     themes = {t["id"]: t for t in all_themes()}
-    assert set(themes) == {"aurora", "christmas"}
-    assert themes["christmas"]["snow"] is True
-    assert set(themes["christmas"]["colors"]) == {
+    assert set(themes) == {"aurora"}
+    assert themes["aurora"]["snow"] is False
+    assert set(themes["aurora"]["colors"]) == {
         "bg", "bg2", "primary", "secondary", "accent", "violet", "ice",
     }
 

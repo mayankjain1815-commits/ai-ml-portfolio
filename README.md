@@ -3,13 +3,8 @@
 [![tests](https://github.com/mayankjain1815-commits/ai-ml-portfolio/actions/workflows/tests.yml/badge.svg)](https://github.com/mayankjain1815-commits/ai-ml-portfolio/actions/workflows/tests.yml)
 
 <p align="center">
-  <img src="assets/portfolio-hero.gif" alt="Two continuous 3D rings: ten concept words orbit a BUILD / EXPLAIN / DEFEND core while a counter-rotating inner ring carries 23 public repositories" width="720">
+  <img src="assets/portfolio-hero.gif" alt="Animated solar system: ten concept planets orbit close to a bright core while 23 repository planets follow eight wider orbit bands, each with textured surfaces, rings and moons" width="720">
 </p>
-
-<p align="center">
-  <img src="assets/portfolio-christmas.gif" alt="The same dual-ring animation in the Christmas theme: tree green, bauble red, gold and falling snow" width="720">
-</p>
-
 
 > Eight self-contained AI/ML projects — complex enough to impress, simple enough to explain out loud in two minutes. Every project runs **fully offline in demo mode**; the Python projects upgrade to real LLM calls the moment a `GEMINI_API_KEY` is set.
 
@@ -31,23 +26,25 @@ All three are hand-written canvas systems: no WebGL, no libraries, no external a
 
 The animated versions above are GIFs because GitHub strips `<script>` and `<canvas>` from Markdown. The real interactive versions — pointer parallax, offscreen pausing, reduced-motion support — live on the self-contained [landing page](index.html).
 
-### Word Atlas — the backend behind both rotating rings
+### Solar Atlas — the backend behind 33 worlds
 
-The [landing page](index.html) has two continuous 3D rings: the outer one rotates the **ten concept words**, and a counter-rotating inner ring carries **23 public repositories** from the account. Click any word or repo (or use the atlas chips) and a detail panel opens. A read-only Flask API in [`backend/`](backend/README.md) owns every record; the page carries the same records as embedded JSON so it still works with the server off or on a static host.
+The [landing page](index.html) is now a solar system. The **ten concept words** orbit as inner planets and **23 public repositories** orbit further out across eight wider bands. One deterministic star drives the whole layout: every orbit radius, period, inclination, eccentricity, texture, ring and moon count comes from the record slug. Click a planet in the canvas or a chip in the catalog and a detail panel opens with both the record and its measured orbital results. A read-only Flask API in [`backend/`](backend/README.md) owns every record; the page carries the same data as embedded JSON so it still works with the server off or on a static host.
 
 ```bash
 cd backend && python -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python -m word_atlas           # http://127.0.0.1:5110
-.venv/bin/python -m pytest -q            # 76 offline tests
-curl -s http://127.0.0.1:5110/api/words/rag
-curl -s http://127.0.0.1:5110/api/repos/omniroute
-curl -s http://127.0.0.1:5110/api/themes/christmas
+.venv/bin/python -m pytest -q            # 116 offline tests
+curl -s http://127.0.0.1:5110/api/solar
+curl -s http://127.0.0.1:5110/api/solar/words/rag
+curl -s http://127.0.0.1:5110/api/solar/repos/omniroute
+curl -s http://127.0.0.1:5110/api/stats
 ```
 
+- **Planet records:** each world reports catalogue id, orbit band, orbit radius, period, diameter, inclination, eccentricity, texture, temperature, moons and ring tilt — deterministic UI metadata, explicitly labelled as not astronomy.
 - **Word records:** definition, why it matters, pipeline, real code anchors, commands, interview answer, pitfalls, tests, related words and linked repos.
 - **Repo records:** description, stack, highlights, GitHub URL, star/language snapshot, linked words, related repos, canvas systems and a clone command.
-- **Search + stats:** `/api/search?q=` spans both rings; `/api/stats`, `/api/timeline`, `/api/languages` and `/api/categories` power the inline stat strip and repo explorer.
-- **Christmas theme:** `/api/themes` serves an aurora and a Christmas palette. The toggle recolours all three canvas systems, adds snow and persists through the URL hash — no external assets.
+- **Search + stats:** `/api/search?q=` spans both classes; `/api/solar`, `/api/solar/stats`, `/api/stats`, `/api/timeline`, `/api/languages` and `/api/categories` power the stat strip, search and catalog.
+- **One palette:** the old Christmas skin and snow effect are gone. `/api/themes` now serves only the aurora palette that drives the solar canvas and the three systems below.
 
 CORS is open so the page works from `file://` too, and the embedded fallback renders instantly before any fetch resolves.
 
@@ -80,21 +77,22 @@ CORS is open so the page works from `file://` too, and the embedded fallback ren
 ├── 06-gh-activity-forge/       contribution-graph generator
 ├── 07-disaster-watch/          forecast + risk scoring dashboard (port 5107)
 ├── 08-sentinel-iot/            ESP32/LoRa command platform (Node 22, ports 5108/5109)
-├── backend/                    Flask atlas API + 76 offline tests
+├── backend/                    Flask atlas API + 116 offline tests
+│   ├── sync_index.py            refreshes index.html's embedded JSON snapshots
 │   └── word_atlas/
-│       ├── data.py              source of truth for the 10 rotating words
-│       ├── repos.py             source of truth for the 23 orbiting repos
-│       └── themes.py            aurora + Christmas palettes
+│       ├── data.py              source of truth for the 10 concept words
+│       ├── repos.py             source of truth for the 23 repository worlds
+│       ├── solar.py             deterministic 33-world layout and orbit stats
+│       └── themes.py            the remaining aurora palette
 ├── .github/workflows/tests.yml CI: 8 Python suites (3.13) + SENTINEL tests/build (Node 22)
 ├── docs/
 │   ├── BUILD_SPEC.md           shared conventions for projects 01–06
 │   └── LEARNING_GUIDE.md       interview prep: Q&A per project
 ├── assets/                     animated GIF showcase rendered inline on GitHub
-│   ├── portfolio-hero.gif       dual 3D rings: 10 words + 23 repos (24 frames)
-│   ├── portfolio-christmas.gif  the same rings in the Christmas theme (24 frames)
+│   ├── portfolio-hero.gif       solar system: 33 textured worlds on 13 orbit bands
 │   └── portfolio-systems.gif    three canvas systems (48 frames)
 ├── .venv/                      shared Python 3.13 environment (gitignored)
-├── index.html                  dual 3D rings, atlas panels, search, stats + Christmas theme
+├── index.html                  solar canvas, catalog, detail panels, search and stats
 └── README.md                   you are here
 ```
 
@@ -116,7 +114,7 @@ cd ../07-disaster-watch && ../.venv/bin/python -m disaster_watch demo
 cd ../08-sentinel-iot && npm ci && npm test && npm run dev
 ```
 
-CI runs every suite on push/PR: eight Python suites on 3.13 (including the Word Atlas backend's 76 tests) and SENTINEL's tests plus production build on Node 22.
+CI runs every suite on push/PR: eight Python suites on 3.13 (including the Solar Atlas backend's 116 tests) and SENTINEL's tests plus production build on Node 22.
 
 ## Interview framing
 

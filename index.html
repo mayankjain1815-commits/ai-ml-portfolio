@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI / ML Portfolio — Mayank Jain</title>
-<meta name="description" content="Eight self-contained AI/ML projects. Every one runs fully offline in demo mode.">
+<title>Solar Atlas — AI / ML Portfolio, Mayank Jain</title>
+<meta name="description" content="A 33-world solar system of ten AI/ML concepts and 23 public repositories, backed by a read-only Flask API with an offline fallback.">
 <style>
   :root {
     --obsidian:    #060918;
@@ -25,9 +25,7 @@
   }
 
   * { box-sizing: border-box; }
-
   html { scroll-behavior: smooth; }
-
   body {
     margin: 0;
     color: var(--ice);
@@ -40,16 +38,13 @@
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
-
   a { color: inherit; }
-
-  .wrap { width: min(1120px, calc(100% - 2.5rem)); margin-inline: auto; }
+  .wrap { width: min(1160px, calc(100% - 2.5rem)); margin-inline: auto; }
 
   /* ---------- nav ---------- */
   nav {
     display: flex; align-items: center; justify-content: space-between;
-    gap: 1rem; padding: 1.25rem 0;
-    border-bottom: 1px solid var(--line);
+    gap: 1rem; padding: 1.25rem 0; border-bottom: 1px solid var(--line);
   }
   .brand { font-family: var(--mono); font-weight: 700; letter-spacing: .06em; font-size: .82rem; text-transform: uppercase; }
   .brand b { color: var(--lime); }
@@ -59,8 +54,8 @@
 
   /* ---------- hero ---------- */
   .hero {
-    display: grid; grid-template-columns: 1.05fr .95fr; align-items: center;
-    gap: 2rem; min-height: 520px; padding: 3.5rem 0 2rem;
+    display: grid; grid-template-columns: 1fr 1.05fr; align-items: center;
+    gap: 2.2rem; min-height: 540px; padding: 3.5rem 0 2rem;
   }
   .eyebrow {
     display: inline-flex; align-items: center; gap: .55rem;
@@ -70,7 +65,7 @@
   }
   .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 4px rgba(196,255,77,.16), 0 0 14px var(--lime); }
   h1 {
-    font-size: clamp(2.7rem, 6.2vw, 5rem); line-height: .98; letter-spacing: -.045em;
+    font-size: clamp(2.6rem, 5.8vw, 4.7rem); line-height: .99; letter-spacing: -.045em;
     margin: 1.1rem 0 1rem; color: var(--ice); font-weight: 800;
   }
   h1 .accent {
@@ -91,45 +86,37 @@
   .btn.primary:hover { box-shadow: 0 0 34px rgba(45, 231, 255, .48); }
   .btn.secondary:hover { border-color: var(--magenta); box-shadow: var(--glow-pink); }
 
-  /* ---------- 3D continuous type ---------- */
-  .stage {
-    position: relative; height: 340px; display: grid; place-items: center;
-    perspective: 900px; perspective-origin: 50% 45%;
+  /* ---------- solar system ---------- */
+  .solar-stage {
+    position: relative; height: 470px; overflow: hidden; border-radius: 22px;
+    border: 1px solid rgba(45, 231, 255, .3);
+    background: radial-gradient(circle at 50% 52%, #121c47, #050815 72%);
+    box-shadow: var(--shadow), 0 0 42px rgba(45,231,255,.1);
   }
-  .stage::after {
-    content: ""; position: absolute; left: 50%; bottom: 22px; width: 240px; height: 26px;
-    transform: translateX(-50%); border-radius: 50%;
-    background: radial-gradient(ellipse, rgba(45,231,255,.3), transparent 70%);
-    filter: blur(9px);
+  .solar-stage::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 42%, rgba(3,5,14,.66) 100%);
   }
-  .ring {
-    position: relative; width: 200px; height: 110px;
-    transform-style: preserve-3d;
-    animation: orbit 22s linear infinite;
+  #fx-solar { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+  .solar-hud, .solar-readout, .solar-legend { position: absolute; z-index: 2; pointer-events: none; }
+  .solar-hud { top: 1rem; left: 1.1rem; font-family: var(--mono); font-size: .62rem; letter-spacing: .14em; text-transform: uppercase; color: var(--cyan); }
+  .solar-hud b { display: block; margin-top: .25rem; font-size: 1rem; letter-spacing: .02em; color: var(--ice); text-transform: none; }
+  .solar-readout {
+    top: 1rem; right: 1.1rem; max-width: 46%; text-align: right;
+    font-family: var(--mono); font-size: .7rem; color: var(--ice);
+    background: rgba(6,9,24,.72); border: 1px solid var(--line); border-radius: 9px; padding: .4rem .65rem;
   }
-  .ring span {
-    position: absolute; inset: 0; display: grid; place-items: center;
-    font-family: var(--mono); font-weight: 800; font-size: 1.18rem; letter-spacing: .1em;
-    white-space: nowrap; color: var(--cyan);
-    transform: rotateY(calc(var(--i) * 36deg)) translateZ(215px);
-    backface-visibility: hidden;
-    text-shadow: 0 0 14px rgba(45,231,255,.55);
+  .solar-readout b { color: var(--lime); }
+  .solar-readout small { display: block; color: var(--muted); font-size: .62rem; }
+  .solar-legend {
+    left: 1.1rem; right: 1.1rem; bottom: 1rem; display: flex; flex-wrap: wrap; gap: .4rem;
   }
-  .ring span:nth-child(4n+2) { color: var(--magenta); text-shadow: 0 0 14px rgba(255,66,198,.55); }
-  .ring span:nth-child(4n+3) { color: var(--lime); text-shadow: 0 0 14px rgba(196,255,77,.45); }
-  .ring span:nth-child(4n+4) { color: var(--violet); text-shadow: 0 0 14px rgba(142,100,255,.55); }
-  @keyframes orbit { from { transform: rotateY(0deg); } to { transform: rotateY(-360deg); } }
+  .solar-legend span {
+    font-family: var(--mono); font-size: .62rem; color: var(--muted);
+    background: rgba(6,9,24,.72); border: 1px solid var(--line); border-radius: 99px; padding: .2rem .55rem;
+  }
 
-  .core {
-    position: absolute; display: grid; place-items: center; text-align: center;
-    width: 150px; height: 150px; border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #1a2452, var(--obsidian) 72%);
-    color: var(--ice); box-shadow: var(--shadow), 0 0 0 1px rgba(45,231,255,.4), 0 0 40px rgba(142,100,255,.35);
-    font-family: var(--mono); font-size: .68rem; letter-spacing: .12em; line-height: 1.7;
-  }
-  .core b { color: var(--lime); }
-
-  /* ---------- continuous marquee ---------- */
+  /* ---------- marquee ---------- */
   .marquee {
     overflow: hidden; border-block: 1px solid rgba(45, 231, 255, .38);
     background: linear-gradient(90deg, #080d20, var(--navy), #080d20); color: var(--ice); padding: .65rem 0;
@@ -142,7 +129,89 @@
   .marquee__track i { color: var(--magenta); font-style: normal; text-shadow: 0 0 12px rgba(255,66,198,.6); }
   @keyframes slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-  /* ---------- effect showcase ---------- */
+  /* ---------- shared sections ---------- */
+  section { padding: 3.4rem 0; }
+  .section-head { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1.6rem; }
+  h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); letter-spacing: -.025em; margin: 0; color: var(--ice); }
+  .section-head p { margin: 0; font-family: var(--mono); font-size: .75rem; color: var(--muted); }
+  h3 { margin: 0; color: var(--ice); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1rem; }
+  .card {
+    position: relative; display: flex; flex-direction: column; gap: .55rem;
+    padding: 1.35rem; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 14px; text-decoration: none;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .card:hover { transform: translateY(-6px); box-shadow: var(--glow-cyan); border-color: var(--cyan); }
+  .card .num { font-family: var(--mono); font-size: .72rem; letter-spacing: .12em; color: var(--lime); }
+  .card h3 { font-size: 1.12rem; letter-spacing: -.01em; }
+  .card p { margin: 0; font-size: .9rem; color: var(--muted); }
+  .card .tags { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: auto; padding-top: .6rem; }
+  .card .tags b {
+    font-family: var(--mono); font-size: .65rem; font-weight: 600; letter-spacing: .04em;
+    color: var(--cyan); background: rgba(45,231,255,.09); border: 1px solid rgba(45,231,255,.16);
+    padding: .22rem .45rem; border-radius: 5px;
+  }
+  .card .arrow { position: absolute; right: 1.1rem; top: 1.1rem; color: var(--magenta); font-weight: 700; }
+  .idea {
+    background: linear-gradient(120deg, #101a42, #1a1038 70%);
+    color: var(--ice); border: 1px solid rgba(142,100,255,.32); border-radius: 18px;
+    padding: 2rem; box-shadow: var(--shadow), var(--glow-pink);
+  }
+  .idea h2 { color: var(--lime); }
+  .idea p { max-width: 60rem; color: var(--muted); }
+  .idea strong { color: var(--ice); }
+  .idea code { font-family: var(--mono); font-size: .85em; background: rgba(45,231,255,.1); color: var(--cyan); padding: .1rem .35rem; border-radius: 4px; }
+  footer {
+    border-top: 1px solid var(--line); padding: 1.6rem 0 2.5rem;
+    font-family: var(--mono); font-size: .74rem; color: var(--muted);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: .6rem;
+  }
+
+  /* ---------- observatory tools and catalog ---------- */
+  .atlas { padding: 2.8rem 0 .2rem; }
+  .atlas-tools { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; margin-bottom: .9rem; }
+  .atlas-search {
+    flex: 1 1 280px; min-width: 220px; padding: .62rem .85rem; border-radius: 9px;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ice);
+    font-family: var(--mono); font-size: .8rem;
+  }
+  .atlas-search:focus { outline: none; border-color: var(--cyan); box-shadow: var(--glow-cyan); }
+  .atlas-source { font-family: var(--mono); font-size: .66rem; color: var(--muted); }
+  .search-results { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 .8rem; min-height: 0; }
+  .search-result {
+    font-family: var(--mono); font-size: .7rem; text-align: left; cursor: pointer;
+    color: var(--ice); background: var(--panel); border: 1px solid var(--result, var(--cyan));
+    border-radius: 7px; padding: .32rem .55rem;
+  }
+  .search-result small { display: block; color: var(--muted); font-size: .62rem; }
+  .search-empty { font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+  .stats-strip { display: flex; flex-wrap: wrap; gap: .55rem; margin: .4rem 0 1.3rem; }
+  .stat-pill {
+    font-family: var(--mono); font-size: .7rem; color: var(--ice);
+    background: var(--panel); border: 1px solid var(--line); border-radius: 99px;
+    padding: .3rem .7rem;
+  }
+  .stat-pill b { color: var(--lime); font-size: .85rem; }
+  .catalog { display: grid; grid-template-columns: 1fr 1.5fr; gap: 1rem; }
+  .catalog-group {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+    padding: 1.1rem; box-shadow: var(--shadow);
+  }
+  .catalog-group > p { margin: .35rem 0 1rem; font-size: .8rem; color: var(--muted); }
+  .planet-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .5rem; }
+  .planet-chip {
+    text-align: left; cursor: pointer; padding: .62rem .7rem; border-radius: 10px;
+    background: rgba(6,9,24,.58); border: 1px solid var(--line); color: var(--ice);
+    transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+  }
+  .planet-chip:hover { transform: translateY(-2px); border-color: var(--chip, var(--cyan)); box-shadow: 0 0 18px rgba(45,231,255,.16); }
+  .planet-chip__id { font-family: var(--mono); font-size: .6rem; letter-spacing: .12em; color: var(--chip, var(--cyan)); }
+  .planet-chip__label { display: block; font-family: var(--mono); font-size: .78rem; font-weight: 700; margin-top: .15rem; }
+  .planet-chip__meta { display: block; font-family: var(--mono); font-size: .62rem; color: var(--muted); margin-top: .15rem; }
+  .catalog-note { margin: 1rem 0 0; font-family: var(--mono); font-size: .66rem; color: var(--muted); }
+
+  /* ---------- under the hood ---------- */
   .showcase { padding: 3.2rem 0 .6rem; }
   .panels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
   .panel {
@@ -172,70 +241,10 @@
     position: relative; z-index: 2; margin-top: auto; padding: 1.2rem 1.25rem 1.25rem;
     background: linear-gradient(transparent, rgba(6,9,24,.95) 38%);
   }
-  .panel h3 { margin: 0; font-size: 1.02rem; color: var(--ice); }
+  .panel h3 { font-size: 1.02rem; }
   .panel p { margin: .3rem 0 0; font-size: .82rem; color: var(--muted); }
 
-  /* ---------- sections ---------- */
-  section { padding: 3.4rem 0; }
-  .section-head { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1.6rem; }
-  h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); letter-spacing: -.025em; margin: 0; color: var(--ice); }
-  .section-head p { margin: 0; font-family: var(--mono); font-size: .75rem; color: var(--muted); }
-
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1rem; }
-  .card {
-    position: relative; display: flex; flex-direction: column; gap: .55rem;
-    padding: 1.35rem; background: var(--panel); border: 1px solid var(--line);
-    border-radius: 14px; text-decoration: none;
-    transform-style: preserve-3d; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
-  }
-  .card:hover { transform: translateY(-6px) rotateX(3deg) rotateY(-3deg); box-shadow: var(--glow-cyan); border-color: var(--cyan); }
-  .card .num { font-family: var(--mono); font-size: .72rem; letter-spacing: .12em; color: var(--lime); }
-  .card h3 { margin: 0; color: var(--ice); font-size: 1.12rem; letter-spacing: -.01em; }
-  .card p { margin: 0; font-size: .9rem; color: var(--muted); }
-  .card .tags { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: auto; padding-top: .6rem; }
-  .card .tags b {
-    font-family: var(--mono); font-size: .65rem; font-weight: 600; letter-spacing: .04em;
-    color: var(--cyan); background: rgba(45,231,255,.09); border: 1px solid rgba(45,231,255,.16);
-    padding: .22rem .45rem; border-radius: 5px;
-  }
-  .card .arrow { position: absolute; right: 1.1rem; top: 1.1rem; color: var(--magenta); font-weight: 700; }
-
-  .idea {
-    background: linear-gradient(120deg, #101a42, #1a1038 70%);
-    color: var(--ice); border: 1px solid rgba(142,100,255,.32); border-radius: 18px;
-    padding: 2rem; box-shadow: var(--shadow), var(--glow-pink);
-  }
-  .idea h2 { color: var(--lime); }
-  .idea p { max-width: 60rem; color: var(--muted); }
-  .idea strong { color: var(--ice); }
-  .idea code { font-family: var(--mono); font-size: .85em; background: rgba(45,231,255,.1); color: var(--cyan); padding: .1rem .35rem; border-radius: 4px; }
-
-  footer {
-    border-top: 1px solid var(--line); padding: 1.6rem 0 2.5rem;
-    font-family: var(--mono); font-size: .74rem; color: var(--muted);
-    display: flex; justify-content: space-between; flex-wrap: wrap; gap: .6rem;
-  }
-
-  /* ---------- word atlas + detail panel ---------- */
-  .ring span[data-word] { cursor: pointer; }
-  .ring span[data-word]:hover,
-  .ring span[data-word]:focus-visible {
-    outline: none; filter: brightness(1.4);
-    text-decoration: underline; text-underline-offset: 6px;
-  }
-  .stage:hover .ring { animation-play-state: paused; }
-
-  .atlas { padding: 2.8rem 0 .2rem; }
-  .atlas-chips { display: flex; flex-wrap: wrap; gap: .55rem; }
-  .word-chip {
-    font-family: var(--mono); font-size: .73rem; letter-spacing: .07em; text-transform: uppercase;
-    color: var(--ice); background: var(--panel); border: 1px solid var(--line);
-    padding: .5rem .75rem; border-radius: 8px; cursor: pointer;
-    transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
-  }
-  .word-chip::before { content: "▸ "; color: var(--chip, var(--cyan)); }
-  .word-chip:hover { transform: translateY(-2px); border-color: var(--chip, var(--cyan)); box-shadow: 0 0 18px rgba(45,231,255,.18); }
-
+  /* ---------- detail modal ---------- */
   .detail-backdrop {
     position: fixed; inset: 0; z-index: 60; display: none;
     background: rgba(3, 5, 14, .8); -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px);
@@ -243,7 +252,7 @@
   }
   .detail-backdrop.open { display: grid; place-items: start center; }
   .detail {
-    width: min(900px, 100%); margin: 2vh auto; position: relative;
+    width: min(940px, 100%); margin: 2vh auto; position: relative;
     background: linear-gradient(155deg, #121b42, #070b1d 72%);
     border: 1px solid var(--accent, var(--cyan)); border-radius: 18px;
     box-shadow: var(--shadow), 0 0 44px rgba(45,231,255,.14);
@@ -326,214 +335,75 @@
     padding: .3rem .55rem;
   }
   .detail__link:hover { border-color: var(--accent, var(--cyan)); color: var(--accent, var(--cyan)); }
-  body[data-theme="christmas"] .detail {
-    background: linear-gradient(155deg, #153a26, #07120d 74%);
-    box-shadow: var(--shadow), 0 0 44px rgba(57,217,138,.16);
+  .telemetry {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: .5rem;
+    margin-top: 1.1rem;
   }
-  body[data-theme="christmas"] .detail h4 { color: #ffd166; }
-  body[data-theme="christmas"] .detail__source { color: #39d98a; border-color: rgba(57,217,138,.4); background: rgba(57,217,138,.08); }
+  .telemetry__item {
+    background: rgba(45,231,255,.06); border: 1px solid rgba(45,231,255,.18);
+    border-radius: 9px; padding: .45rem .6rem;
+  }
+  .telemetry__item span { display: block; font-family: var(--mono); font-size: .58rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .telemetry__item b { font-family: var(--mono); font-size: .85rem; color: var(--ice); }
+  .telemetry__note { margin: .55rem 0 0 !important; font-size: .7rem !important; }
 
-  /* ---------- counter-rotating repo ring ---------- */
-  .repo-ring {
-    position: absolute; width: 120px; height: 44px;
-    transform-style: preserve-3d; animation: orbit-reverse 38s linear infinite;
-  }
-  @keyframes orbit-reverse { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
-  .repo-ring span {
-    position: absolute; inset: 0; display: grid; place-items: center;
-    font-family: var(--mono); font-size: .54rem; font-weight: 700; letter-spacing: .03em;
-    white-space: nowrap; color: var(--ice); opacity: .8;
-    transform: rotateY(var(--a)) translateZ(138px);
-    backface-visibility: hidden; cursor: pointer;
-    text-shadow: 0 0 10px rgba(233,242,255,.45);
-  }
-  .repo-ring span:hover, .repo-ring span:focus-visible {
-    outline: none; opacity: 1; filter: brightness(1.5); text-decoration: underline;
-  }
-  .stage:hover .ring, .stage:hover .repo-ring { animation-play-state: paused; }
-
-  /* ---------- search, stats and repo explorer ---------- */
-  .atlas-tools { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; margin-bottom: .9rem; }
-  .atlas-search {
-    flex: 1 1 280px; min-width: 220px; padding: .62rem .85rem; border-radius: 9px;
-    background: var(--panel); border: 1px solid var(--line); color: var(--ice);
-    font-family: var(--mono); font-size: .8rem;
-  }
-  .atlas-search:focus { outline: none; border-color: var(--cyan); box-shadow: var(--glow-cyan); }
-  .atlas-source { font-family: var(--mono); font-size: .66rem; color: var(--muted); }
-  .search-results { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 .8rem; min-height: 0; }
-  .search-result {
-    font-family: var(--mono); font-size: .7rem; text-align: left; cursor: pointer;
-    color: var(--ice); background: var(--panel); border: 1px solid var(--result, var(--cyan));
-    border-radius: 7px; padding: .32rem .55rem;
-  }
-  .search-result small { display: block; color: var(--muted); font-size: .62rem; }
-  .search-empty { font-family: var(--mono); font-size: .72rem; color: var(--muted); }
-  .stats-strip { display: flex; flex-wrap: wrap; gap: .55rem; margin: .4rem 0 1.3rem; }
-  .stat-pill {
-    font-family: var(--mono); font-size: .7rem; color: var(--ice);
-    background: var(--panel); border: 1px solid var(--line); border-radius: 99px;
-    padding: .3rem .7rem;
-  }
-  .stat-pill b { color: var(--lime); font-size: .85rem; }
-  .repo-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin: 1.8rem 0 .7rem; }
-  .repo-head h3 { margin: 0; font-size: 1rem; }
-  .repo-head span { font-family: var(--mono); font-size: .66rem; color: var(--muted); }
-  .repo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: .5rem; }
-  .repo-chip {
-    text-align: left; cursor: pointer; padding: .65rem .75rem; border-radius: 10px;
-    background: var(--panel); border: 1px solid var(--line); color: var(--ice);
-    transition: transform .16s ease, border-color .16s ease;
-  }
-  .repo-chip:hover { transform: translateY(-2px); border-color: var(--chip, var(--cyan)); }
-  .repo-chip b { display: block; font-family: var(--mono); font-size: .78rem; color: var(--chip, var(--cyan)); }
-  .repo-chip small { display: block; font-size: .7rem; color: var(--muted); line-height: 1.35; margin-top: .2rem; }
-  .repo-chip em { font-style: normal; color: var(--lime); }
-
-  /* ---------- Christmas theme ---------- */
-  .theme-toggle {
-    font-family: var(--mono); font-size: .72rem; font-weight: 700; letter-spacing: .04em;
-    color: var(--ice); background: var(--panel); border: 1px solid var(--line);
-    border-radius: 999px; padding: .45rem .8rem; cursor: pointer; white-space: nowrap;
-  }
-  .theme-toggle:hover { border-color: var(--magenta); }
-  .theme-toggle[aria-pressed="true"] {
-    border-color: #39d98a; box-shadow: 0 0 20px rgba(57,217,138,.35); color: #ffd166;
-  }
-  #fx-snow {
-    position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none;
-    z-index: 3; opacity: 0; transition: opacity .5s ease;
-  }
-  body[data-theme="christmas"] #fx-snow { opacity: .8; }
-  body[data-theme="christmas"] {
-    --obsidian: #07120d; --navy: #11291d; --cyan: #ff3b4e; --magenta: #ffd166;
-    --lime: #39d98a; --violet: #ff8a5b; --ice: #f6fff8; --muted: rgba(246,255,248,.74);
-    --line: rgba(255,209,102,.2); --panel: rgba(17,41,29,.8);
-    --glow-cyan: 0 0 24px rgba(255,59,78,.3); --glow-pink: 0 0 26px rgba(255,209,102,.3);
-    background:
-      radial-gradient(circle at 10% 4%, rgba(255,59,78,.16), transparent 34rem),
-      radial-gradient(circle at 90% 8%, rgba(57,217,138,.16), transparent 32rem),
-      radial-gradient(circle at 50% 70%, rgba(255,209,102,.1), transparent 44rem),
-      #07120d;
-  }
-  body[data-theme="christmas"] .eyebrow { color: #ffd166; border-color: rgba(255,209,102,.42); }
-  body[data-theme="christmas"] h1 .accent {
-    background: linear-gradient(90deg, #ff3b4e, #ffd166 52%, #39d98a);
-  }
-  body[data-theme="christmas"] .ring span { color: #ff3b4e; text-shadow: 0 0 14px rgba(255,59,78,.6); }
-  body[data-theme="christmas"] .ring span:nth-child(4n+2) { color: #39d98a; text-shadow: 0 0 14px rgba(57,217,138,.55); }
-  body[data-theme="christmas"] .ring span:nth-child(4n+3) { color: #ffd166; text-shadow: 0 0 14px rgba(255,209,102,.55); }
-  body[data-theme="christmas"] .ring span:nth-child(4n+4) { color: #ff8a5b; text-shadow: 0 0 14px rgba(255,138,91,.55); }
-  body[data-theme="christmas"] .core {
-    background: radial-gradient(circle at 35% 30%, #1d4a2f, #07120d 72%);
-    box-shadow: var(--shadow), 0 0 0 1px rgba(255,209,102,.55), 0 0 40px rgba(57,217,138,.4);
-  }
-  body[data-theme="christmas"] .core b { color: #ffd166; }
-  body[data-theme="christmas"] .marquee {
-    border-color: rgba(57,217,138,.5);
-    background: linear-gradient(90deg, #0a1a12, #143524, #0a1a12);
-  }
-  body[data-theme="christmas"] .marquee__track i { color: #ffd166; text-shadow: 0 0 12px rgba(255,209,102,.7); }
-  body[data-theme="christmas"] .panel {
-    border-color: rgba(57,217,138,.35);
-    background: radial-gradient(circle at 32% 18%, #173c28, #07120d 74%);
-  }
-  body[data-theme="christmas"] .panel .tag { border-color: rgba(255,209,102,.4); color: #ffd166; }
-  body[data-theme="christmas"] .idea {
-    background: linear-gradient(120deg, #123322, #331a12);
-    border-color: rgba(255,209,102,.4);
-  }
-  body[data-theme="christmas"] .idea h2 { color: #39d98a; }
-  body[data-theme="christmas"] .repo-ring span { color: #ffd166; text-shadow: 0 0 10px rgba(255,209,102,.6); }
-  body[data-theme="christmas"] .stat-pill b { color: #ffd166; }
-  body[data-theme="christmas"] .stat-pill { border-color: rgba(255,209,102,.25); }
-
-  @media (max-width: 820px) {
-    .detail__grid { grid-template-columns: 1fr; gap: .4rem; }
-    .stage { height: 300px; }
+  @media (max-width: 940px) {
+    .hero { grid-template-columns: 1fr; }
+    .solar-stage { height: 430px; }
+    .catalog { grid-template-columns: 1fr; }
     .panels { grid-template-columns: 1fr; }
     .panel { min-height: 280px; }
-    .repo-ring span { font-size: .48rem; transform: rotateY(var(--a)) translateZ(112px); }
+  }
+  @media (max-width: 820px) {
+    .detail__grid { grid-template-columns: 1fr; gap: .4rem; }
     .stats-strip { gap: .35rem; }
+    .solar-readout { max-width: 55%; }
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    .ring, .repo-ring, .marquee__track { animation-play-state: paused; }
-    .card { transition: none; }
-    .card:hover { transform: none; }
+    .marquee__track { animation-play-state: paused; }
+    .card, .planet-chip { transition: none; }
+    .card:hover, .planet-chip:hover { transform: none; }
   }
 </style>
 </head>
 <body>
 
-<canvas id="fx-snow" aria-hidden="true"></canvas>
-
 <div class="wrap">
   <nav>
     <div class="brand">Mayank Jain <b>/</b> AI · ML</div>
     <div class="links">
+      <a href="#observatory">Observatory</a>
       <a href="#projects">Projects</a>
       <a href="#idea">The idea</a>
       <a href="docs/LEARNING_GUIDE.md">Learning guide</a>
       <a href="README.md">README</a>
-      <button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="false" title="Toggle the Christmas theme">✦ Aurora</button>
     </div>
   </nav>
 
   <header class="hero">
     <div>
-      <span class="eyebrow">8 projects · one principle</span>
+      <span class="eyebrow">33 worlds · one star · one backend</span>
       <h1>Built to be<br><span class="accent">explained.</span></h1>
       <p class="lede">
-        Self-contained AI/ML systems — agents, retrieval, drift detection, skills,
-        contribution graphs, disaster forecasting and an IoT command platform. Each one
-        runs fully offline in demo mode and upgrades to real model calls with a key.
+        Ten AI/ML concepts orbit as inner planets. Twenty-three public repositories
+        orbit further out. Click any world for its full record — definition, code
+        anchors, stack, highlights and deterministic orbital results — with a
+        Flask API online and an embedded copy offline.
       </p>
       <div class="cta">
-        <a class="btn primary" href="#projects">Explore the projects ↓</a>
+        <a class="btn primary" href="#observatory">Explore the planets ↓</a>
         <a class="btn secondary" href="README.md">Read the README</a>
       </div>
     </div>
 
-    <div class="stage" aria-label="Continuously rotating 3D word ring — click any word for details">
-      <div class="ring" role="group" aria-label="Ten words, one explanation each">
-        <span style="--i:0" data-word="rag" role="button" tabindex="0" title="Open RAG details">RAG</span>
-        <span style="--i:1" data-word="agents" role="button" tabindex="0" title="Open AGENTS details">AGENTS</span>
-        <span style="--i:2" data-word="mlops" role="button" tabindex="0" title="Open MLOPS details">MLOPS</span>
-        <span style="--i:3" data-word="forecast" role="button" tabindex="0" title="Open FORECAST details">FORECAST</span>
-        <span style="--i:4" data-word="signals" role="button" tabindex="0" title="Open SIGNALS details">SIGNALS</span>
-        <span style="--i:5" data-word="skills" role="button" tabindex="0" title="Open SKILLS details">SKILLS</span>
-        <span style="--i:6" data-word="risk" role="button" tabindex="0" title="Open RISK details">RISK</span>
-        <span style="--i:7" data-word="offline" role="button" tabindex="0" title="Open OFFLINE details">OFFLINE</span>
-        <span style="--i:8" data-word="demo" role="button" tabindex="0" title="Open DEMO details">DEMO</span>
-        <span style="--i:9" data-word="iot" role="button" tabindex="0" title="Open IOT details">IOT</span>
+    <div class="solar-stage" aria-label="Interactive solar system: ten concept planets and twenty-three repository planets orbiting one star">
+      <canvas id="fx-solar" aria-hidden="true"></canvas>
+      <div class="solar-hud">Solar atlas<b>10 concepts · 23 repos</b></div>
+      <div class="solar-readout" id="solar-readout">Hover a world<b>Click for full results</b></div>
+      <div class="solar-legend">
+        <span>Inner = concept</span><span>Outer = repository</span><span>Rings &amp; moons are real data from the layout</span><span>Esc closes a record</span>
       </div>
-      <div class="repo-ring" role="group" aria-label="Twenty-three public repositories, one detail record each">
-        <span style="--a:0.0deg" data-repo="slop" role="button" tabindex="0" title="Open AI-Slop-Detector details">SLOP</span>
-        <span style="--a:15.652deg" data-repo="trading" role="button" tabindex="0" title="Open AI-Trading-Bot details">TRADE</span>
-        <span style="--a:31.304deg" data-repo="memory-guard" role="button" tabindex="0" title="Open Agent-Memory-Guard details">GUARD</span>
-        <span style="--a:46.957deg" data-repo="wallet" role="button" tabindex="0" title="Open Agent-Wallet-SDK details">WALLET</span>
-        <span style="--a:62.609deg" data-repo="citadel" role="button" tabindex="0" title="Open CITADEL details">CITADEL</span>
-        <span style="--a:78.261deg" data-repo="cleanconnect" role="button" tabindex="0" title="Open CleanConnect details">CLEAN</span>
-        <span style="--a:93.913deg" data-repo="doclify" role="button" tabindex="0" title="Open Doclify details">DOCS</span>
-        <span style="--a:109.565deg" data-repo="feature-engine" role="button" tabindex="0" title="Open Feature-Engine details">FEATURES</span>
-        <span style="--a:125.217deg" data-repo="marketinsight" role="button" tabindex="0" title="Open Marketinsight details">MARKET</span>
-        <span style="--a:140.87deg" data-repo="mirrorgpt" role="button" tabindex="0" title="Open MirrorGPT details">MIRROR</span>
-        <span style="--a:156.522deg" data-repo="movies" role="button" tabindex="0" title="Open Movie-Recommendation-System details">MOVIES</span>
-        <span style="--a:172.174deg" data-repo="next-role" role="button" tabindex="0" title="Open Next-Role details">ROLE</span>
-        <span style="--a:187.826deg" data-repo="omniroute" role="button" tabindex="0" title="Open OmniRoute details">OMNI</span>
-        <span style="--a:203.478deg" data-repo="shopping" role="button" tabindex="0" title="Open ShoppingGPT details">SHOP</span>
-        <span style="--a:219.13deg" data-repo="synapse" role="button" tabindex="0" title="Open Synapse details">SYNAPSE</span>
-        <span style="--a:234.783deg" data-repo="pii" role="button" tabindex="0" title="Open TrustBoost-PII-Sanitizer details">PII</span>
-        <span style="--a:250.435deg" data-repo="portfolio" role="button" tabindex="0" title="Open ai-ml-portfolio details">PORTFOLIO</span>
-        <span style="--a:266.087deg" data-repo="jarvis" role="button" tabindex="0" title="Open jarvis-mac details">JARVIS</span>
-        <span style="--a:281.739deg" data-repo="profile" role="button" tabindex="0" title="Open mayankjain1815-commits details">PROFILE</span>
-        <span style="--a:297.391deg" data-repo="n8n" role="button" tabindex="0" title="Open n8n details">N8N</span>
-        <span style="--a:313.043deg" data-repo="sentinel" role="button" tabindex="0" title="Open sentinel-iot-disaster-command details">SENTINEL</span>
-        <span style="--a:328.696deg" data-repo="strix" role="button" tabindex="0" title="Open strix details">STRIX</span>
-        <span style="--a:344.348deg" data-repo="sih" role="button" tabindex="0" title="Open sih-main details">SIH</span>
-      </div>
-      <div class="core">BUILD<br><b>·</b> EXPLAIN<br><b>·</b> DEFEND</div>
     </div>
   </header>
 </div>
@@ -550,59 +420,64 @@
 </div>
 
 <div class="wrap">
-  <section class="atlas" aria-label="Word atlas">
+  <section class="atlas" id="observatory" aria-label="Solar observatory">
     <div class="section-head">
-      <h2>Word atlas</h2>
-      <p>Ten words · 23 repos · one searchable backend</p>
+      <h2>Solar observatory</h2>
+      <p>13 orbit bands · 33 clickable worlds · one searchable backend</p>
     </div>
     <div class="atlas-tools">
       <input id="atlas-search" class="atlas-search" type="search" autocomplete="off"
-             placeholder="Search words and repos — try “rag”, “proxy”, “snow”…"
-             aria-label="Search words and repositories">
+             placeholder="Search worlds — try “rag”, “proxy”, “sih”…"
+             aria-label="Search concept and repository worlds">
       <span class="atlas-source" id="atlas-source">backend API with offline fallback</span>
     </div>
     <div class="search-results" id="search-results" aria-live="polite"></div>
-    <div class="stats-strip" id="live-stats" aria-label="Live catalogue statistics"></div>
-    <div class="atlas-chips">
-      <button type="button" class="word-chip" style="--chip:#2de7ff" data-word="rag">RAG</button>
-      <button type="button" class="word-chip" style="--chip:#ff42c6" data-word="agents">Agents</button>
-      <button type="button" class="word-chip" style="--chip:#c4ff4d" data-word="mlops">MLOps</button>
-      <button type="button" class="word-chip" style="--chip:#8e64ff" data-word="forecast">Forecast</button>
-      <button type="button" class="word-chip" style="--chip:#2de7ff" data-word="signals">Signals</button>
-      <button type="button" class="word-chip" style="--chip:#ff42c6" data-word="skills">Skills</button>
-      <button type="button" class="word-chip" style="--chip:#ff42c6" data-word="risk">Risk</button>
-      <button type="button" class="word-chip" style="--chip:#c4ff4d" data-word="offline">Offline</button>
-      <button type="button" class="word-chip" style="--chip:#8e64ff" data-word="demo">Demo</button>
-      <button type="button" class="word-chip" style="--chip:#2de7ff" data-word="iot">IoT</button>
-    </div>
+    <div class="stats-strip" id="live-stats" aria-label="Solar catalogue statistics"></div>
 
-    <div class="repo-head">
-      <h3>Repos in orbit</h3>
-      <span id="repo-snapshot">GitHub metadata snapshot · loading…</span>
+    <div class="catalog">
+      <div class="catalog-group">
+        <h3>Inner system · concept worlds</h3>
+        <p>The ten ideas behind the portfolio. Each links to its definition, pipeline, code anchors and the repos that use it.</p>
+        <div class="planet-list" id="word-catalog"><button type="button" class="planet-chip" style="--chip:#2DE7FF" data-word="rag"><span class="planet-chip__id">W01 · Retrieval</span><span class="planet-chip__label">RAG</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#FF42C6" data-word="agents"><span class="planet-chip__id">W02 · Agents</span><span class="planet-chip__label">AGENTS</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#C4FF4D" data-word="mlops"><span class="planet-chip__id">W03 · Operations</span><span class="planet-chip__label">MLOPS</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#8E64FF" data-word="forecast"><span class="planet-chip__id">W04 · Operations</span><span class="planet-chip__label">FORECAST</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#2DE7FF" data-word="signals"><span class="planet-chip__id">W05 · Operations</span><span class="planet-chip__label">SIGNALS</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#FF42C6" data-word="skills"><span class="planet-chip__id">W06 · Agents</span><span class="planet-chip__label">SKILLS</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#FF42C6" data-word="risk"><span class="planet-chip__id">W07 · Operations</span><span class="planet-chip__label">RISK</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#C4FF4D" data-word="offline"><span class="planet-chip__id">W08 · Architecture</span><span class="planet-chip__label">OFFLINE</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#8E64FF" data-word="demo"><span class="planet-chip__id">W09 · Architecture</span><span class="planet-chip__label">DEMO</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#2DE7FF" data-word="iot"><span class="planet-chip__id">W10 · Operations</span><span class="planet-chip__label">IOT</span><span class="planet-chip__meta">loading orbit…</span></button></div>
+      </div>
+      <div class="catalog-group">
+        <h3>Outer system · repository worlds</h3>
+        <p>All 23 public repositories, each with a star/language snapshot, stack, highlights, linked concepts and a clone command.</p>
+        <div class="planet-list" id="repo-catalog"><button type="button" class="planet-chip" style="--chip:#FF42C6" data-repo="slop"><span class="planet-chip__id">R01 · Security</span><span class="planet-chip__label">SLOP</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#C4FF4D" data-repo="trading"><span class="planet-chip__id">R02 · Finance</span><span class="planet-chip__label">TRADE</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#FF42C6" data-repo="memory-guard"><span class="planet-chip__id">R03 · Security</span><span class="planet-chip__label">GUARD</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#C4FF4D" data-repo="wallet"><span class="planet-chip__id">R04 · Finance</span><span class="planet-chip__label">WALLET</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#8E64FF" data-repo="citadel"><span class="planet-chip__id">R05 · Infrastructure</span><span class="planet-chip__label">CITADEL</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#C4FF4D" data-repo="cleanconnect"><span class="planet-chip__id">R06 · Civic</span><span class="planet-chip__label">CLEAN</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#2DE7FF" data-repo="doclify"><span class="planet-chip__id">R07 · Developer Tools</span><span class="planet-chip__label">DOCS</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#2DE7FF" data-repo="feature-engine"><span class="planet-chip__id">R08 · Data</span><span class="planet-chip__label">FEATURES</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#C4FF4D" data-repo="marketinsight"><span class="planet-chip__id">R09 · Finance</span><span class="planet-chip__label">MARKET</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#8E64FF" data-repo="mirrorgpt"><span class="planet-chip__id">R10 · Agents</span><span class="planet-chip__label">MIRROR</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#2DE7FF" data-repo="movies"><span class="planet-chip__id">R11 · Data</span><span class="planet-chip__label">MOVIES</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#8E64FF" data-repo="next-role"><span class="planet-chip__id">R12 · Agents</span><span class="planet-chip__label">ROLE</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#8E64FF" data-repo="omniroute"><span class="planet-chip__id">R13 · Infrastructure</span><span class="planet-chip__label">OMNI</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#8E64FF" data-repo="shopping"><span class="planet-chip__id">R14 · Agents</span><span class="planet-chip__label">SHOP</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#8E64FF" data-repo="synapse"><span class="planet-chip__id">R15 · Media</span><span class="planet-chip__label">SYNAPSE</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#FF42C6" data-repo="pii"><span class="planet-chip__id">R16 · Security</span><span class="planet-chip__label">PII</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#FF42C6" data-repo="portfolio"><span class="planet-chip__id">R17 · Portfolio</span><span class="planet-chip__label">PORTFOLIO</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#8E64FF" data-repo="jarvis"><span class="planet-chip__id">R18 · Agents</span><span class="planet-chip__label">JARVIS</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#FF42C6" data-repo="profile"><span class="planet-chip__id">R19 · Portfolio</span><span class="planet-chip__label">PROFILE</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#8E64FF" data-repo="n8n"><span class="planet-chip__id">R20 · Infrastructure</span><span class="planet-chip__label">N8N</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#2DE7FF" data-repo="sentinel"><span class="planet-chip__id">R21 · Operations</span><span class="planet-chip__label">SENTINEL</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#FF42C6" data-repo="strix"><span class="planet-chip__id">R22 · Security</span><span class="planet-chip__label">STRIX</span><span class="planet-chip__meta">loading orbit…</span></button>
+<button type="button" class="planet-chip" style="--chip:#C4FF4D" data-repo="sih"><span class="planet-chip__id">R23 · Hackathon</span><span class="planet-chip__label">SIH</span><span class="planet-chip__meta">loading orbit…</span></button></div>
+      </div>
     </div>
-    <div class="repo-grid" id="repo-grid">        <button type="button" class="repo-chip" style="--chip:#FF42C6" data-repo="slop"><b>SLOP</b><small>AI-Slop-Detector · Python · ★5</small></button>
-        <button type="button" class="repo-chip" style="--chip:#C4FF4D" data-repo="trading"><b>TRADE</b><small>AI-Trading-Bot · HTML · ★5</small></button>
-        <button type="button" class="repo-chip" style="--chip:#FF42C6" data-repo="memory-guard"><b>GUARD</b><small>Agent-Memory-Guard · Python · ★4</small></button>
-        <button type="button" class="repo-chip" style="--chip:#C4FF4D" data-repo="wallet"><b>WALLET</b><small>Agent-Wallet-SDK · TypeScript · ★4</small></button>
-        <button type="button" class="repo-chip" style="--chip:#8E64FF" data-repo="citadel"><b>CITADEL</b><small>CITADEL · JavaScript · ★4</small></button>
-        <button type="button" class="repo-chip" style="--chip:#C4FF4D" data-repo="cleanconnect"><b>CLEAN</b><small>CleanConnect · JavaScript · ★0</small></button>
-        <button type="button" class="repo-chip" style="--chip:#2DE7FF" data-repo="doclify"><b>DOCS</b><small>Doclify · Python · ★4</small></button>
-        <button type="button" class="repo-chip" style="--chip:#2DE7FF" data-repo="feature-engine"><b>FEATURES</b><small>Feature-Engine · Python · ★5</small></button>
-        <button type="button" class="repo-chip" style="--chip:#C4FF4D" data-repo="marketinsight"><b>MARKET</b><small>Marketinsight · Python · ★4</small></button>
-        <button type="button" class="repo-chip" style="--chip:#8E64FF" data-repo="mirrorgpt"><b>MIRROR</b><small>MirrorGPT · Python · ★4</small></button>
-        <button type="button" class="repo-chip" style="--chip:#2DE7FF" data-repo="movies"><b>MOVIES</b><small>Movie-Recommendation-System · Jupyter Notebook · ★5</small></button>
-        <button type="button" class="repo-chip" style="--chip:#8E64FF" data-repo="next-role"><b>ROLE</b><small>Next-Role · Python · ★4</small></button>
-        <button type="button" class="repo-chip" style="--chip:#8E64FF" data-repo="omniroute"><b>OMNI</b><small>OmniRoute · TypeScript · ★6</small></button>
-        <button type="button" class="repo-chip" style="--chip:#8E64FF" data-repo="shopping"><b>SHOP</b><small>ShoppingGPT · HTML · ★3</small></button>
-        <button type="button" class="repo-chip" style="--chip:#8E64FF" data-repo="synapse"><b>SYNAPSE</b><small>Synapse · Python · ★3</small></button>
-        <button type="button" class="repo-chip" style="--chip:#FF42C6" data-repo="pii"><b>PII</b><small>TrustBoost-PII-Sanitizer · HTML · ★5</small></button>
-        <button type="button" class="repo-chip" style="--chip:#FF42C6" data-repo="portfolio"><b>PORTFOLIO</b><small>ai-ml-portfolio · Python · ★0</small></button>
-        <button type="button" class="repo-chip" style="--chip:#8E64FF" data-repo="jarvis"><b>JARVIS</b><small>jarvis-mac · Python · ★0</small></button>
-        <button type="button" class="repo-chip" style="--chip:#FF42C6" data-repo="profile"><b>PROFILE</b><small>mayankjain1815-commits · TypeScript · ★5</small></button>
-        <button type="button" class="repo-chip" style="--chip:#8E64FF" data-repo="n8n"><b>N8N</b><small>n8n · TypeScript · ★3</small></button>
-        <button type="button" class="repo-chip" style="--chip:#2DE7FF" data-repo="sentinel"><b>SENTINEL</b><small>sentinel-iot-disaster-command · JavaScript · ★0</small></button>
-        <button type="button" class="repo-chip" style="--chip:#C4FF4D" data-repo="sih"><b>SIH</b><small>sih-main · Python · ★4</small></button>
-        <button type="button" class="repo-chip" style="--chip:#FF42C6" data-repo="strix"><b>STRIX</b><small>strix · Python · ★4</small></button></div>
+    <p class="catalog-note">Orbits, periods, rings and moons are deterministic visualisation metadata derived from each slug — not astronomical facts.</p>
   </section>
 
   <section class="showcase" aria-label="Animated systems showcase">
@@ -611,7 +486,6 @@
       <p>Three live systems · no libraries · canvas only</p>
     </div>
     <div class="panels">
-
       <div class="panel" id="panel-particles">
         <span class="tag">01 / interactive</span>
         <canvas id="fx-particles" aria-hidden="true"></canvas>
@@ -620,7 +494,6 @@
           <p>Depth-projected nodes, proximity links and cursor parallax. Move your pointer.</p>
         </div>
       </div>
-
       <div class="panel" id="panel-globe">
         <span class="tag">02 / orbital scan</span>
         <canvas id="fx-globe" aria-hidden="true"></canvas>
@@ -629,7 +502,6 @@
           <p>Rotating wireframe sphere with a radar sweep and live node positions.</p>
         </div>
       </div>
-
       <div class="panel" id="panel-neural">
         <span class="tag">03 / inference</span>
         <canvas id="fx-neural" aria-hidden="true"></canvas>
@@ -638,75 +510,63 @@
           <p>Signals propagating through weighted layers — the shape of every project here.</p>
         </div>
       </div>
-
     </div>
   </section>
-</div>
 
-<div class="wrap">
   <section id="projects">
     <div class="section-head">
       <h2>The projects</h2>
       <p>Click any card for its README</p>
     </div>
     <div class="grid">
-
       <a class="card" href="01-orbit-voice-assistant/README.md">
         <span class="arrow">↗</span><span class="num">01</span>
         <h3>Orbit Voice Assistant</h3>
         <p>Voice-first browser assistant: rule-based NLU, AST-safe calculator, notes and an app allowlist.</p>
         <div class="tags"><b>Flask</b><b>Web Speech</b><b>ReAct</b></div>
       </a>
-
       <a class="card" href="02-crew-engine/README.md">
         <span class="arrow">↗</span><span class="num">02</span>
         <h3>Crew Engine</h3>
         <p>Multi-agent crews — sequential, supervisor, reflective — sharing a blackboard with an audit trace.</p>
         <div class="tags"><b>Agents</b><b>Tools</b><b>Gemini</b></div>
       </a>
-
       <a class="card" href="03-rag-studio/README.md">
         <span class="arrow">↗</span><span class="num">03</span>
         <h3>RAG Studio</h3>
         <p>Hand-built retrieval: chunking, TF-IDF index, generation and a recall/MRR/faithfulness eval harness.</p>
         <div class="tags"><b>RAG</b><b>TF-IDF</b><b>Eval</b></div>
       </a>
-
       <a class="card" href="04-model-watch/README.md">
         <span class="arrow">↗</span><span class="num">04</span>
         <h3>Model Watch</h3>
         <p>PSI and KS drift detection by hand, sliding-window alerts, registry and a live monitoring dashboard.</p>
         <div class="tags"><b>MLOps</b><b>Drift</b><b>Flask</b></div>
       </a>
-
       <a class="card" href="05-skill-forge/README.md">
         <span class="arrow">↗</span><span class="num">05</span>
         <h3>Skill Forge</h3>
         <p>Agent skills with frontmatter parsing, keyword and LLM routing, token-budget packing and a CLI.</p>
         <div class="tags"><b>Skills</b><b>Router</b><b>CLI</b></div>
       </a>
-
       <a class="card" href="06-gh-activity-forge/README.md">
         <span class="arrow">↗</span><span class="num">06</span>
         <h3>GH Activity Forge</h3>
         <p>Seeded contribution profiles and a hand-built SVG renderer using GitHub's exact palette.</p>
         <div class="tags"><b>SVG</b><b>Simulation</b><b>Reports</b></div>
       </a>
-
       <a class="card" href="07-disaster-watch/README.md">
         <span class="arrow">↗</span><span class="num">07</span>
         <h3>Disaster Watch</h3>
         <p>Forecast-driven risk scoring, deduplicated warnings and an authority dashboard for six monitored areas.</p>
         <div class="tags"><b>Forecast</b><b>Risk rules</b><b>Flask</b></div>
       </a>
-
       <a class="card" href="08-sentinel-iot/README.md">
         <span class="arrow">↗</span><span class="num">08</span>
         <h3>SENTINEL · IoT Command</h3>
         <p>ESP32/LoRa telemetry, continuous risk engine, WebSocket push, authority console and an offline map.</p>
         <div class="tags"><b>Node 22</b><b>React</b><b>SQLite</b></div>
       </a>
-
     </div>
   </section>
 
@@ -725,7 +585,7 @@
   </section>
 
   <footer>
-    <span>AI / ML PORTFOLIO · 8 PROJECTS · OFFLINE BY DESIGN</span>
+    <span>AI / ML PORTFOLIO · 8 PROJECTS · 33 WORLDS · OFFLINE BY DESIGN</span>
     <span><a href="README.md">README</a> · <a href="docs/LEARNING_GUIDE.md">Learning guide</a> · <a href="https://github.com/mayankjain1815-commits/ai-ml-portfolio">GitHub</a></span>
   </footer>
 </div>
@@ -736,18 +596,18 @@
 
 <!-- Same ten records as backend/word_atlas/data.py, embedded for offline use. -->
 <script type="application/json" id="word-atlas-data">[{"slug":"rag","term":"RAG","title":"Retrieval-Augmented Generation","category":"Retrieval","color":"#2DE7FF","tagline":"Ground the answer in text you can actually inspect.","definition":"Retrieval-augmented generation retrieves relevant passages from a corpus and conditions the answer on them. The model is an open-book reader, not a closed-book guesser, so every claim can be traced to a chunk.","why_it_matters":"It converts an unverifiable paragraph into a grading problem: recall@k measures whether the right evidence was found, and faithfulness measures whether the answer stayed inside that evidence.","how_it_works":["Ingest text and split it on paragraph/sentence boundaries with a measured overlap.","Build a TF-IDF index over chunks; expand queries with a small hand-built thesaurus.","Retrieve the top-k chunks by cosine similarity, then apply MMR to drop near-duplicates.","Generate the answer from the selected context; the offline brain does extractive scoring.","Score the pipeline with recall@k, MRR and faithfulness against a fixed question set."],"concepts":["chunking","TF-IDF","cosine similarity","MMR","recall@k","faithfulness"],"projects":[{"id":"03","name":"RAG Studio","path":"03-rag-studio","readme":"03-rag-studio/README.md","role":"The whole pipeline: chunk → index → retrieve → generate → evaluate."}],"code_anchors":[{"path":"03-rag-studio/rag_studio/chunker.py","symbol":"chunk_document","note":"Boundary scoring with overlap."},{"path":"03-rag-studio/rag_studio/index.py","symbol":"TfidfIndex","note":"Hand-built sparse index and query vector."},{"path":"03-rag-studio/rag_studio/retriever.py","symbol":"retrieve","note":"Top-k plus MMR diversification."}],"commands":["cd 03-rag-studio && ../.venv/bin/python -m rag_studio demo","cd 03-rag-studio && ../.venv/bin/python -m pytest -q"],"interview_answer":"I built RAG without a framework so the retrieval maths is mine: my own chunker, TF-IDF index, query expansion, MMR selection and an eval harness. The demo brain does extractive scoring, which is the same pipeline shape as the Gemini path — that is why it runs with zero keys and why recall@k is a real number, not a vibe.","pitfalls":["A chunk that cuts a sentence in half makes a correct passage unretrievable.","Plain top-k returns five copies of the same paragraph; MMR fixes that.","Faithfulness has to be scored against retrieved context, not model confidence."],"tests":["03-rag-studio/tests/test_chunker.py","03-rag-studio/tests/test_retrieval.py","03-rag-studio/tests/test_evals.py"],"systems":["neural"]},{"slug":"agents","term":"AGENTS","title":"Multi-Agent Crews","category":"Agents","color":"#FF42C6","tagline":"Several bounded reasoners, one shared blackboard, one audit trace.","definition":"An agent is a loop that observes, decides, calls a tool and records the result. A crew composes those loops — sequentially, under a supervisor, or with a critic that forces reflection — while sharing state instead of passing prose around.","why_it_matters":"The interesting failure is not a wrong tool call; it is a crew that never converges or a critic that grades a draft its writer never saw. A shared blackboard plus a trace makes both failures inspectable.","how_it_works":["Define agents with a role, goal and a bounded set of tools.","Route tasks through SequentialCrew, SupervisorCrew or ReflectiveCrew.","Write facts, artifacts and messages to one Blackboard so nobody works from stale memory.","Record every thought/tool/observation in a trace for replay.","In LLM mode call Gemini with JSON tool-calling; offline mode runs the same state machine."],"concepts":["ReAct","tool registry","blackboard","supervisor","reflection","trace"],"projects":[{"id":"02","name":"Crew Engine","path":"02-crew-engine","readme":"02-crew-engine/README.md","role":"The crew engine: agents, task routing, blackboard and trace."},{"id":"01","name":"Orbit Voice Assistant","path":"01-orbit-voice-assistant","readme":"01-orbit-voice-assistant/README.md","role":"A single bounded ReAct loop over browser tools."}],"code_anchors":[{"path":"02-crew-engine/crew_engine/crew.py","symbol":"ReflectiveCrew","note":"Writer/critic loop with a convergence cap."},{"path":"02-crew-engine/crew_engine/blackboard.py","symbol":"Blackboard","note":"Shared facts, artifacts and audit messages."},{"path":"01-orbit-voice-assistant/orbit_voice_assistant/chat.py","symbol":"ReAct loop","note":"Bounded reason-act-observe cycle."}],"commands":["cd 02-crew-engine && ../.venv/bin/python -m crew_engine demo --trace","cd 02-crew-engine && ../.venv/bin/python -m pytest -q"],"interview_answer":"I implemented the orchestration myself: three crew topologies, a blackboard and a trace. The reflective crew was the hard one — it kept failing because the critic checked citations against a different fact subset than the writer used. I fixed it by scoring citations against the draft's own bullets, then encoded that as a test.","pitfalls":["Unbounded ReAct loops burn tokens without ever converging.","A critic evaluating different evidence from the writer produces endless false negatives.","Passing full history between agents hides which fact came from where."],"tests":["02-crew-engine/tests/test_crew.py","02-crew-engine/tests/test_blackboard.py","02-crew-engine/tests/test_brain.py"],"systems":["neural","particles"]},{"slug":"mlops","term":"MLOPS","title":"Model Operations & Drift","category":"Operations","color":"#C4FF4D","tagline":"Notice the model going stale before the users do.","definition":"MLOps is the monitoring and registry layer around a deployed model: track input distributions, compute drift statistics, raise severity-scaled alerts and keep a versioned record of what was shipped.","why_it_matters":"Accuracy on a frozen test set says nothing about next week's traffic. PSI and KS are cheap, explainable checks that run on every window without a label.","how_it_works":["Generate a seeded reference and live stream so the demo is reproducible.","Compute population stability index per bucket and KS distance on numeric features.","Layer a regression-slope check for gradual trend, not just sudden jumps.","Escalate through the AlertManager with warn/alert thresholds and cooldowns.","Serve a Flask dashboard plus a registry that lists model versions and metrics."],"concepts":["PSI","KS statistic","sliding window","severity","registry","cooldown"],"projects":[{"id":"04","name":"Model Watch","path":"04-model-watch","readme":"04-model-watch/README.md","role":"Drift detection, alerting, registry and the monitoring dashboard."}],"code_anchors":[{"path":"04-model-watch/model_watch/drift.py","symbol":"psi","note":"Bucketed population stability index."},{"path":"04-model-watch/model_watch/drift.py","symbol":"ks_statistic","note":"Two-sample KS distance."},{"path":"04-model-watch/model_watch/alerts.py","symbol":"AlertManager","note":"Threshold, dedup and cooldown logic."}],"commands":["cd 04-model-watch && ../.venv/bin/python -m model_watch demo","cd 04-model-watch && ../.venv/bin/python -m pytest -q"],"interview_answer":"I implemented PSI and KS from the formulae rather than calling a library, so I can explain the bucket choices and what each number means. A sliding window feeds a severity classifier, and the alert manager deduplicates and cools down so a single noisy batch cannot page anyone.","pitfalls":["PSI with empty reference buckets explodes; the implementation smooths them.","KS flags any large sample; thresholds must account for window size.","Alert spam is worse than a missed warning — dedup and cooldown are part of the design."],"tests":["04-model-watch/tests/test_core.py","04-model-watch/tests/test_monitoring.py"],"systems":["globe","particles"]},{"slug":"forecast","term":"FORECAST","title":"Deterministic Forecasting","category":"Operations","color":"#8E64FF","tagline":"Same seed, same emergency, every single demo.","definition":"A seeded forecast generator produces hourly weather for six monitored areas. It is not a weather service: it is a reproducible input stream that makes risk logic testable and the dashboard demo honest.","why_it_matters":"You cannot unit-test a risk model against live weather. A deterministic forecast lets a test assert the exact hour at which a flood warning should be issued.","how_it_works":["Seed a generator once and derive 72 hourly points per area.","Model a diurnal cycle plus correlated rain, wind, humidity and pressure-driven events.","Feed each hour into the rule-based risk model for flood/cyclone/heat/storm.","Run the monitor orchestrator to produce forecasts, risks, alerts and incidents.","Expose the resulting snapshot through JSON APIs and a Flask dashboard on port 5107."],"concepts":["seeded PRNG","hourly horizon","diurnal cycle","scenario replay","risk scoring"],"projects":[{"id":"07","name":"Disaster Watch","path":"07-disaster-watch","readme":"07-disaster-watch/README.md","role":"Forecast generator, risk rules, alerts and the authority dashboard."}],"code_anchors":[{"path":"07-disaster-watch/disaster_watch/forecast_gen.py","symbol":"generate_forecast","note":"Seeded 72-hour hourly stream."},{"path":"07-disaster-watch/disaster_watch/monitor.py","symbol":"run_monitor","note":"Forecast → risk → alerts → incidents."}],"commands":["cd 07-disaster-watch && ../.venv/bin/python -m disaster_watch demo","cd 07-disaster-watch && ../.venv/bin/python -m pytest -q"],"interview_answer":"The forecast is deliberately seeded. That makes the entire disaster pipeline replayable — I can assert the exact hour a warning opens and that deduplication does not emit a second one. With live weather those tests would be flaky and unreviewable.","pitfalls":["Random noise without correlation looks nothing like a real storm.","A forecast that changes between runs makes alert tests meaningless.","Mixing forecast generation with risk logic couples two things that should be tested apart."],"tests":["07-disaster-watch/tests/test_forecast.py","07-disaster-watch/tests/test_risk.py","07-disaster-watch/tests/test_alerts.py"],"systems":["globe"]},{"slug":"signals","term":"SIGNALS","title":"Telemetry & Signal Processing","category":"Operations","color":"#2DE7FF","tagline":"Noisy sensor readings become evidence, not panic.","definition":"Signals are the validated telemetry frames arriving from sensors — temperature, rain, water level, vibration, AQI, battery and radio quality. Processing means validating, normalising, storing and turning them into a state a human can read.","why_it_matters":"A single spike is noise; a rising river over twelve packets is evidence. The processing layer is where that distinction is made before any alert exists.","how_it_works":["Validate each ingress packet against a schema; reject impossible ranges.","Persist to native node:sqlite with an index on node and timestamp.","Derive per-node history windows and a 0–100 risk score per hazard.","Push a compact snapshot over WebSocket so the UI never polls.","Keep the raw packet and the derived score side by side for audit."],"concepts":["ingress validation","sqlite","windowing","WebSocket","hysteresis"],"projects":[{"id":"08","name":"SENTINEL · IoT Command","path":"08-sentinel-iot","readme":"08-sentinel-iot/README.md","role":"Telemetry ingress, store, simulator and realtime snapshot."},{"id":"04","name":"Model Watch","path":"04-model-watch","readme":"04-model-watch/README.md","role":"Model input streams and drift signal windows."}],"code_anchors":[{"path":"08-sentinel-iot/server/app.js","symbol":"createApp","note":"Validated telemetry ingress and read APIs."},{"path":"08-sentinel-iot/server/realtime.js","symbol":"isAuthorizedGateway","note":"Authorised WebSocket upgrades."},{"path":"04-model-watch/model_watch/stream.py","symbol":"generate_stream","note":"Seeded live feature stream."}],"commands":["cd 08-sentinel-iot && npm ci && npm test","cd 08-sentinel-iot && npm run dev"],"interview_answer":"Signals are validated at the edge of the API and stored in node:sqlite so the risk engine and the UI read the same transaction boundary. I keep raw readings and derived scores together — that is what makes an alert explainable later.","pitfalls":["Trusting a sensor packet without range checks poisons every downstream score.","Polling a dashboard wastes resources; WebSocket push keeps it honest.","Correlated readings must be simulated or hysteresis can never be tested."],"tests":["08-sentinel-iot/tests/telemetry.test.js","08-sentinel-iot/tests/validation.test.js","08-sentinel-iot/tests/realtime.test.js"],"systems":["particles","globe"]},{"slug":"skills","term":"SKILLS","title":"Agent Skill Packaging","category":"Agents","color":"#FF42C6","tagline":"Capabilities as small, routable, budgeted documents.","definition":"A skill is a SKILL.md file with frontmatter and a body. A selector chooses which skills matter for a prompt, a packer fits them into a token budget, and a runner executes the chosen procedure.","why_it_matters":"It turns 'the model knows tools' into a versioned, inspectable catalogue. Token budgets are explicit, so a prompt cannot silently blow past its context window.","how_it_works":["Parse frontmatter with a tiny YAML-ish subset — no PyYAML dependency.","Score skills with a keyword selector; upgrade to an LLM router when a key exists.","Estimate tokens and pack selected skills into a fixed budget with a priority order.","Run the packed prompt through the same executor in demo and live mode.","Expose everything through a CLI: list, search, pick, pack, run, install."],"concepts":["frontmatter","keyword routing","token budget","prompt packing","CLI"],"projects":[{"id":"05","name":"Skill Forge","path":"05-skill-forge","readme":"05-skill-forge/README.md","role":"Skill loader, selector, packer, runner and CLI."}],"code_anchors":[{"path":"05-skill-forge/skill_forge/loader.py","symbol":"load_skill","note":"Frontmatter + body parsing."},{"path":"05-skill-forge/skill_forge/selector.py","symbol":"KeywordSelector","note":"Offline skill routing."},{"path":"05-skill-forge/skill_forge/packer.py","symbol":"pack","note":"Token-budget prompt assembly."}],"commands":["cd 05-skill-forge && ../.venv/bin/python -m skill_forge demo","cd 05-skill-forge && ../.venv/bin/python -m pytest -q"],"interview_answer":"Skills are files, not registry code. I parse the frontmatter myself, route with keywords offline or an LLM when a key is present, and pack under an explicit token budget. Nine bundled skills and fifty-seven tests cover the whole path.","pitfalls":["A greedy packer can fill the budget with one verbose skill.","Frontmatter parsers that accept too much syntax become a security surface.","Routing must degrade to keywords when the LLM is unavailable."],"tests":["05-skill-forge/tests/test_selector.py","05-skill-forge/tests/test_packer.py","05-skill-forge/tests/test_skill.py"],"systems":["neural"]},{"slug":"risk","term":"RISK","title":"Explainable Risk Scoring","category":"Operations","color":"#FF42C6","tagline":"Every point in the score has a name and a number.","definition":"Risk scoring converts several continuous signals into a 0–100 index and a band. The implementation is transparent: each hazard contributes named points, a compound-hazard bonus applies when several fire together, and SOS overrides.","why_it_matters":"An operator at 2 a.m. needs to know why an area is critical. A black-box classifier might be more accurate on paper, but it cannot answer that question in the room.","how_it_works":["Ramp each raw measurement from an onset to a saturation threshold.","Turn ramps into named point contributions per hazard (flood, landslide, air, heat).","Add a compound bonus when multiple hazards cross their onset together.","Clamp to 0–100, map to a band, and keep the contribution breakdown for the API.","Open, escalate and resolve alerts with hysteresis on (node, hazard) keys."],"concepts":["ramp","weighted contribution","compound hazard","band","hysteresis"],"projects":[{"id":"07","name":"Disaster Watch","path":"07-disaster-watch","readme":"07-disaster-watch/README.md","role":"Rule-weighted risk index over forecast hours."},{"id":"08","name":"SENTINEL · IoT Command","path":"08-sentinel-iot","readme":"08-sentinel-iot/README.md","role":"Continuous per-node risk engine with breakdown and alerts."}],"code_anchors":[{"path":"07-disaster-watch/disaster_watch/risk_model.py","symbol":"score_forecast","note":"Weighted rule score over forecast hours."},{"path":"08-sentinel-iot/server/risk-engine.js","symbol":"assessRisk","note":"Transparent 0–100 score with factors."}],"commands":["cd 07-disaster-watch && ../.venv/bin/python -m disaster_watch demo","cd 08-sentinel-iot && npm test"],"interview_answer":"I chose rules over a trained model because the score has to be auditable. Every hazard contributes named points, the compound bonus is explicit, and the API returns the breakdown. The weights are data, so I can unit-test them at their boundaries instead of hoping a model behaves.","pitfalls":["Unclamped contributions produce nonsense scores outside the training range.","Without hysteresis a noisy sensor makes alerts flap every few packets.","A score without its breakdown is useless to an operator."],"tests":["07-disaster-watch/tests/test_risk.py","08-sentinel-iot/tests/risk-engine.test.js","08-sentinel-iot/tests/api.test.js"],"systems":["globe","neural"]},{"slug":"offline","term":"OFFLINE","title":"Zero-Key Operation","category":"Architecture","color":"#C4FF4D","tagline":"The whole portfolio runs with no network and no secrets.","definition":"Offline mode means every project has a deterministic local implementation of the same pipeline the live model runs. It is a parallel implementation, not a stub or a cached response.","why_it_matters":"CI can verify every claim without API keys, a reviewer can run the demo on a plane, and the fallback is never a dead end when a provider is down.","how_it_works":["Wrap model calls behind one interface with two implementations: live and deterministic.","Seed randomness and label every generated number as demo data.","Run the same tests against the offline path in CI on every push.","Upgrade with GEMINI_API_KEY; keep the offline brain as the honest fallback.","Vendor no runtime assets — no CDN fonts, scripts or external images in the demos."],"concepts":["demo mode","determinism","seeded data","CI without secrets","fallback"],"projects":[{"id":"01","name":"Orbit Voice Assistant","path":"01-orbit-voice-assistant","readme":"01-orbit-voice-assistant/README.md","role":"Runs fully offline with seeded data."},{"id":"02","name":"Crew Engine","path":"02-crew-engine","readme":"02-crew-engine/README.md","role":"Runs fully offline with seeded data."},{"id":"03","name":"RAG Studio","path":"03-rag-studio","readme":"03-rag-studio/README.md","role":"Runs fully offline with seeded data."},{"id":"04","name":"Model Watch","path":"04-model-watch","readme":"04-model-watch/README.md","role":"Runs fully offline with seeded data."},{"id":"05","name":"Skill Forge","path":"05-skill-forge","readme":"05-skill-forge/README.md","role":"Runs fully offline with seeded data."},{"id":"06","name":"GH Activity Forge","path":"06-gh-activity-forge","readme":"06-gh-activity-forge/README.md","role":"Runs fully offline with seeded data."},{"id":"07","name":"Disaster Watch","path":"07-disaster-watch","readme":"07-disaster-watch/README.md","role":"Runs fully offline with seeded data."},{"id":"08","name":"SENTINEL · IoT Command","path":"08-sentinel-iot","readme":"08-sentinel-iot/README.md","role":"Runs fully offline with seeded data."}],"code_anchors":[{"path":"docs/BUILD_SPEC.md","symbol":"Non-negotiables","note":"The zero-key rule written down."},{"path":".github/workflows/tests.yml","symbol":"test matrix","note":"Every suite runs in CI with no secrets."}],"commands":["for p in 0*; do (cd \"$p\" && ../.venv/bin/python -m pytest -q) 2>/dev/null; done","cd 08-sentinel-iot && npm test"],"interview_answer":"Offline is an architectural constraint, not a feature flag. Each project has a real deterministic brain that performs the same steps as the live model, so the tests assert real behaviour with zero keys. Set a key and only the final call changes.","pitfalls":["A fallback that returns canned text proves nothing and fails under review.","Unseeded randomness makes CI flaky and demos unrepeatable.","Secrets in CI turn an offline suite into a network-dependent one."],"tests":[".github/workflows/tests.yml"],"systems":["particles","globe","neural"]},{"slug":"demo","term":"DEMO","title":"Demoable by Design","category":"Architecture","color":"#8E64FF","tagline":"Two minutes, one command, no setup ritual.","definition":"Every project ships a single demo command that produces a complete, satisfying run with visible intermediate state — a trace, a dashboard, a report — rather than a single answer.","why_it_matters":"A demo is the most compressed form of an explanation. If it needs a key, a database and three terminals, nobody will run it, and the project stops being evidence.","how_it_works":["Expose one obvious entry point per project: python -m <pkg> demo or npm run dev.","Seed the input so the output is identical on every machine.","Print or render the intermediate steps, not just the final result.","Ship a README command that can be copy-pasted from the landing page.","Keep the demo code on the same path as the real code, not a separate toy implementation."],"concepts":["entry point","seeded scenario","visible trace","copy-paste command","two-minute story"],"projects":[{"id":"01","name":"Orbit Voice Assistant","path":"01-orbit-voice-assistant","readme":"01-orbit-voice-assistant/README.md","role":"One-command demo with visible intermediate state."},{"id":"02","name":"Crew Engine","path":"02-crew-engine","readme":"02-crew-engine/README.md","role":"One-command demo with visible intermediate state."},{"id":"03","name":"RAG Studio","path":"03-rag-studio","readme":"03-rag-studio/README.md","role":"One-command demo with visible intermediate state."},{"id":"04","name":"Model Watch","path":"04-model-watch","readme":"04-model-watch/README.md","role":"One-command demo with visible intermediate state."},{"id":"05","name":"Skill Forge","path":"05-skill-forge","readme":"05-skill-forge/README.md","role":"One-command demo with visible intermediate state."},{"id":"06","name":"GH Activity Forge","path":"06-gh-activity-forge","readme":"06-gh-activity-forge/README.md","role":"One-command demo with visible intermediate state."},{"id":"07","name":"Disaster Watch","path":"07-disaster-watch","readme":"07-disaster-watch/README.md","role":"One-command demo with visible intermediate state."},{"id":"08","name":"SENTINEL · IoT Command","path":"08-sentinel-iot","readme":"08-sentinel-iot/README.md","role":"One-command demo with visible intermediate state."}],"code_anchors":[{"path":"docs/LEARNING_GUIDE.md","symbol":"Project-by-project Q&A","note":"A two-minute story for each project."},{"path":"index.html","symbol":"project cards","note":"Every card links to its own README."}],"commands":["cd 02-crew-engine && ../.venv/bin/python -m crew_engine demo --trace","cd 07-disaster-watch && ../.venv/bin/python -m disaster_watch demo"],"interview_answer":"I designed the demo first. Each project has one command, a seeded scenario and a visible trace, so I can hand an interviewer a run they can reproduce in two minutes. The demo path and the live path share the same code; only the final model call differs.","pitfalls":["A demo that hides its intermediate steps cannot be defended.","Different commands per project destroy the portfolio's rhythm.","A canned output looks impressive once and collapses under a follow-up question."],"tests":["docs/LEARNING_GUIDE.md"],"systems":["neural","particles"]},{"slug":"iot","term":"IOT","title":"IoT Early-Warning Command","category":"Operations","color":"#2DE7FF","tagline":"From a LoRa packet to an evacuation order, end to end.","definition":"An Internet-of-Things command system for a three-node ESP32/LoRa network: telemetry ingress, risk scoring, alert escalation, WebSocket push, an offline vector map and an authority console that can act on what it sees.","why_it_matters":"It is the only project where the model is just one component. The hard problems are state, authorisation, deduplication and an operator loop that never loses an audit trail.","how_it_works":["Validate telemetry from the gateway and persist it to native node:sqlite.","Score flood, landslide, air quality and heat continuously on 0–100 with factors.","Dedup alerts by (node, hazard), escalate and require two clean packets to resolve.","Push snapshots over WebSocket to a React/Leaflet dashboard with a bundled offline map.","Let an authorised operator acknowledge, override with expiry, evacuate, sound the siren and write an immutable incident record."],"concepts":["ESP32","LoRa","node:sqlite","WebSocket","authority console","incident log"],"projects":[{"id":"08","name":"SENTINEL · IoT Command","path":"08-sentinel-iot","readme":"08-sentinel-iot/README.md","role":"The complete command platform, Node 22 + React 19."}],"code_anchors":[{"path":"08-sentinel-iot/server/app.js","symbol":"createApp","note":"API, command routes and gateway auth."},{"path":"08-sentinel-iot/server/risk-engine.js","symbol":"assessRisk","note":"Transparent hazard scoring."},{"path":"08-sentinel-iot/tests/api.test.js","symbol":"api suite","note":"38 offline tests for the full loop."}],"commands":["cd 08-sentinel-iot && npm ci && npm test","cd 08-sentinel-iot && npm run dev"],"interview_answer":"SENTINEL is the systems project: node:sqlite gives one transaction boundary with no infrastructure, a WebSocket pushes snapshots instead of polling, and alerts use hysteresis so a noisy sensor cannot flap. The authority console closes the loop — acknowledge, override with an expiry, evacuate, and every action lands in an immutable incident log.","pitfalls":["Using a hosted map breaks the offline guarantee; the basemap is local vector data.","Command routes need real auth and role checks, not a trusting header.","Alert flapping on correlated sensor noise destroys operator trust."],"tests":["08-sentinel-iot/tests/api.test.js","08-sentinel-iot/tests/risk-engine.test.js","08-sentinel-iot/tests/telemetry.test.js"],"systems":["globe","particles"]}]</script>
-
-<!-- Same repository and theme records as backend/word_atlas/, embedded for offline use. -->
-<script type="application/json" id="repo-atlas-data">[{"slug":"slop","name":"AI-Slop-Detector","short":"SLOP","description":"End-to-end implementation of an AI writing detector.","language":"Python","stars":5,"updated":"2026-10-03","url":"https://github.com/mayankjain1815-commits/AI-Slop-Detector","category":"Security","color":"#FF42C6","stack":["Python","NLP","classification"],"highlights":["Detects machine-like writing patterns in submitted text.","Package the detector behind a small runnable entry point.","Scores and explanations are kept separate so results are inspectable."],"words":["signals","risk","skills"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/AI-Slop-Detector && cd AI-Slop-Detector && python -m pytest -q","note":"","kind":"original"},{"slug":"trading","name":"AI-Trading-Bot","short":"TRADE","description":"Trading bot that analyses sentiment of live news events and trades accordingly.","language":"HTML","stars":5,"updated":"2026-10-03","url":"https://github.com/mayankjain1815-commits/AI-Trading-Bot","category":"Finance","color":"#C4FF4D","stack":["HTML","JavaScript","news sentiment"],"highlights":["Ingests news events and derives a sentiment score.","Turns signals into a documented decision rather than a black-box bet.","Frontend presents the reasoning alongside the action."],"words":["signals","risk","forecast"],"systems":["particles"],"command":"gh repo clone mayankjain1815-commits/AI-Trading-Bot && cd AI-Trading-Bot","note":"","kind":"original"},{"slug":"memory-guard","name":"Agent-Memory-Guard","short":"GUARD","description":"Runtime defense that catches AI memory poisoning attacks, even after a context reset.","language":"Python","stars":4,"updated":"2026-10-02","url":"https://github.com/mayankjain1815-commits/Agent-Memory-Guard","category":"Security","color":"#FF42C6","stack":["Python","agents","runtime policy"],"highlights":["Treats memory writes as an untrusted boundary.","Detects poisoning that survives a context reset.","Policy decisions are explicit so they can be tested offline."],"words":["agents","risk","offline"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/Agent-Memory-Guard && cd Agent-Memory-Guard && python -m pytest -q","note":"","kind":"original"},{"slug":"wallet","name":"Agent-Wallet-SDK","short":"WALLET","description":"Non-custodial multi-chain financial infrastructure SDK for autonomous AI agents.","language":"TypeScript","stars":4,"updated":"2026-10-02","url":"https://github.com/mayankjain1815-commits/Agent-Wallet-SDK","category":"Finance","color":"#C4FF4D","stack":["TypeScript","SDK","multi-chain"],"highlights":["Agent-safe wallet primitives with no custody handoff.","Multi-chain interface behind one SDK surface.","Guard rails are part of the API, not an afterthought."],"words":["agents","skills","risk"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/Agent-Wallet-SDK && cd Agent-Wallet-SDK && npm test","note":"","kind":"original"},{"slug":"citadel","name":"CITADEL","short":"CITADEL","description":"Open-source operating layer for Claude Code and OpenAI Codex — routes and hardens agent requests against real repositories.","language":"JavaScript","stars":4,"updated":"2026-10-19","url":"https://github.com/mayankjain1815-commits/CITADEL","category":"Infrastructure","color":"#8E64FF","stack":["JavaScript","agent routing","guardrails"],"highlights":["Routes agent requests through one hardened control plane.","Checks requests against the real repository before execution.","Dependency and workflow alerts are guarded in CI."],"words":["agents","skills","offline"],"systems":["particles","neural"],"command":"gh repo clone mayankjain1815-commits/CITADEL && cd CITADEL && npm test","note":"","kind":"original"},{"slug":"cleanconnect","name":"CleanConnect","short":"CLEAN","description":"Verified waste collection platform with QR + GPS pickup verification, Civic Points, driver routes and admin analytics.","language":"JavaScript","stars":0,"updated":"2026-11-05","url":"https://github.com/mayankjain1815-commits/CleanConnect","category":"Civic","color":"#C4FF4D","stack":["JavaScript","QR","GPS","analytics"],"highlights":["Closes the loop from pickup proof to civic reward.","Driver routes and admin analytics share one data model.","Newest public repository in this orbit."],"words":["signals","iot","demo"],"systems":["globe"],"command":"gh repo clone mayankjain1815-commits/CleanConnect && cd CleanConnect","note":"","kind":"original"},{"slug":"doclify","name":"Doclify","short":"DOCS","description":"AI agent that documents software projects by scanning a codebase and building structured per-file context.","language":"Python","stars":4,"updated":"2026-11-04","url":"https://github.com/mayankjain1815-commits/Doclify","category":"Developer Tools","color":"#2DE7FF","stack":["Python","AST","documentation"],"highlights":["Scans a repository and builds per-file structured context.","Documentation is generated from real code, not guessed prose.","Output is inspectable and versionable."],"words":["agents","skills","rag"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/Doclify && cd Doclify && python -m pytest -q","note":"","kind":"original"},{"slug":"feature-engine","name":"Feature-Engine","short":"FEATURES","description":"Python library with multiple transformers to engineer and select features for machine learning models.","language":"Python","stars":5,"updated":"2026-10-05","url":"https://github.com/mayankjain1815-commits/Feature-Engine","category":"Data","color":"#2DE7FF","stack":["Python","transformers","feature selection"],"highlights":["Composable transformers for real ML pipelines.","Selection is explicit rather than hidden inside a model.","Library-first: usable outside the demo that motivated it."],"words":["mlops","signals","demo"],"systems":["particles"],"command":"gh repo clone mayankjain1815-commits/Feature-Engine && cd Feature-Engine && python -m pytest -q","note":"","kind":"original"},{"slug":"marketinsight","name":"Marketinsight","short":"MARKET","description":"AI-powered stock market analysis platform offering financial data and insights through a conversational interface.","language":"Python","stars":4,"updated":"2026-11-06","url":"https://github.com/mayankjain1815-commits/Marketinsight","category":"Finance","color":"#C4FF4D","stack":["Python","LLM","financial data"],"highlights":["Conversational interface over market data.","Combines retrieval and a reasoning layer for explanations.","Designed to show the source behind each insight."],"words":["forecast","signals","agents"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/Marketinsight && cd Marketinsight && python -m pytest -q","note":"","kind":"original"},{"slug":"mirrorgpt","name":"MirrorGPT","short":"MIRROR","description":"Tools for building a personalized agent that mirrors your facts, speaking style and voice.","language":"Python","stars":4,"updated":"2026-10-02","url":"https://github.com/mayankjain1815-commits/MirrorGPT","category":"Agents","color":"#8E64FF","stack":["Python","personalization","voice"],"highlights":["Builds an agent profile from the user's own facts and style.","Voice and text stay on one pipeline.","Falls back to deterministic behaviour with no key."],"words":["agents","skills","offline"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/MirrorGPT && cd MirrorGPT && python -m pytest -q","note":"","kind":"original"},{"slug":"movies","name":"Movie-Recommendation-System","short":"MOVIES","description":"Movie recommendation system that delivers personalized movie suggestions.","language":"Jupyter Notebook","stars":5,"updated":"2026-10-05","url":"https://github.com/mayankjain1815-commits/Movie-Recommendation-System","category":"Data","color":"#2DE7FF","stack":["Jupyter","pandas","recommendation"],"highlights":["Classic recommendation work in a readable notebook.","Personalised suggestions from interaction history.","Good example of the data-to-product bridge."],"words":["rag","demo","signals"],"systems":["particles"],"command":"gh repo clone mayankjain1815-commits/Movie-Recommendation-System && cd Movie-Recommendation-System","note":"","kind":"original"},{"slug":"next-role","name":"Next-Role","short":"ROLE","description":"Upload a CV and job description to get a tailored resume, researched interview prep and a day-of battlecard.","language":"Python","stars":4,"updated":"2026-10-05","url":"https://github.com/mayankjain1815-commits/Next-Role","category":"Agents","color":"#8E64FF","stack":["Python","RAG","document generation"],"highlights":["Retrieves role context before drafting anything.","Produces a resume, prep notes and a day-of battlecard.","Three outputs share one grounded context bundle."],"words":["agents","rag","skills"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/Next-Role && cd Next-Role && python -m pytest -q","note":"","kind":"original"},{"slug":"omniroute","name":"OmniRoute","short":"OMNI","description":"Unified AI proxy/router: one OpenAI-compatible endpoint across 291 LLM providers, with automatic fallback, quota pooling and cost control.","language":"TypeScript","stars":6,"updated":"2026-10-07","url":"https://github.com/mayankjain1815-commits/OmniRoute","category":"Infrastructure","color":"#8E64FF","stack":["TypeScript","proxy","fallback routing"],"highlights":["One compatible endpoint across 291 providers.","Automatic fallback and quota pooling keep requests alive.","Cost control is a first-class routing constraint."],"words":["agents","offline","mlops"],"systems":["particles","globe"],"command":"gh repo clone mayankjain1815-commits/OmniRoute && cd OmniRoute && npm test","note":"","kind":"original"},{"slug":"shopping","name":"ShoppingGPT","short":"SHOP","description":"AI-powered shopping assistant combining natural language processing for a smart shopping experience.","language":"HTML","stars":3,"updated":"2026-10-05","url":"https://github.com/mayankjain1815-commits/ShoppingGPT","category":"Agents","color":"#8E64FF","stack":["HTML","JavaScript","NLP"],"highlights":["Natural-language shopping flow in a small frontend.","Commodity example of intent → action.","Kept deliberately simple and readable."],"words":["agents","demo","skills"],"systems":["particles"],"command":"gh repo clone mayankjain1815-commits/ShoppingGPT && cd ShoppingGPT","note":"","kind":"original"},{"slug":"synapse","name":"Synapse","short":"SYNAPSE","description":"Daily news and content aggregation application, cloned and maintained independently.","language":"Python","stars":3,"updated":"2026-10-02","url":"https://github.com/mayankjain1815-commits/Synapse","category":"Media","color":"#8E64FF","stack":["Python","aggregation","feeds"],"highlights":["Aggregates daily news into one view.","Independently maintained clone, not a passive fork.","Signal processing over messy real-world feeds."],"words":["signals","agents","demo"],"systems":["particles"],"command":"gh repo clone mayankjain1815-commits/Synapse && cd Synapse && python -m pytest -q","note":"","kind":"original"},{"slug":"pii","name":"TrustBoost-PII-Sanitizer","short":"PII","description":"Inspection layer between agents and LLMs that detects and sanitizes raw PII before it leaves your pipeline.","language":"HTML","stars":5,"updated":"2026-10-02","url":"https://github.com/mayankjain1815-commits/TrustBoost-PII-Sanitizer","category":"Security","color":"#FF42C6","stack":["HTML","JavaScript","PII detection"],"highlights":["Sits on the boundary between agent and model.","Detects and sanitizes raw PII before egress.","Safety rule that is trivial to describe and hard to skip."],"words":["risk","signals","offline"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/TrustBoost-PII-Sanitizer && cd TrustBoost-PII-Sanitizer","note":"","kind":"original"},{"slug":"portfolio","name":"ai-ml-portfolio","short":"PORTFOLIO","description":"Eight self-contained AI/ML projects plus a Flask word atlas — no langchain, no SDK wrappers, offline by design.","language":"Python","stars":0,"updated":"2026-11-21","url":"https://github.com/mayankjain1815-commits/ai-ml-portfolio","category":"Portfolio","color":"#FF42C6","stack":["Python","Flask","pytest","Node 22"],"highlights":["Eight projects with one-command demos and 333 offline tests.","The rotating words and this repo ring are backed by the Word Atlas API.","Three hand-written canvas systems and a duplicate 3D word ring."],"words":["rag","agents","mlops","forecast","signals","skills","risk","offline","demo","iot"],"systems":["particles","globe","neural"],"command":"cd ai-ml-portfolio && cd backend && python -m word_atlas","note":"","kind":"original"},{"slug":"jarvis","name":"jarvis-mac","short":"JARVIS","description":"Local assistant experiments for macOS.","language":"Python","stars":0,"updated":"2026-11-23","url":"https://github.com/mayankjain1815-commits/jarvis-mac","category":"Agents","color":"#8E64FF","stack":["Python","macOS","assistant"],"highlights":["Newest local assistant experiment.","Explores agent loops against desktop context.","Description intentionally short — the code is the documentation."],"words":["agents","signals","demo"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/jarvis-mac && cd jarvis-mac && python -m pytest -q","note":"","kind":"original"},{"slug":"profile","name":"mayankjain1815-commits","short":"PROFILE","description":"Public work: TypeScript AI infrastructure, agents and tooling — plus the inline aurora-neon showcase.","language":"TypeScript","stars":5,"updated":"2026-10-02","url":"https://github.com/mayankjain1815-commits/mayankjain1815-commits","category":"Portfolio","color":"#FF42C6","stack":["Markdown","shields.io","WebP"],"highlights":["Profile README with inline animated WebP showcases.","Live shields.io badges query GitHub at render time.","Aurora palette carried from the portfolio into the profile."],"words":["demo","offline","signals"],"systems":["particles"],"command":"gh repo clone mayankjain1815-commits/mayankjain1815-commits","note":"","kind":"profile"},{"slug":"n8n","name":"n8n","short":"N8N","description":"Fair-code platform to build and deploy AI agents and workflows, self-hosted or in the cloud.","language":"TypeScript","stars":3,"updated":"2026-10-20","url":"https://github.com/mayankjain1815-commits/n8n","category":"Infrastructure","color":"#8E64FF","stack":["TypeScript","workflows","self-hosted"],"highlights":["Workflow automation with AI agents.","Self-hosted or cloud deployment.","Independently maintained clone."],"words":["agents","skills","demo"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/n8n && cd n8n && npm test","note":"","kind":"original"},{"slug":"sentinel","name":"sentinel-iot-disaster-command","short":"SENTINEL","description":"Standalone IoT early-warning command repo — the upstream of the SENTINEL project in the portfolio.","language":"JavaScript","stars":0,"updated":"2026-10-31","url":"https://github.com/mayankjain1815-commits/sentinel-iot-disaster-command","category":"Operations","color":"#2DE7FF","stack":["Node 22","React","sqlite"],"highlights":["Three-node ESP32/LoRa early-warning concept.","Kept as the standalone companion to portfolio project 08.","Bug fixes live in the portfolio copy, not here."],"words":["iot","risk","signals","forecast"],"systems":["globe"],"command":"gh repo clone mayankjain1815-commits/sentinel-iot-disaster-command","note":"The portfolio's 08-sentinel-iot is the maintained copy.","kind":"original"},{"slug":"strix","name":"strix","short":"STRIX","description":"AI-powered security agent that scans codebases and pull requests for vulnerabilities in CI/CD pipelines.","language":"Python","stars":4,"updated":"2026-11-11","url":"https://github.com/mayankjain1815-commits/strix","category":"Security","color":"#FF42C6","stack":["Python","CI/CD","security scanning"],"highlights":["Scans code and pull requests in CI.","Security findings are produced by an agent, not a regex wall.","Recently updated public work."],"words":["risk","agents","mlops"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/strix && cd strix && python -m pytest -q","note":"","kind":"original"},{"slug":"sih","name":"sih-main","short":"SIH","description":"District-level weather forecast verification with SHAP explanations — selected for the national round of Smart India Hackathon 2026.","language":"Python","stars":4,"updated":"2026-10-02","url":"https://github.com/mayankjain1815-commits/sih-main","category":"Hackathon","color":"#C4FF4D","stack":["Python","XGBoost","FastAPI","React","SHAP"],"highlights":["Predicts where India's medium-range forecasts will bust.","SHAP explains why each district is flagged.","Problem statement 26079, Ministry of Earth Sciences."],"words":["forecast","risk","mlops","signals"],"systems":["globe","particles"],"command":"gh repo clone mayankjain1815-commits/sih-main && cd sih-main && python -m pytest -q","note":"Forked upstream for the hackathon; the only fork in this orbit.","kind":"fork"}]</script>
-<script type="application/json" id="theme-atlas-data">[{"id":"aurora","name":"Aurora neon","tagline":"Obsidian navy, electric cyan, hot magenta, acid lime, violet and ice.","colors":{"bg":"#060918","bg2":"#0d1430","primary":"#2de7ff","secondary":"#ff42c6","accent":"#c4ff4d","violet":"#8e64ff","ice":"#e9f2ff"},"snow":false,"ornaments":false,"glyph":"✦"},{"id":"christmas","name":"Christmas 2026","tagline":"Snow, tree green, bauble red and gold — same systems, festive skin.","colors":{"bg":"#07120d","bg2":"#11291d","primary":"#ff3b4e","secondary":"#ffd166","accent":"#39d98a","violet":"#ff8a5b","ice":"#f6fff8"},"snow":true,"ornaments":true,"glyph":"🎄"}]</script>
+<!-- Same repository records as backend/word_atlas/repos.py, embedded for offline use. -->
+<script type="application/json" id="repo-atlas-data">[{"slug":"slop","name":"AI-Slop-Detector","short":"SLOP","description":"End-to-end implementation of an AI writing detector.","language":"Python","stars":5,"updated":"2026-10-03","url":"https://github.com/mayankjain1815-commits/AI-Slop-Detector","category":"Security","color":"#FF42C6","stack":["Python","NLP","classification"],"highlights":["Detects machine-like writing patterns in submitted text.","Package the detector behind a small runnable entry point.","Scores and explanations are kept separate so results are inspectable."],"words":["signals","risk","skills"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/AI-Slop-Detector && cd AI-Slop-Detector && python -m pytest -q","note":"","kind":"original"},{"slug":"trading","name":"AI-Trading-Bot","short":"TRADE","description":"Trading bot that analyses sentiment of live news events and trades accordingly.","language":"HTML","stars":5,"updated":"2026-10-03","url":"https://github.com/mayankjain1815-commits/AI-Trading-Bot","category":"Finance","color":"#C4FF4D","stack":["HTML","JavaScript","news sentiment"],"highlights":["Ingests news events and derives a sentiment score.","Turns signals into a documented decision rather than a black-box bet.","Frontend presents the reasoning alongside the action."],"words":["signals","risk","forecast"],"systems":["particles"],"command":"gh repo clone mayankjain1815-commits/AI-Trading-Bot && cd AI-Trading-Bot","note":"","kind":"original"},{"slug":"memory-guard","name":"Agent-Memory-Guard","short":"GUARD","description":"Runtime defense that catches AI memory poisoning attacks, even after a context reset.","language":"Python","stars":4,"updated":"2026-10-02","url":"https://github.com/mayankjain1815-commits/Agent-Memory-Guard","category":"Security","color":"#FF42C6","stack":["Python","agents","runtime policy"],"highlights":["Treats memory writes as an untrusted boundary.","Detects poisoning that survives a context reset.","Policy decisions are explicit so they can be tested offline."],"words":["agents","risk","offline"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/Agent-Memory-Guard && cd Agent-Memory-Guard && python -m pytest -q","note":"","kind":"original"},{"slug":"wallet","name":"Agent-Wallet-SDK","short":"WALLET","description":"Non-custodial multi-chain financial infrastructure SDK for autonomous AI agents.","language":"TypeScript","stars":4,"updated":"2026-10-02","url":"https://github.com/mayankjain1815-commits/Agent-Wallet-SDK","category":"Finance","color":"#C4FF4D","stack":["TypeScript","SDK","multi-chain"],"highlights":["Agent-safe wallet primitives with no custody handoff.","Multi-chain interface behind one SDK surface.","Guard rails are part of the API, not an afterthought."],"words":["agents","skills","risk"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/Agent-Wallet-SDK && cd Agent-Wallet-SDK && npm test","note":"","kind":"original"},{"slug":"citadel","name":"CITADEL","short":"CITADEL","description":"Open-source operating layer for Claude Code and OpenAI Codex — routes and hardens agent requests against real repositories.","language":"JavaScript","stars":4,"updated":"2026-10-19","url":"https://github.com/mayankjain1815-commits/CITADEL","category":"Infrastructure","color":"#8E64FF","stack":["JavaScript","agent routing","guardrails"],"highlights":["Routes agent requests through one hardened control plane.","Checks requests against the real repository before execution.","Dependency and workflow alerts are guarded in CI."],"words":["agents","skills","offline"],"systems":["particles","neural"],"command":"gh repo clone mayankjain1815-commits/CITADEL && cd CITADEL && npm test","note":"","kind":"original"},{"slug":"cleanconnect","name":"CleanConnect","short":"CLEAN","description":"Verified waste collection platform with QR + GPS pickup verification, Civic Points, driver routes and admin analytics.","language":"JavaScript","stars":0,"updated":"2026-11-05","url":"https://github.com/mayankjain1815-commits/CleanConnect","category":"Civic","color":"#C4FF4D","stack":["JavaScript","QR","GPS","analytics"],"highlights":["Closes the loop from pickup proof to civic reward.","Driver routes and admin analytics share one data model.","Newest public repository in this orbit."],"words":["signals","iot","demo"],"systems":["globe"],"command":"gh repo clone mayankjain1815-commits/CleanConnect && cd CleanConnect","note":"","kind":"original"},{"slug":"doclify","name":"Doclify","short":"DOCS","description":"AI agent that documents software projects by scanning a codebase and building structured per-file context.","language":"Python","stars":4,"updated":"2026-11-04","url":"https://github.com/mayankjain1815-commits/Doclify","category":"Developer Tools","color":"#2DE7FF","stack":["Python","AST","documentation"],"highlights":["Scans a repository and builds per-file structured context.","Documentation is generated from real code, not guessed prose.","Output is inspectable and versionable."],"words":["agents","skills","rag"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/Doclify && cd Doclify && python -m pytest -q","note":"","kind":"original"},{"slug":"feature-engine","name":"Feature-Engine","short":"FEATURES","description":"Python library with multiple transformers to engineer and select features for machine learning models.","language":"Python","stars":5,"updated":"2026-10-05","url":"https://github.com/mayankjain1815-commits/Feature-Engine","category":"Data","color":"#2DE7FF","stack":["Python","transformers","feature selection"],"highlights":["Composable transformers for real ML pipelines.","Selection is explicit rather than hidden inside a model.","Library-first: usable outside the demo that motivated it."],"words":["mlops","signals","demo"],"systems":["particles"],"command":"gh repo clone mayankjain1815-commits/Feature-Engine && cd Feature-Engine && python -m pytest -q","note":"","kind":"original"},{"slug":"marketinsight","name":"Marketinsight","short":"MARKET","description":"AI-powered stock market analysis platform offering financial data and insights through a conversational interface.","language":"Python","stars":4,"updated":"2026-11-06","url":"https://github.com/mayankjain1815-commits/Marketinsight","category":"Finance","color":"#C4FF4D","stack":["Python","LLM","financial data"],"highlights":["Conversational interface over market data.","Combines retrieval and a reasoning layer for explanations.","Designed to show the source behind each insight."],"words":["forecast","signals","agents"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/Marketinsight && cd Marketinsight && python -m pytest -q","note":"","kind":"original"},{"slug":"mirrorgpt","name":"MirrorGPT","short":"MIRROR","description":"Tools for building a personalized agent that mirrors your facts, speaking style and voice.","language":"Python","stars":4,"updated":"2026-10-02","url":"https://github.com/mayankjain1815-commits/MirrorGPT","category":"Agents","color":"#8E64FF","stack":["Python","personalization","voice"],"highlights":["Builds an agent profile from the user's own facts and style.","Voice and text stay on one pipeline.","Falls back to deterministic behaviour with no key."],"words":["agents","skills","offline"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/MirrorGPT && cd MirrorGPT && python -m pytest -q","note":"","kind":"original"},{"slug":"movies","name":"Movie-Recommendation-System","short":"MOVIES","description":"Movie recommendation system that delivers personalized movie suggestions.","language":"Jupyter Notebook","stars":5,"updated":"2026-10-05","url":"https://github.com/mayankjain1815-commits/Movie-Recommendation-System","category":"Data","color":"#2DE7FF","stack":["Jupyter","pandas","recommendation"],"highlights":["Classic recommendation work in a readable notebook.","Personalised suggestions from interaction history.","Good example of the data-to-product bridge."],"words":["rag","demo","signals"],"systems":["particles"],"command":"gh repo clone mayankjain1815-commits/Movie-Recommendation-System && cd Movie-Recommendation-System","note":"","kind":"original"},{"slug":"next-role","name":"Next-Role","short":"ROLE","description":"Upload a CV and job description to get a tailored resume, researched interview prep and a day-of battlecard.","language":"Python","stars":4,"updated":"2026-10-05","url":"https://github.com/mayankjain1815-commits/Next-Role","category":"Agents","color":"#8E64FF","stack":["Python","RAG","document generation"],"highlights":["Retrieves role context before drafting anything.","Produces a resume, prep notes and a day-of battlecard.","Three outputs share one grounded context bundle."],"words":["agents","rag","skills"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/Next-Role && cd Next-Role && python -m pytest -q","note":"","kind":"original"},{"slug":"omniroute","name":"OmniRoute","short":"OMNI","description":"Unified AI proxy/router: one OpenAI-compatible endpoint across 291 LLM providers, with automatic fallback, quota pooling and cost control.","language":"TypeScript","stars":6,"updated":"2026-10-07","url":"https://github.com/mayankjain1815-commits/OmniRoute","category":"Infrastructure","color":"#8E64FF","stack":["TypeScript","proxy","fallback routing"],"highlights":["One compatible endpoint across 291 providers.","Automatic fallback and quota pooling keep requests alive.","Cost control is a first-class routing constraint."],"words":["agents","offline","mlops"],"systems":["particles","globe"],"command":"gh repo clone mayankjain1815-commits/OmniRoute && cd OmniRoute && npm test","note":"","kind":"original"},{"slug":"shopping","name":"ShoppingGPT","short":"SHOP","description":"AI-powered shopping assistant combining natural language processing for a smart shopping experience.","language":"HTML","stars":3,"updated":"2026-10-05","url":"https://github.com/mayankjain1815-commits/ShoppingGPT","category":"Agents","color":"#8E64FF","stack":["HTML","JavaScript","NLP"],"highlights":["Natural-language shopping flow in a small frontend.","Commodity example of intent → action.","Kept deliberately simple and readable."],"words":["agents","demo","skills"],"systems":["particles"],"command":"gh repo clone mayankjain1815-commits/ShoppingGPT && cd ShoppingGPT","note":"","kind":"original"},{"slug":"synapse","name":"Synapse","short":"SYNAPSE","description":"Daily news and content aggregation application, cloned and maintained independently.","language":"Python","stars":3,"updated":"2026-10-02","url":"https://github.com/mayankjain1815-commits/Synapse","category":"Media","color":"#8E64FF","stack":["Python","aggregation","feeds"],"highlights":["Aggregates daily news into one view.","Independently maintained clone, not a passive fork.","Signal processing over messy real-world feeds."],"words":["signals","agents","demo"],"systems":["particles"],"command":"gh repo clone mayankjain1815-commits/Synapse && cd Synapse && python -m pytest -q","note":"","kind":"original"},{"slug":"pii","name":"TrustBoost-PII-Sanitizer","short":"PII","description":"Inspection layer between agents and LLMs that detects and sanitizes raw PII before it leaves your pipeline.","language":"HTML","stars":5,"updated":"2026-10-02","url":"https://github.com/mayankjain1815-commits/TrustBoost-PII-Sanitizer","category":"Security","color":"#FF42C6","stack":["HTML","JavaScript","PII detection"],"highlights":["Sits on the boundary between agent and model.","Detects and sanitizes raw PII before egress.","Safety rule that is trivial to describe and hard to skip."],"words":["risk","signals","offline"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/TrustBoost-PII-Sanitizer && cd TrustBoost-PII-Sanitizer","note":"","kind":"original"},{"slug":"portfolio","name":"ai-ml-portfolio","short":"PORTFOLIO","description":"Eight self-contained AI/ML projects plus a Flask word atlas — no langchain, no SDK wrappers, offline by design.","language":"Python","stars":0,"updated":"2026-11-21","url":"https://github.com/mayankjain1815-commits/ai-ml-portfolio","category":"Portfolio","color":"#FF42C6","stack":["Python","Flask","pytest","Node 22"],"highlights":["Eight projects with one-command demos and hundreds of offline tests.","The solar system and this planet are backed by the Word Atlas API.","Three hand-written canvas systems and a 33-world solar atlas."],"words":["rag","agents","mlops","forecast","signals","skills","risk","offline","demo","iot"],"systems":["particles","globe","neural"],"command":"cd ai-ml-portfolio && cd backend && python -m word_atlas","note":"","kind":"original"},{"slug":"jarvis","name":"jarvis-mac","short":"JARVIS","description":"Local assistant experiments for macOS.","language":"Python","stars":0,"updated":"2026-11-23","url":"https://github.com/mayankjain1815-commits/jarvis-mac","category":"Agents","color":"#8E64FF","stack":["Python","macOS","assistant"],"highlights":["Newest local assistant experiment.","Explores agent loops against desktop context.","Description intentionally short — the code is the documentation."],"words":["agents","signals","demo"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/jarvis-mac && cd jarvis-mac && python -m pytest -q","note":"","kind":"original"},{"slug":"profile","name":"mayankjain1815-commits","short":"PROFILE","description":"Public work: TypeScript AI infrastructure, agents and tooling — plus the inline aurora-neon showcase.","language":"TypeScript","stars":5,"updated":"2026-10-02","url":"https://github.com/mayankjain1815-commits/mayankjain1815-commits","category":"Portfolio","color":"#FF42C6","stack":["Markdown","shields.io","WebP"],"highlights":["Profile README with inline animated WebP showcases.","Live shields.io badges query GitHub at render time.","Aurora palette carried from the portfolio into the profile."],"words":["demo","offline","signals"],"systems":["particles"],"command":"gh repo clone mayankjain1815-commits/mayankjain1815-commits","note":"","kind":"profile"},{"slug":"n8n","name":"n8n","short":"N8N","description":"Fair-code platform to build and deploy AI agents and workflows, self-hosted or in the cloud.","language":"TypeScript","stars":3,"updated":"2026-10-20","url":"https://github.com/mayankjain1815-commits/n8n","category":"Infrastructure","color":"#8E64FF","stack":["TypeScript","workflows","self-hosted"],"highlights":["Workflow automation with AI agents.","Self-hosted or cloud deployment.","Independently maintained clone."],"words":["agents","skills","demo"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/n8n && cd n8n && npm test","note":"","kind":"original"},{"slug":"sentinel","name":"sentinel-iot-disaster-command","short":"SENTINEL","description":"Standalone IoT early-warning command repo — the upstream of the SENTINEL project in the portfolio.","language":"JavaScript","stars":0,"updated":"2026-10-31","url":"https://github.com/mayankjain1815-commits/sentinel-iot-disaster-command","category":"Operations","color":"#2DE7FF","stack":["Node 22","React","sqlite"],"highlights":["Three-node ESP32/LoRa early-warning concept.","Kept as the standalone companion to portfolio project 08.","Bug fixes live in the portfolio copy, not here."],"words":["iot","risk","signals","forecast"],"systems":["globe"],"command":"gh repo clone mayankjain1815-commits/sentinel-iot-disaster-command","note":"The portfolio's 08-sentinel-iot is the maintained copy.","kind":"original"},{"slug":"strix","name":"strix","short":"STRIX","description":"AI-powered security agent that scans codebases and pull requests for vulnerabilities in CI/CD pipelines.","language":"Python","stars":4,"updated":"2026-11-11","url":"https://github.com/mayankjain1815-commits/strix","category":"Security","color":"#FF42C6","stack":["Python","CI/CD","security scanning"],"highlights":["Scans code and pull requests in CI.","Security findings are produced by an agent, not a regex wall.","Recently updated public work."],"words":["risk","agents","mlops"],"systems":["neural"],"command":"gh repo clone mayankjain1815-commits/strix && cd strix && python -m pytest -q","note":"","kind":"original"},{"slug":"sih","name":"sih-main","short":"SIH","description":"District-level weather forecast verification with SHAP explanations — selected for the national round of Smart India Hackathon 2026.","language":"Python","stars":4,"updated":"2026-10-02","url":"https://github.com/mayankjain1815-commits/sih-main","category":"Hackathon","color":"#C4FF4D","stack":["Python","XGBoost","FastAPI","React","SHAP"],"highlights":["Predicts where India's medium-range forecasts will bust.","SHAP explains why each district is flagged.","Problem statement 26079, Ministry of Earth Sciences."],"words":["forecast","risk","mlops","signals"],"systems":["globe","particles"],"command":"gh repo clone mayankjain1815-commits/sih-main && cd sih-main && python -m pytest -q","note":"Forked upstream for the hackathon; the only fork in this orbit.","kind":"fork"}]</script>
+<!-- Same aurora palette as backend/word_atlas/themes.py. -->
+<script type="application/json" id="theme-atlas-data">[{"id":"aurora","name":"Aurora neon","tagline":"Obsidian navy, electric cyan, hot magenta, acid lime, violet and ice.","colors":{"bg":"#060918","bg2":"#0d1430","primary":"#2de7ff","secondary":"#ff42c6","accent":"#c4ff4d","violet":"#8e64ff","ice":"#e9f2ff"},"snow":false,"ornaments":false,"glyph":"✦"}]</script>
+<!-- Same deterministic 33-world layout as backend/word_atlas/solar.py. -->
+<script type="application/json" id="solar-atlas-data">{"star":{"name":"Portfolio Core","label":"CORE","caption":"10 concepts · 23 repositories · 33 worlds","color":"#C4FF4D","radius":30,"note":"One deterministic layout shared by the canvas, the API and the offline JSON."},"bodies":[{"slug":"rag","kind":"word","catalog_id":"W01","label":"RAG","name":"Retrieval-Augmented Generation","category":"Retrieval","color":"#2DE7FF","summary":"Ground the answer in text you can actually inspect.","orbit":0.26,"orbit_band":1,"period":3.39,"radius":10.84,"phase":0.2021,"spin":0.43,"texture":"stormy","ring":false,"ring_tilt":-0.021,"moons":1,"moon_names":["I"],"inclination":6.73,"eccentricity":0.073,"temperature":"hot","linked":4,"language":"concept","updated":"","stars":0,"url":""},{"slug":"agents","kind":"word","catalog_id":"W02","label":"AGENTS","name":"Multi-Agent Crews","category":"Agents","color":"#FF42C6","summary":"Several bounded reasoners, one shared blackboard, one audit trace.","orbit":0.332,"orbit_band":2,"period":5.11,"radius":12.02,"phase":2.7487,"spin":0.612,"texture":"cratered","ring":true,"ring_tilt":0.363,"moons":0,"moon_names":[],"inclination":10.75,"eccentricity":0.118,"temperature":"hot","linked":14,"language":"concept","updated":"","stars":0,"url":""},{"slug":"mlops","kind":"word","catalog_id":"W03","label":"MLOPS","name":"Model Operations & Drift","category":"Operations","color":"#C4FF4D","summary":"Notice the model going stale before the users do.","orbit":0.404,"orbit_band":3,"period":6.65,"radius":11.55,"phase":5.0903,"spin":0.54,"texture":"banded","ring":false,"ring_tilt":0.211,"moons":2,"moon_names":["I","II"],"inclination":9.15,"eccentricity":0.1,"temperature":"hot","linked":5,"language":"concept","updated":"","stars":0,"url":""},{"slug":"forecast","kind":"word","catalog_id":"W04","label":"FORECAST","name":"Deterministic Forecasting","category":"Operations","color":"#8E64FF","summary":"Same seed, same emergency, every single demo.","orbit":0.476,"orbit_band":4,"period":8.33,"radius":11.29,"phase":1.1745,"spin":0.499,"texture":"terran","ring":false,"ring_tilt":0.125,"moons":2,"moon_names":["I","II"],"inclination":8.26,"eccentricity":0.09,"temperature":"temperate","linked":5,"language":"concept","updated":"","stars":0,"url":""},{"slug":"signals","kind":"word","catalog_id":"W05","label":"SIGNALS","name":"Telemetry & Signal Processing","category":"Operations","color":"#2DE7FF","summary":"Noisy sensor readings become evidence, not panic.","orbit":0.548,"orbit_band":5,"period":9.5,"radius":9.78,"phase":3.3878,"spin":0.268,"texture":"banded","ring":false,"ring_tilt":-0.364,"moons":0,"moon_names":[],"inclination":3.15,"eccentricity":0.032,"temperature":"temperate","linked":13,"language":"concept","updated":"","stars":0,"url":""},{"slug":"skills","kind":"word","catalog_id":"W06","label":"SKILLS","name":"Agent Skill Packaging","category":"Agents","color":"#FF42C6","summary":"Capabilities as small, routable, budgeted documents.","orbit":0.266,"orbit_band":1,"period":3.25,"radius":9.28,"phase":5.7263,"spin":0.192,"texture":"icy","ring":true,"ring_tilt":-0.525,"moons":0,"moon_names":[],"inclination":1.46,"eccentricity":0.013,"temperature":"hot","linked":9,"language":"concept","updated":"","stars":0,"url":""},{"slug":"risk","kind":"word","catalog_id":"W07","label":"RISK","name":"Explainable Risk Scoring","category":"Operations","color":"#FF42C6","summary":"Every point in the score has a name and a number.","orbit":0.338,"orbit_band":2,"period":4.92,"radius":10.64,"phase":2.0118,"spin":0.401,"texture":"terran","ring":false,"ring_tilt":-0.083,"moons":1,"moon_names":["I"],"inclination":6.08,"eccentricity":0.065,"temperature":"hot","linked":9,"language":"concept","updated":"","stars":0,"url":""},{"slug":"offline","kind":"word","catalog_id":"W08","label":"OFFLINE","name":"Zero-Key Operation","category":"Architecture","color":"#C4FF4D","summary":"The whole portfolio runs with no network and no secrets.","orbit":0.41,"orbit_band":3,"period":6.95,"radius":12.08,"phase":4.5895,"spin":0.621,"texture":"stormy","ring":false,"ring_tilt":0.383,"moons":0,"moon_names":[],"inclination":10.95,"eccentricity":0.12,"temperature":"hot","linked":7,"language":"concept","updated":"","stars":0,"url":""},{"slug":"demo","kind":"word","catalog_id":"W09","label":"DEMO","name":"Demoable by Design","category":"Architecture","color":"#8E64FF","summary":"Two minutes, one command, no setup ritual.","orbit":0.482,"orbit_band":4,"period":8.08,"radius":10.25,"phase":0.4803,"spin":0.341,"texture":"banded","ring":true,"ring_tilt":-0.209,"moons":1,"moon_names":["I"],"inclination":4.76,"eccentricity":0.05,"temperature":"temperate","linked":9,"language":"concept","updated":"","stars":0,"url":""},{"slug":"iot","kind":"word","catalog_id":"W10","label":"IOT","name":"IoT Early-Warning Command","category":"Operations","color":"#2DE7FF","summary":"From a LoRa packet to an evacuation order, end to end.","orbit":0.554,"orbit_band":5,"period":9.68,"radius":9.84,"phase":2.8292,"spin":0.278,"texture":"icy","ring":false,"ring_tilt":-0.343,"moons":0,"moon_names":[],"inclination":3.37,"eccentricity":0.034,"temperature":"temperate","linked":3,"language":"concept","updated":"","stars":0,"url":""},{"slug":"slop","kind":"repo","catalog_id":"R01","label":"SLOP","name":"AI-Slop-Detector","category":"Security","color":"#FF42C6","summary":"End-to-end implementation of an AI writing detector.","orbit":0.7,"orbit_band":1,"period":14.02,"radius":8.37,"phase":0.1572,"spin":0.375,"texture":"terran","ring":false,"ring_tilt":-0.138,"moons":1,"moon_names":["I"],"inclination":5.5,"eccentricity":0.059,"temperature":"temperate","linked":3,"language":"Python","updated":"2026-10-03","stars":5,"url":"https://github.com/mayankjain1815-commits/AI-Slop-Detector"},{"slug":"trading","kind":"repo","catalog_id":"R02","label":"TRADE","name":"AI-Trading-Bot","category":"Finance","color":"#C4FF4D","summary":"Trading bot that analyses sentiment of live news events and trades accordingly.","orbit":0.735,"orbit_band":2,"period":16.32,"radius":10.13,"phase":2.7737,"spin":0.643,"texture":"cratered","ring":false,"ring_tilt":0.429,"moons":3,"moon_names":["I","II","III"],"inclination":11.43,"eccentricity":0.126,"temperature":"temperate","linked":3,"language":"HTML","updated":"2026-10-03","stars":5,"url":"https://github.com/mayankjain1815-commits/AI-Trading-Bot"},{"slug":"memory-guard","kind":"repo","catalog_id":"R03","label":"GUARD","name":"Agent-Memory-Guard","category":"Security","color":"#FF42C6","summary":"Runtime defense that catches AI memory poisoning attacks, even after a context reset.","orbit":0.77,"orbit_band":3,"period":16.02,"radius":8.27,"phase":4.9439,"spin":0.358,"texture":"terran","ring":true,"ring_tilt":-0.173,"moons":1,"moon_names":["I"],"inclination":5.14,"eccentricity":0.055,"temperature":"cold","linked":3,"language":"Python","updated":"2026-10-02","stars":4,"url":"https://github.com/mayankjain1815-commits/Agent-Memory-Guard"},{"slug":"wallet","kind":"repo","catalog_id":"R04","label":"WALLET","name":"Agent-Wallet-SDK","category":"Finance","color":"#C4FF4D","summary":"Non-custodial multi-chain financial infrastructure SDK for autonomous AI agents.","orbit":0.805,"orbit_band":4,"period":18.16,"radius":9.57,"phase":1.2222,"spin":0.558,"texture":"stormy","ring":false,"ring_tilt":0.25,"moons":2,"moon_names":["I","II"],"inclination":9.56,"eccentricity":0.105,"temperature":"cold","linked":3,"language":"TypeScript","updated":"2026-10-02","stars":4,"url":"https://github.com/mayankjain1815-commits/Agent-Wallet-SDK"},{"slug":"citadel","kind":"repo","catalog_id":"R05","label":"CITADEL","name":"CITADEL","category":"Infrastructure","color":"#8E64FF","summary":"Open-source operating layer for Claude Code and OpenAI Codex — routes and hardens agent requests against real repositories.","orbit":0.84,"orbit_band":5,"period":18.79,"radius":8.97,"phase":3.5475,"spin":0.466,"texture":"cratered","ring":false,"ring_tilt":0.055,"moons":2,"moon_names":["I","II"],"inclination":7.52,"eccentricity":0.081,"temperature":"cold","linked":3,"language":"JavaScript","updated":"2026-10-19","stars":4,"url":"https://github.com/mayankjain1815-commits/CITADEL"},{"slug":"cleanconnect","kind":"repo","catalog_id":"R06","label":"CLEAN","name":"CleanConnect","category":"Civic","color":"#C4FF4D","summary":"Verified waste collection platform with QR + GPS pickup verification, Civic Points, driver routes and admin analytics.","orbit":0.875,"orbit_band":6,"period":19.8,"radius":8.82,"phase":5.9296,"spin":0.444,"texture":"stormy","ring":false,"ring_tilt":0.008,"moons":2,"moon_names":["I","II"],"inclination":7.03,"eccentricity":0.076,"temperature":"cold","linked":3,"language":"JavaScript","updated":"2026-11-05","stars":0,"url":"https://github.com/mayankjain1815-commits/CleanConnect"},{"slug":"doclify","kind":"repo","catalog_id":"R07","label":"DOCS","name":"Doclify","category":"Developer Tools","color":"#2DE7FF","summary":"AI agent that documents software projects by scanning a codebase and building structured per-file context.","orbit":0.91,"orbit_band":7,"period":21.62,"radius":9.5,"phase":2.1301,"spin":0.547,"texture":"icy","ring":true,"ring_tilt":0.227,"moons":2,"moon_names":["I","II"],"inclination":9.32,"eccentricity":0.102,"temperature":"cold","linked":3,"language":"Python","updated":"2026-11-04","stars":4,"url":"https://github.com/mayankjain1815-commits/Doclify"},{"slug":"feature-engine","kind":"repo","catalog_id":"R08","label":"FEATURES","name":"Feature-Engine","category":"Data","color":"#2DE7FF","summary":"Python library with multiple transformers to engineer and select features for machine learning models.","orbit":0.945,"orbit_band":8,"period":21.27,"radius":7.99,"phase":4.3439,"spin":0.317,"texture":"icy","ring":false,"ring_tilt":-0.26,"moons":1,"moon_names":["I"],"inclination":4.23,"eccentricity":0.044,"temperature":"cold","linked":3,"language":"Python","updated":"2026-10-05","stars":5,"url":"https://github.com/mayankjain1815-commits/Feature-Engine"},{"slug":"marketinsight","kind":"repo","catalog_id":"R09","label":"MARKET","name":"Marketinsight","category":"Finance","color":"#C4FF4D","summary":"AI-powered stock market analysis platform offering financial data and insights through a conversational interface.","orbit":0.704,"orbit_band":1,"period":15.0,"radius":9.65,"phase":0.665,"spin":0.57,"texture":"banded","ring":false,"ring_tilt":0.275,"moons":2,"moon_names":["I","II"],"inclination":9.82,"eccentricity":0.107,"temperature":"temperate","linked":3,"language":"Python","updated":"2026-11-06","stars":4,"url":"https://github.com/mayankjain1815-commits/Marketinsight"},{"slug":"mirrorgpt","kind":"repo","catalog_id":"R10","label":"MIRROR","name":"MirrorGPT","category":"Agents","color":"#8E64FF","summary":"Tools for building a personalized agent that mirrors your facts, speaking style and voice.","orbit":0.739,"orbit_band":2,"period":14.51,"radius":7.46,"phase":2.7951,"spin":0.236,"texture":"icy","ring":false,"ring_tilt":-0.432,"moons":0,"moon_names":[],"inclination":2.43,"eccentricity":0.024,"temperature":"temperate","linked":3,"language":"Python","updated":"2026-10-02","stars":4,"url":"https://github.com/mayankjain1815-commits/MirrorGPT"},{"slug":"movies","kind":"repo","catalog_id":"R11","label":"MOVIES","name":"Movie-Recommendation-System","category":"Data","color":"#2DE7FF","summary":"Movie recommendation system that delivers personalized movie suggestions.","orbit":0.774,"orbit_band":3,"period":17.73,"radius":10.31,"phase":5.546,"spin":0.67,"texture":"banded","ring":false,"ring_tilt":0.487,"moons":3,"moon_names":["I","II","III"],"inclination":12.04,"eccentricity":0.133,"temperature":"cold","linked":3,"language":"Jupyter Notebook","updated":"2026-10-05","stars":5,"url":"https://github.com/mayankjain1815-commits/Movie-Recommendation-System"},{"slug":"next-role","kind":"repo","catalog_id":"R12","label":"ROLE","name":"Next-Role","category":"Agents","color":"#8E64FF","summary":"Upload a CV and job description to get a tailored resume, researched interview prep and a day-of battlecard.","orbit":0.809,"orbit_band":4,"period":17.47,"radius":8.58,"phase":1.4495,"spin":0.406,"texture":"terran","ring":false,"ring_tilt":-0.072,"moons":1,"moon_names":["I"],"inclination":6.2,"eccentricity":0.067,"temperature":"cold","linked":3,"language":"Python","updated":"2026-10-05","stars":4,"url":"https://github.com/mayankjain1815-commits/Next-Role"},{"slug":"omniroute","kind":"repo","catalog_id":"R13","label":"OMNI","name":"OmniRoute","category":"Infrastructure","color":"#8E64FF","summary":"Unified AI proxy/router: one OpenAI-compatible endpoint across 291 LLM providers, with automatic fallback, quota pooling and cost control.","orbit":0.844,"orbit_band":5,"period":19.56,"radius":9.69,"phase":3.9872,"spin":0.577,"texture":"cratered","ring":true,"ring_tilt":0.289,"moons":3,"moon_names":["I","II","III"],"inclination":9.97,"eccentricity":0.109,"temperature":"cold","linked":3,"language":"TypeScript","updated":"2026-10-07","stars":6,"url":"https://github.com/mayankjain1815-commits/OmniRoute"},{"slug":"shopping","kind":"repo","catalog_id":"R14","label":"SHOP","name":"ShoppingGPT","category":"Agents","color":"#8E64FF","summary":"AI-powered shopping assistant combining natural language processing for a smart shopping experience.","orbit":0.879,"orbit_band":6,"period":18.42,"radius":7.21,"phase":6.0808,"spin":0.197,"texture":"banded","ring":false,"ring_tilt":-0.513,"moons":0,"moon_names":[],"inclination":1.58,"eccentricity":0.014,"temperature":"cold","linked":3,"language":"HTML","updated":"2026-10-05","stars":3,"url":"https://github.com/mayankjain1815-commits/ShoppingGPT"},{"slug":"synapse","kind":"repo","catalog_id":"R15","label":"SYNAPSE","name":"Synapse","category":"Media","color":"#8E64FF","summary":"Daily news and content aggregation application, cloned and maintained independently.","orbit":0.914,"orbit_band":7,"period":22.31,"radius":10.05,"phase":2.548,"spin":0.631,"texture":"cratered","ring":false,"ring_tilt":0.404,"moons":3,"moon_names":["I","II","III"],"inclination":11.18,"eccentricity":0.123,"temperature":"cold","linked":3,"language":"Python","updated":"2026-10-02","stars":3,"url":"https://github.com/mayankjain1815-commits/Synapse"},{"slug":"pii","kind":"repo","catalog_id":"R16","label":"PII","name":"TrustBoost-PII-Sanitizer","category":"Security","color":"#FF42C6","summary":"Inspection layer between agents and LLMs that detects and sanitizes raw PII before it leaves your pipeline.","orbit":0.949,"orbit_band":8,"period":23.13,"radius":9.65,"phase":4.8983,"spin":0.57,"texture":"icy","ring":false,"ring_tilt":0.274,"moons":2,"moon_names":["I","II"],"inclination":9.82,"eccentricity":0.107,"temperature":"cold","linked":3,"language":"HTML","updated":"2026-10-02","stars":5,"url":"https://github.com/mayankjain1815-commits/TrustBoost-PII-Sanitizer"},{"slug":"portfolio","kind":"repo","catalog_id":"R17","label":"PORTFOLIO","name":"ai-ml-portfolio","category":"Portfolio","color":"#FF42C6","summary":"Eight self-contained AI/ML projects plus a Flask word atlas — no langchain, no SDK wrappers, offline by design.","orbit":0.708,"orbit_band":1,"period":14.91,"radius":9.33,"phase":0.9754,"spin":0.521,"texture":"terran","ring":false,"ring_tilt":0.17,"moons":2,"moon_names":["I","II"],"inclination":8.73,"eccentricity":0.095,"temperature":"temperate","linked":10,"language":"Python","updated":"2026-11-21","stars":0,"url":"https://github.com/mayankjain1815-commits/ai-ml-portfolio"},{"slug":"jarvis","kind":"repo","catalog_id":"R18","label":"JARVIS","name":"jarvis-mac","category":"Agents","color":"#8E64FF","summary":"Local assistant experiments for macOS.","orbit":0.743,"orbit_band":2,"period":15.13,"radius":8.15,"phase":3.2304,"spin":0.341,"texture":"cratered","ring":true,"ring_tilt":-0.209,"moons":1,"moon_names":["I"],"inclination":4.76,"eccentricity":0.05,"temperature":"temperate","linked":3,"language":"Python","updated":"2026-11-23","stars":0,"url":"https://github.com/mayankjain1815-commits/jarvis-mac"},{"slug":"profile","kind":"repo","catalog_id":"R19","label":"PROFILE","name":"mayankjain1815-commits","category":"Portfolio","color":"#FF42C6","summary":"Public work: TypeScript AI infrastructure, agents and tooling — plus the inline aurora-neon showcase.","orbit":0.778,"orbit_band":3,"period":17.66,"radius":10.05,"phase":5.8644,"spin":0.631,"texture":"icy","ring":false,"ring_tilt":0.404,"moons":3,"moon_names":["I","II","III"],"inclination":11.17,"eccentricity":0.123,"temperature":"cold","linked":3,"language":"TypeScript","updated":"2026-10-02","stars":5,"url":"https://github.com/mayankjain1815-commits/mayankjain1815-commits"},{"slug":"n8n","kind":"repo","catalog_id":"R20","label":"N8N","name":"n8n","category":"Infrastructure","color":"#8E64FF","summary":"Fair-code platform to build and deploy AI agents and workflows, self-hosted or in the cloud.","orbit":0.813,"orbit_band":4,"period":16.95,"radius":7.82,"phase":1.7057,"spin":0.29,"texture":"terran","ring":false,"ring_tilt":-0.318,"moons":0,"moon_names":[],"inclination":3.63,"eccentricity":0.037,"temperature":"cold","linked":3,"language":"TypeScript","updated":"2026-10-20","stars":3,"url":"https://github.com/mayankjain1815-commits/n8n"},{"slug":"sentinel","kind":"repo","catalog_id":"R21","label":"SENTINEL","name":"sentinel-iot-disaster-command","category":"Operations","color":"#2DE7FF","summary":"Standalone IoT early-warning command repo — the upstream of the SENTINEL project in the portfolio.","orbit":0.848,"orbit_band":5,"period":18.83,"radius":8.72,"phase":4.2174,"spin":0.428,"texture":"icy","ring":false,"ring_tilt":-0.025,"moons":1,"moon_names":["I"],"inclination":6.69,"eccentricity":0.072,"temperature":"cold","linked":4,"language":"JavaScript","updated":"2026-10-31","stars":0,"url":"https://github.com/mayankjain1815-commits/sentinel-iot-disaster-command"},{"slug":"strix","kind":"repo","catalog_id":"R22","label":"STRIX","name":"strix","category":"Security","color":"#FF42C6","summary":"AI-powered security agent that scans codebases and pull requests for vulnerabilities in CI/CD pipelines.","orbit":0.883,"orbit_band":6,"period":18.6,"radius":7.28,"phase":0.1555,"spin":0.207,"texture":"icy","ring":true,"ring_tilt":-0.493,"moons":0,"moon_names":[],"inclination":1.8,"eccentricity":0.017,"temperature":"cold","linked":3,"language":"Python","updated":"2026-11-11","stars":4,"url":"https://github.com/mayankjain1815-commits/strix"},{"slug":"sih","kind":"repo","catalog_id":"R23","label":"SIH","name":"sih-main","category":"Hackathon","color":"#C4FF4D","summary":"District-level weather forecast verification with SHAP explanations — selected for the national round of Smart India Hackathon 2026.","orbit":0.918,"orbit_band":7,"period":19.56,"radius":7.15,"phase":2.5403,"spin":0.188,"texture":"icy","ring":false,"ring_tilt":-0.533,"moons":0,"moon_names":[],"inclination":1.38,"eccentricity":0.012,"temperature":"cold","linked":4,"language":"Python","updated":"2026-10-02","stars":4,"url":"https://github.com/mayankjain1815-commits/sih-main"}],"stats":{"bodies":33,"words":10,"repos":23,"moons":42,"ring_worlds":8,"orbit_bands":13,"categories":13,"languages":6,"stars":81,"period_min":3.25,"period_max":23.13,"snapshot":"2026-11-24"},"textures":["banded","cratered","icy","stormy","terran"],"snapshot":"2026-11-24","note":"Orbits, periods, moons and rings are deterministic UI metadata, not astronomical facts."}</script>
 
 <script>
 (function () {
   'use strict';
   var TAU = Math.PI * 2;
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* Canvas colours follow the active theme; the theme switch dispatches this event. */
   var paint = {
     cyan: [45, 231, 255], magenta: [255, 66, 198], lime: [196, 255, 77],
     violet: [142, 100, 255], ice: [233, 242, 255], bg: [6, 9, 24]
@@ -760,14 +620,18 @@
     var p = paint[name];
     return 'rgba(' + p[0] + ',' + p[1] + ',' + p[2] + ',' + alpha + ')';
   }
-  document.addEventListener('atlas-theme', function (event) {
-    if (!event.detail || !event.detail.colors) return;
-    var c = event.detail.colors;
-    paint = {
-      cyan: rgb(c.primary), magenta: rgb(c.secondary), lime: rgb(c.accent),
-      violet: rgb(c.violet), ice: rgb(c.ice), bg: rgb(c.bg)
-    };
-  });
+  function rgbaHex(hex, alpha) {
+    var p = rgb(hex);
+    return 'rgba(' + p[0] + ',' + p[1] + ',' + p[2] + ',' + alpha + ')';
+  }
+  function lighten(hex, amount) {
+    var p = rgb(hex);
+    return 'rgb(' + p.map(function (v) { return Math.round(v + (255 - v) * amount); }).join(',') + ')';
+  }
+  function darken(hex, amount) {
+    var p = rgb(hex);
+    return 'rgb(' + p.map(function (v) { return Math.round(v * (1 - amount)); }).join(',') + ')';
+  }
 
   function surface(id) {
     var el = document.getElementById(id);
@@ -806,13 +670,267 @@
     window.requestAnimationFrame(frame);
   }
 
-  /* 01 — interactive depth-projected particle constellation */
+  /* ---------- 00 — the solar system ---------- */
+  var SOLAR = JSON.parse(document.getElementById('solar-atlas-data').textContent);
+  var bodies = SOLAR.bodies.slice();
+  var selected = null, hovered = null, hits = [];
+  var ss = surface('fx-solar');
+  var readout = document.getElementById('solar-readout');
+
+  window.addEventListener('atlas-solar-data', function (event) {
+    if (event.detail && event.detail.bodies) bodies = event.detail.bodies.slice();
+  });
+  window.addEventListener('atlas-selected', function (event) {
+    selected = event.detail || null;
+  });
+
+  var starfield = Array.from({ length: 170 }, function (_, i) {
+    var golden = 0.61803398875;
+    return {
+      x: (i * golden) % 1, y: ((i * golden * 3.7) % 1),
+      r: 0.35 + ((i * 17) % 9) / 12,
+      a: 0.14 + ((i * 31) % 11) / 35
+    };
+  });
+
+  function planetPoint(body, t, cx, cy, maxR) {
+    var speed = 0.00155 / Math.sqrt(body.orbit);
+    var angle = body.phase + (reduce ? 0 : t * speed);
+    var rx = maxR * body.orbit;
+    return {
+      x: cx + Math.cos(angle) * rx,
+      y: cy + Math.sin(angle) * rx * 0.53,
+      depth: Math.sin(angle),
+      angle: angle,
+      r: body.radius * (0.9 + (Math.sin(angle) + 1) * 0.06)
+    };
+  }
+
+  function drawTexture(c, body, r, t) {
+    c.save();
+    c.beginPath(); c.arc(0, 0, r, 0, TAU); c.clip();
+    var shift = reduce ? 0 : (t * body.spin * 0.012) % (r * 2);
+    if (body.texture === 'banded') {
+      for (var by = -r; by <= r; by += Math.max(2.2, r * 0.19)) {
+        c.fillStyle = rgbaHex(body.color, ((Math.round(by) + 10) % 2 ? 0.14 : 0.28));
+        c.fillRect(-r, by + shift % 4, r * 2, Math.max(1.4, r * 0.09));
+      }
+      c.strokeStyle = rgbaHex('#E9F2FF', 0.18); c.lineWidth = 0.7;
+      c.beginPath(); c.moveTo(-r, shift % 4 - r * 0.2); c.lineTo(r, shift % 4 - r * 0.2); c.stroke();
+    } else if (body.texture === 'cratered') {
+      for (var ci = 0; ci < 6; ci++) {
+        var ca = ci * 2.399, cr = r * (0.14 + (ci % 3) * 0.08);
+        var cx2 = Math.cos(ca) * r * 0.52, cy2 = Math.sin(ca) * r * 0.52;
+        c.strokeStyle = rgbaHex('#060918', 0.34); c.lineWidth = 0.9;
+        c.beginPath(); c.arc(cx2, cy2, cr, 0, TAU); c.stroke();
+        c.fillStyle = rgbaHex('#E9F2FF', 0.1);
+        c.beginPath(); c.arc(cx2 - cr * 0.25, cy2 - cr * 0.25, cr * 0.45, 0, TAU); c.fill();
+      }
+    } else if (body.texture === 'icy') {
+      c.strokeStyle = rgbaHex('#E9F2FF', 0.34); c.lineWidth = 1;
+      for (var ii = -2; ii <= 2; ii++) {
+        c.beginPath();
+        c.ellipse(0, ii * r * 0.34, r * 1.1, r * 0.12, 0, 0, TAU);
+        c.stroke();
+      }
+      c.fillStyle = rgbaHex('#2DE7FF', 0.18);
+      c.beginPath(); c.ellipse(r * 0.25, -r * 0.2, r * 0.45, r * 0.7, -0.5, 0, TAU); c.fill();
+    } else if (body.texture === 'stormy') {
+      for (var si = 0; si < 4; si++) {
+        c.strokeStyle = rgbaHex(si % 2 ? '#FF42C6' : '#E9F2FF', 0.2);
+        c.lineWidth = 1.3;
+        c.beginPath();
+        c.ellipse(Math.sin(si) * r * 0.22, Math.cos(si) * r * 0.28,
+                  r * (0.28 + si * 0.13), r * 0.16, si * 0.7, 0, TAU * 0.75);
+        c.stroke();
+      }
+    } else {
+      c.fillStyle = rgbaHex('#C4FF4D', 0.22);
+      for (var ti = 0; ti < 5; ti++) {
+        var ta = ti * 1.8;
+        c.beginPath();
+        c.ellipse(Math.cos(ta) * r * 0.45, Math.sin(ta) * r * 0.42,
+                  r * 0.34, r * 0.19, ta, 0, TAU);
+        c.fill();
+      }
+      c.strokeStyle = rgbaHex('#2DE7FF', 0.16); c.lineWidth = 0.8;
+      c.beginPath(); c.arc(0, 0, r * 0.75, -1.2, 1.1); c.stroke();
+    }
+    c.restore();
+  }
+
+  function drawPlanet(c, body, p, t, highlighted) {
+    var r = p.r;
+    c.save();
+    var glow = c.createRadialGradient(p.x, p.y, r * 0.3, p.x, p.y, r * 2.6);
+    glow.addColorStop(0, rgbaHex(body.color, highlighted ? 0.34 : 0.18));
+    glow.addColorStop(1, rgbaHex(body.color, 0));
+    c.fillStyle = glow;
+    c.beginPath(); c.arc(p.x, p.y, r * 2.6, 0, TAU); c.fill();
+
+    if (body.ring) {
+      c.save();
+      c.translate(p.x, p.y); c.rotate(body.ring_tilt); c.scale(1, 0.34);
+      c.strokeStyle = rgbaHex(body.color, 0.55); c.lineWidth = Math.max(1, r * 0.14);
+      c.beginPath(); c.arc(0, 0, r * 1.72, 0, TAU); c.stroke();
+      c.strokeStyle = rgbaHex('#E9F2FF', 0.3); c.lineWidth = Math.max(0.7, r * 0.06);
+      c.beginPath(); c.arc(0, 0, r * 2.05, 0, TAU); c.stroke();
+      c.restore();
+    }
+
+    c.save();
+    c.translate(p.x, p.y);
+    var sphere = c.createRadialGradient(-r * 0.38, -r * 0.42, r * 0.08, 0, 0, r * 1.12);
+    sphere.addColorStop(0, lighten(body.color, 0.62));
+    sphere.addColorStop(0.55, body.color);
+    sphere.addColorStop(1, darken(body.color, 0.66));
+    c.fillStyle = sphere;
+    c.beginPath(); c.arc(0, 0, r, 0, TAU); c.fill();
+    drawTexture(c, body, r, t);
+    c.strokeStyle = highlighted ? rgbaHex('#FFFFFF', 0.95) : rgbaHex('#E9F2FF', 0.34);
+    c.lineWidth = highlighted ? 1.6 : 0.7;
+    c.beginPath(); c.arc(0, 0, r + (highlighted ? 2 : 0.5), 0, TAU); c.stroke();
+    c.restore();
+
+    for (var mi = 0; mi < body.moons; mi++) {
+      var ma = p.angle * (1.6 + mi * 0.35) + mi * 2.1 + (reduce ? 0 : t * 0.012);
+      var mr = r * (1.85 + mi * 0.42);
+      var mx = p.x + Math.cos(ma) * mr;
+      var my = p.y + Math.sin(ma) * mr * 0.44;
+      c.strokeStyle = rgbaHex('#E9F2FF', 0.12); c.lineWidth = 0.5;
+      c.beginPath(); c.ellipse(p.x, p.y, mr, mr * 0.44, 0, 0, TAU); c.stroke();
+      c.fillStyle = rgbaHex('#E9F2FF', 0.78);
+      c.beginPath(); c.arc(mx, my, Math.max(1.1, r * 0.14), 0, TAU); c.fill();
+    }
+
+    var label = highlighted || body.kind === 'word' || (body.kind === 'repo' && body.orbit_band % 3 === 1);
+    if (label) {
+      var text = body.label;
+      c.font = (highlighted ? '700 ' : '600 ') + (highlighted ? 11 : 8.5) + 'px ui-monospace, Menlo, monospace';
+      var tw = c.measureText(text).width;
+      var lx = Math.max(2, Math.min(ss.w - tw - 12, p.x - tw / 2 - 4));
+      var ly = Math.max(2, Math.min(ss.h - 15, p.y - r - 15));
+      c.fillStyle = 'rgba(6,9,24,' + (highlighted ? 0.94 : 0.68) + ')';
+      c.fillRect(lx, ly, tw + 8, 13);
+      c.fillStyle = highlighted ? '#FFFFFF' : 'rgba(233,242,255,.82)';
+      c.fillText(text, lx + 4, ly + 10);
+    }
+  }
+
+  function drawSun(c, cx, cy, t) {
+    var corona = c.createRadialGradient(cx, cy, 8, cx, cy, 92);
+    corona.addColorStop(0, 'rgba(196,255,77,.42)');
+    corona.addColorStop(0.34, 'rgba(45,231,255,.16)');
+    corona.addColorStop(1, 'rgba(45,231,255,0)');
+    c.fillStyle = corona;
+    c.beginPath(); c.arc(cx, cy, 92, 0, TAU); c.fill();
+
+    c.save(); c.translate(cx, cy);
+    c.rotate(reduce ? 0 : t * 0.003);
+    for (var fi = 0; fi < 12; fi++) {
+      c.strokeStyle = rgbaHex(fi % 2 ? '#C4FF4D' : '#2DE7FF', 0.16 + (fi % 3) * 0.06);
+      c.lineWidth = 1.1;
+      c.beginPath();
+      c.arc(0, 0, 35 + (fi % 4) * 5, fi * 0.52, fi * 0.52 + 0.28);
+      c.stroke();
+    }
+    var surface = c.createRadialGradient(-9, -10, 3, 0, 0, 31);
+    surface.addColorStop(0, '#F4FFC7');
+    surface.addColorStop(0.45, '#C4FF4D');
+    surface.addColorStop(0.82, '#2DE7FF');
+    surface.addColorStop(1, '#0A2B4A');
+    c.fillStyle = surface;
+    c.beginPath(); c.arc(0, 0, 30, 0, TAU); c.fill();
+    c.strokeStyle = 'rgba(196,255,77,.65)'; c.lineWidth = 1.2;
+    c.beginPath(); c.arc(0, 0, 32, 0, TAU); c.stroke();
+    c.restore();
+
+    c.font = '700 8px ui-monospace, Menlo, monospace';
+    c.textAlign = 'center';
+    c.fillStyle = 'rgba(233,242,255,.9)';
+    c.fillText('CORE', cx, cy + 3);
+    c.font = '600 7px ui-monospace, Menlo, monospace';
+    c.fillStyle = 'rgba(233,242,255,.6)';
+    c.fillText('10 + 23', cx, cy + 13);
+    c.textAlign = 'left';
+  }
+
+  animate(function (t) {
+    var c = ss.ctx, w = ss.w, h = ss.h;
+    var cx = w / 2, cy = h / 2 + 6;
+    var maxR = Math.min(w * 0.46, h * 0.82);
+    c.clearRect(0, 0, w, h);
+
+    starfield.forEach(function (s) {
+      c.fillStyle = 'rgba(233,242,255,' + s.a + ')';
+      c.beginPath(); c.arc(s.x * w, s.y * h, s.r, 0, TAU); c.fill();
+    });
+
+    var bands = [];
+    bodies.forEach(function (b) { if (bands.indexOf(b.orbit) < 0) bands.push(b.orbit); });
+    bands.sort(function (a, b2) { return a - b2; });
+    bands.forEach(function (orbit, i) {
+      c.setLineDash([2, 7]);
+      c.strokeStyle = i % 2 ? 'rgba(255,66,198,.10)' : 'rgba(45,231,255,.12)';
+      c.lineWidth = 0.8;
+      c.beginPath(); c.ellipse(cx, cy, maxR * orbit, maxR * orbit * 0.53, 0, 0, TAU); c.stroke();
+    });
+    c.setLineDash([]);
+
+    var points = bodies.map(function (body) {
+      return { body: body, p: planetPoint(body, t, cx, cy, maxR) };
+    });
+    hits = points.map(function (item) { return { body: item.body, p: item.p }; });
+    points.filter(function (item) { return item.p.depth < 0; })
+          .forEach(function (item) { drawPlanet(c, item.body, item.p, t, false); });
+    drawSun(c, cx, cy, t);
+    points.filter(function (item) { return item.p.depth >= 0; })
+          .forEach(function (item) {
+            var key = item.body.kind + ':' + item.body.slug;
+            var highlight = (hovered && key === hovered.kind + ':' + hovered.slug)
+              || (selected && selected.kind === item.body.kind && selected.slug === item.body.slug);
+            drawPlanet(c, item.body, item.p, t, !!highlight);
+          });
+  }, [ss]);
+
+  function pick(event) {
+    var r = ss.el.getBoundingClientRect();
+    var x = event.clientX - r.left, y = event.clientY - r.top;
+    var best = null, bestDist = Infinity;
+    hits.forEach(function (hit) {
+      var d = Math.hypot(hit.p.x - x, hit.p.y - y);
+      if (d < hit.p.r + 11 && d < bestDist) { best = hit.body; bestDist = d; }
+    });
+    return best;
+  }
+
+  function showReadout(body) {
+    if (!body) {
+      readout.innerHTML = 'Hover a world<b>Click for full results</b>';
+      return;
+    }
+    readout.innerHTML = '<b>' + body.catalog_id + ' · ' + body.label + '</b><small>' +
+      body.kind + ' · orbit ' + body.orbit.toFixed(3) + ' AU · ' +
+      body.period.toFixed(1) + ' d · click for results</small>';
+  }
+
+  ss.el.addEventListener('pointermove', function (event) {
+    hovered = pick(event);
+    ss.el.style.cursor = hovered ? 'pointer' : 'default';
+    showReadout(hovered);
+  }, { passive: true });
+  ss.el.addEventListener('pointerleave', function () { hovered = null; showReadout(null); });
+  ss.el.addEventListener('click', function (event) {
+    var body = pick(event);
+    if (body && window.openAtlasRecord) window.openAtlasRecord(body.kind, body.slug, ss.el);
+  });
+
+  /* ---------- 01 — interactive depth-projected particle constellation ---------- */
   var ps = surface('fx-particles');
   var dots = Array.from({ length: 72 }, function () {
     return {
       x: Math.random(), y: Math.random(), z: Math.random() * 2 - 1,
-      vx: (Math.random() - .5) * .00085,
-      vy: (Math.random() - .5) * .00085,
+      vx: (Math.random() - .5) * .00085, vy: (Math.random() - .5) * .00085,
       r: 1 + Math.random() * 1.6
     };
   });
@@ -823,7 +941,6 @@
     targetY = (e.clientY - r.top) / r.height - .5;
   }, { passive: true });
   ps.el.addEventListener('pointerleave', function () { targetX = 0; targetY = 0; });
-
   animate(function () {
     var c = ps.ctx, w = ps.w, h = ps.h;
     c.clearRect(0, 0, w, h);
@@ -861,7 +978,7 @@
     });
   }, [ps]);
 
-  /* 02 — rotating wireframe threat globe with radar sweep */
+  /* ---------- 02 — rotating wireframe threat globe with radar sweep ---------- */
   var gs = surface('fx-globe');
   var markers = [
     { lat: 19.99, lon: 73.79 }, { lat: 20.02, lon: 73.72 }, { lat: 19.94, lon: 73.85 },
@@ -917,7 +1034,7 @@
     });
   }, [gs]);
 
-  /* 03 — signal propagation through a weighted neural graph */
+  /* ---------- 03 — signal propagation through a weighted neural graph ---------- */
   var ns = surface('fx-neural');
   var sizes = [4, 6, 6, 3];
   var layers = sizes.map(function (n, li) {
@@ -968,27 +1085,27 @@
 </script>
 
 <script>
-/* Word + repo atlas: click any ring word, orbiting repo or chip for its full record.
-   The embedded JSON renders instantly; the Flask API upgrades it when reachable.
-   The same data drives search, stats, the Christmas theme and the snow canvas. */
+/* Solar atlas: click a planet or a catalog chip for its full record.
+   Embedded JSON renders instantly; the Flask API upgrades it when reachable. */
 (function () {
   'use strict';
 
   var WORDS = JSON.parse(document.getElementById('word-atlas-data').textContent);
   var REPOS = JSON.parse(document.getElementById('repo-atlas-data').textContent);
   var THEMES = JSON.parse(document.getElementById('theme-atlas-data').textContent);
+  var SOLAR = JSON.parse(document.getElementById('solar-atlas-data').textContent);
   var API = (window.WORD_ATLAS_API || 'http://127.0.0.1:5110').replace(/\/$/, '');
   var apiAllowed = location.protocol !== 'https:' || !!window.WORD_ATLAS_API;
   var apiLive = false;
 
   var backdrop = document.getElementById('word-detail-backdrop');
   var host = document.getElementById('word-detail');
-  var wordBySlug = {}, repoBySlug = {}, themeById = {};
+  var wordBySlug = {}, repoBySlug = {}, bodyByKey = {};
   var activeKey = null, opener = null, closeBtn = null;
 
   WORDS.forEach(function (w) { wordBySlug[w.slug] = w; });
   REPOS.forEach(function (r) { repoBySlug[r.slug] = r; });
-  THEMES.forEach(function (t) { themeById[t.id] = t; });
+  SOLAR.bodies.forEach(function (b) { bodyByKey[b.kind + ':' + b.slug] = b; });
 
   function el(tag, cls, text) {
     var node = document.createElement(tag);
@@ -996,20 +1113,17 @@
     if (text !== undefined && text !== null) node.textContent = String(text);
     return node;
   }
-
   function section(title, build) {
     var box = el('div');
     box.appendChild(el('h4', null, title));
     build(box);
     return box;
   }
-
   function list(items, ordered) {
     var node = el(ordered ? 'ol' : 'ul');
     (items || []).forEach(function (item) { node.appendChild(el('li', null, item)); });
     return node;
   }
-
   function badge(source, label) {
     var node = el('span', 'detail__source', source === 'api'
       ? '● live from Flask API · ' + API + label
@@ -1017,13 +1131,51 @@
     node.setAttribute('data-source', source);
     return node;
   }
-
   function actionButton(label, kind, slug, title) {
     var btn = el('button', null, label);
     btn.type = 'button';
     if (title) btn.title = title;
     btn.addEventListener('click', function () { openRecord(kind, slug, btn); });
     return btn;
+  }
+  function neighboursForBody(body) {
+    if (!body) return [];
+    return SOLAR.bodies.filter(function (other) {
+      return other.kind === body.kind && other.slug !== body.slug &&
+        (other.orbit_band === body.orbit_band || other.category === body.category);
+    });
+  }
+  function telemetry(body, neighbours) {
+    var metrics = [
+      ['catalog id', body.catalog_id], ['orbit', body.orbit.toFixed(3) + ' AU'],
+      ['period', body.period.toFixed(1) + ' days'], ['diameter', body.radius.toFixed(1) + ' units'],
+      ['inclination', body.inclination.toFixed(2) + '°'],
+      ['eccentricity', body.eccentricity.toFixed(3)],
+      ['moons', body.moons + (body.moon_names.length ? ' · ' + body.moon_names.join(', ') : '')],
+      ['rings', body.ring ? 'yes · tilt ' + body.ring_tilt.toFixed(2) : 'none'],
+      ['texture', body.texture], ['temperature', body.temperature],
+      ['orbit band', String(body.orbit_band)], ['links', String(body.linked)]
+    ];
+    return section('Observed results', function (b) {
+      var grid = el('div', 'telemetry');
+      metrics.forEach(function (pair) {
+        var item = el('div', 'telemetry__item');
+        item.appendChild(el('span', null, pair[0]));
+        item.appendChild(el('b', null, pair[1]));
+        grid.appendChild(item);
+      });
+      b.appendChild(grid);
+      b.appendChild(el('p', 'telemetry__note',
+        'Deterministic UI metadata derived from the slug — not astronomical measurements.'));
+      var near = el('div', 'detail__related');
+      (neighbours || []).slice(0, 8).forEach(function (n) {
+        near.appendChild(actionButton(n.catalog_id + ' · ' + n.label, n.kind, n.slug,
+          n.reason + ' · orbit ' + n.orbit.toFixed(3) + ' AU'));
+      });
+      if (!neighbours || !neighbours.length) near.appendChild(el('span', null, 'none'));
+      b.appendChild(el('h4', null, 'Neighbours in this system'));
+      b.appendChild(near);
+    });
   }
 
   function fetchJson(path) {
@@ -1044,12 +1196,12 @@
       throw error;
     });
   }
-
   function fetchRecord(kind, slug) {
-    return fetchJson('/api/' + (kind === 'word' ? 'words' : 'repos') + '/' + encodeURIComponent(slug))
+    var plural = kind === 'word' ? 'words' : 'repos';
+    return fetchJson('/api/solar/' + plural + '/' + encodeURIComponent(slug))
       .then(function (data) {
-        if (!data || !data.ok || !data[kind]) throw new Error('bad payload');
-        return data[kind];
+        if (!data || !data.ok || !data.body || !data.record) throw new Error('bad payload');
+        return data;
       });
   }
 
@@ -1062,28 +1214,25 @@
       return (w.projects || []).some(function (p) { return mine[p.id]; });
     }).map(function (w) { return { slug: w.slug, term: w.term, color: w.color }; });
   }
-
   function relatedForRepo(repo) {
-    return REPOS.filter(function (other) {
-      return other.slug !== repo.slug;
-    }).map(function (other) {
-      var sharedWords = (repo.words || []).filter(function (w) {
-        return (other.words || []).indexOf(w) >= 0;
-      });
-      var sharedSystems = (repo.systems || []).filter(function (s) {
-        return (other.systems || []).indexOf(s) >= 0;
-      });
-      var reasons = [];
-      if (repo.category === other.category) reasons.push('same category');
-      if (sharedWords.length) reasons.push('shares ' + sharedWords.join(', '));
-      if (sharedSystems.length && !reasons.length) reasons.push('shares a canvas system');
-      return reasons.length ? {
-        slug: other.slug, short: other.short, name: other.name,
-        color: other.color, reason: reasons.join('; ')
-      } : null;
-    }).filter(Boolean);
+    return REPOS.filter(function (other) { return other.slug !== repo.slug; })
+      .map(function (other) {
+        var sharedWords = (repo.words || []).filter(function (w) {
+          return (other.words || []).indexOf(w) >= 0;
+        });
+        var sharedSystems = (repo.systems || []).filter(function (s) {
+          return (other.systems || []).indexOf(s) >= 0;
+        });
+        var reasons = [];
+        if (repo.category === other.category) reasons.push('same category');
+        if (sharedWords.length) reasons.push('shares ' + sharedWords.join(', '));
+        if (sharedSystems.length && !reasons.length) reasons.push('shares a canvas system');
+        return reasons.length ? {
+          slug: other.slug, short: other.short, name: other.name,
+          color: other.color, reason: reasons.join('; ')
+        } : null;
+      }).filter(Boolean);
   }
-
   function reposForWord(word) {
     if (word.repos && word.repos.length) return word.repos;
     return REPOS.filter(function (r) { return (r.words || []).indexOf(word.slug) >= 0; })
@@ -1092,49 +1241,37 @@
       });
   }
 
-  function renderWord(word, source) {
+  function renderWord(word, source, body, neighbours) {
     var accent = word.color || '#2de7ff';
     host.style.setProperty('--accent', accent);
     host.textContent = '';
 
     var head = el('div', 'detail__head');
     var left = el('div');
-    left.appendChild(el('div', 'detail__eyebrow', 'Word atlas · ' + word.category));
+    left.appendChild(el('div', 'detail__eyebrow',
+      'Inner world · ' + (body ? body.catalog_id + ' · ' : '') + word.category));
     var title = el('h2', null, word.term);
     title.id = 'word-detail-term';
     left.appendChild(title);
     left.appendChild(el('p', 'detail__subtitle', word.title));
     left.appendChild(el('p', 'detail__tagline', word.tagline));
-    left.appendChild(badge(source, ''));
+    left.appendChild(badge(source, ' /api/solar/words/' + word.slug));
     closeBtn = el('button', 'detail__close', '×');
     closeBtn.type = 'button';
-    closeBtn.setAttribute('aria-label', 'Close word details');
+    closeBtn.setAttribute('aria-label', 'Close world details');
     closeBtn.addEventListener('click', closePanel);
-    head.appendChild(left);
-    head.appendChild(closeBtn);
-    host.appendChild(head);
+    head.appendChild(left); head.appendChild(closeBtn); host.appendChild(head);
+    if (body) host.appendChild(telemetry(body, neighbours));
 
     var grid = el('div', 'detail__grid');
     var main = el('div'), side = el('div');
-    grid.appendChild(main);
-    grid.appendChild(side);
-    host.appendChild(grid);
+    grid.appendChild(main); grid.appendChild(side); host.appendChild(grid);
 
-    main.appendChild(section('Definition', function (b) {
-      b.appendChild(el('p', null, word.definition));
-    }));
-    main.appendChild(section('Why it matters', function (b) {
-      b.appendChild(el('p', null, word.why_it_matters));
-    }));
-    main.appendChild(section('How it works', function (b) {
-      b.appendChild(list(word.how_it_works, true));
-    }));
-    main.appendChild(section('Interview answer', function (b) {
-      b.appendChild(el('blockquote', null, word.interview_answer));
-    }));
-    main.appendChild(section('Watch out for', function (b) {
-      b.appendChild(list(word.pitfalls, false));
-    }));
+    main.appendChild(section('Definition', function (b) { b.appendChild(el('p', null, word.definition)); }));
+    main.appendChild(section('Why it matters', function (b) { b.appendChild(el('p', null, word.why_it_matters)); }));
+    main.appendChild(section('How it works', function (b) { b.appendChild(list(word.how_it_works, true)); }));
+    main.appendChild(section('Interview answer', function (b) { b.appendChild(el('blockquote', null, word.interview_answer)); }));
+    main.appendChild(section('Watch out for', function (b) { b.appendChild(list(word.pitfalls, false)); }));
 
     side.appendChild(section('Concepts', function (b) {
       var chips = el('div', 'detail__chips');
@@ -1159,16 +1296,13 @@
         var small = el('small');
         small.appendChild(el('code', null, a.path));
         small.appendChild(document.createTextNode(' — ' + a.note));
-        li.appendChild(small);
-        ul.appendChild(li);
+        li.appendChild(small); ul.appendChild(li);
       });
       b.appendChild(ul);
     }));
     side.appendChild(section('Try it', function (b) {
       word.commands.forEach(function (cmd) {
-        var pre = el('pre');
-        pre.appendChild(el('code', null, cmd));
-        b.appendChild(pre);
+        var pre = el('pre'); pre.appendChild(el('code', null, cmd)); b.appendChild(pre);
       });
     }));
     side.appendChild(section('Tests', function (b) {
@@ -1181,8 +1315,7 @@
       var related = word.related && word.related.length ? word.related : relatedForWord(word);
       if (!related.length) box.appendChild(el('span', null, 'none'));
       related.forEach(function (r) {
-        box.appendChild(actionButton(r.term, 'word', r.slug,
-          (r.reason ? r.reason + ' — ' : '') + 'open details'));
+        box.appendChild(actionButton(r.term, 'word', r.slug, 'open details'));
       });
       b.appendChild(box);
     }));
@@ -1195,57 +1328,50 @@
       });
       b.appendChild(box);
     }));
-
     host.appendChild(el('p', 'detail__foot',
-      'Esc to close · click outside to dismiss · source of truth: backend/word_atlas/data.py'));
+      'Esc to close · click outside to dismiss · source of truth: backend/word_atlas/data.py + solar.py'));
   }
 
-  function renderRepo(repo, source) {
+  function renderRepo(repo, source, body, neighbours) {
     var accent = repo.color || '#8e64ff';
     host.style.setProperty('--accent', accent);
     host.textContent = '';
 
     var head = el('div', 'detail__head');
     var left = el('div');
-    left.appendChild(el('div', 'detail__eyebrow', 'Repository orbit · ' + repo.category));
+    left.appendChild(el('div', 'detail__eyebrow',
+      'Outer world · ' + (body ? body.catalog_id + ' · ' : '') + repo.category));
     var title = el('h2', null, repo.name);
     title.id = 'word-detail-term';
     left.appendChild(title);
     left.appendChild(el('p', 'detail__subtitle', repo.short + ' · ' + repo.language + ' · ★ ' + repo.stars));
     left.appendChild(el('p', 'detail__tagline', repo.description));
-    left.appendChild(badge(source, ''));
+    left.appendChild(badge(source, ' /api/solar/repos/' + repo.slug));
     var meta = el('div', 'detail__meta');
     [repo.kind || 'original', 'updated ' + repo.updated,
-     'snapshot ' + (repo.snapshot || latestSnapshot())].forEach(function (m) {
+     'snapshot ' + (repo.snapshot || SOLAR.snapshot)].forEach(function (m) {
       meta.appendChild(el('span', null, m));
     });
     left.appendChild(meta);
     closeBtn = el('button', 'detail__close', '×');
     closeBtn.type = 'button';
-    closeBtn.setAttribute('aria-label', 'Close repository details');
+    closeBtn.setAttribute('aria-label', 'Close world details');
     closeBtn.addEventListener('click', closePanel);
-    head.appendChild(left);
-    head.appendChild(closeBtn);
-    host.appendChild(head);
+    head.appendChild(left); head.appendChild(closeBtn); host.appendChild(head);
+    if (body) host.appendChild(telemetry(body, neighbours));
 
     var grid = el('div', 'detail__grid');
     var main = el('div'), side = el('div');
-    grid.appendChild(main);
-    grid.appendChild(side);
-    host.appendChild(grid);
+    grid.appendChild(main); grid.appendChild(side); host.appendChild(grid);
 
-    main.appendChild(section('Highlights', function (b) {
-      b.appendChild(list(repo.highlights, false));
-    }));
+    main.appendChild(section('Highlights', function (b) { b.appendChild(list(repo.highlights, false)); }));
     main.appendChild(section('Stack', function (b) {
       var chips = el('div', 'detail__chips');
       (repo.stack || []).forEach(function (s) { chips.appendChild(el('span', null, s)); });
       b.appendChild(chips);
     }));
     main.appendChild(section('Explore locally', function (b) {
-      var pre = el('pre');
-      pre.appendChild(el('code', null, repo.command));
-      b.appendChild(pre);
+      var pre = el('pre'); pre.appendChild(el('code', null, repo.command)); b.appendChild(pre);
       if (repo.note) b.appendChild(el('p', null, repo.note));
     }));
 
@@ -1255,9 +1381,7 @@
         return (repo.words || []).indexOf(w.slug) >= 0;
       }).map(function (w) { return { slug: w.slug, term: w.term }; });
       if (!records.length) box.appendChild(el('span', null, 'none'));
-      records.forEach(function (w) {
-        box.appendChild(actionButton(w.term, 'word', w.slug, 'open word details'));
-      });
+      records.forEach(function (w) { box.appendChild(actionButton(w.term, 'word', w.slug, 'open details')); });
       b.appendChild(box);
     }));
     side.appendChild(section('Related repos', function (b) {
@@ -1277,19 +1401,11 @@
     }));
     side.appendChild(section('GitHub', function (b) {
       var link = el('a', 'detail__link', 'Open ' + repo.name + ' ↗');
-      link.href = repo.url;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
+      link.href = repo.url; link.target = '_blank'; link.rel = 'noopener noreferrer';
       b.appendChild(link);
     }));
-
     host.appendChild(el('p', 'detail__foot',
-      'Esc to close · click outside to dismiss · source of truth: backend/word_atlas/repos.py'));
-  }
-
-  function render(record, kind, source) {
-    if (kind === 'repo') renderRepo(record, source);
-    else renderWord(record, source);
+      'Esc to close · click outside to dismiss · source of truth: backend/word_atlas/repos.py + solar.py'));
   }
 
   function show() {
@@ -1297,53 +1413,63 @@
     document.body.style.overflow = 'hidden';
     if (closeBtn) closeBtn.focus();
   }
-
   function closePanel() {
     backdrop.classList.remove('open');
     document.body.style.overflow = '';
     activeKey = null;
+    if (window.CustomEvent) {
+      window.dispatchEvent(new CustomEvent('atlas-selected', { detail: null }));
+    }
     if (opener && opener.focus) opener.focus();
   }
-
   function openRecord(kind, slug, node) {
     var record = kind === 'repo' ? repoBySlug[slug] : wordBySlug[slug];
     if (!record) return;
     var key = kind + ':' + slug;
     activeKey = key;
     if (node) opener = node;
-    render(record, kind, 'embedded');
+    var body = bodyByKey[key];
+    render(record, kind, 'embedded', body, neighboursForBody(body));
     show();
-    fetchRecord(kind, slug).then(function (live) {
+    if (window.CustomEvent) {
+      window.dispatchEvent(new CustomEvent('atlas-selected', { detail: { kind: kind, slug: slug } }));
+    }
+    fetchRecord(kind, slug).then(function (data) {
       if (activeKey !== key) return;
-      render(live, kind, 'api');
+      bodyByKey[key] = data.body;
+      render(data.record, kind, 'api', data.body, data.neighbours);
       show();
-    }).catch(function () {
-      /* The embedded copy is already on screen — nothing to do. */
+    }).catch(function () { /* the embedded copy is already visible */ });
+  }
+  window.openAtlasRecord = openRecord;
+
+  function render(record, kind, source, body, neighbours) {
+    if (kind === 'repo') renderRepo(record, source, body, neighbours);
+    else renderWord(record, source, body, neighbours);
+  }
+
+  /* ---------- catalog chips ---------- */
+  function updateChipMeta() {
+    Array.prototype.forEach.call(document.querySelectorAll('.planet-chip'), function (node) {
+      var kind = node.getAttribute('data-word') ? 'word' : 'repo';
+      var slug = node.getAttribute('data-' + kind);
+      var body = bodyByKey[kind + ':' + slug];
+      var meta = node.querySelector('.planet-chip__meta');
+      if (!body || !meta) return;
+      meta.textContent = 'orbit ' + body.orbit.toFixed(3) + ' · ' + body.period.toFixed(1) + 'd · ' + body.moons + ' moons';
     });
   }
-
-  function latestSnapshot() {
-    return REPOS.map(function (r) { return r.updated; }).sort().pop() || 'unknown';
-  }
-
-  Array.prototype.forEach.call(document.querySelectorAll('[data-word]'), function (node) {
-    node.addEventListener('click', function () { openRecord('word', node.getAttribute('data-word'), node); });
+  Array.prototype.forEach.call(document.querySelectorAll('.planet-chip'), function (node) {
+    var kind = node.getAttribute('data-word') ? 'word' : 'repo';
+    var slug = node.getAttribute('data-' + kind);
+    node.addEventListener('click', function () { openRecord(kind, slug, node); });
     node.addEventListener('keydown', function (event) {
       if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        openRecord('word', node.getAttribute('data-word'), node);
+        event.preventDefault(); openRecord(kind, slug, node);
       }
     });
   });
-  Array.prototype.forEach.call(document.querySelectorAll('[data-repo]'), function (node) {
-    node.addEventListener('click', function () { openRecord('repo', node.getAttribute('data-repo'), node); });
-    node.addEventListener('keydown', function (event) {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        openRecord('repo', node.getAttribute('data-repo'), node);
-      }
-    });
-  });
+  updateChipMeta();
 
   backdrop.addEventListener('click', function (event) {
     if (event.target === backdrop) closePanel();
@@ -1352,7 +1478,7 @@
     if (event.key === 'Escape' && backdrop.classList.contains('open')) closePanel();
   });
 
-  /* ---------- search across both rings ---------- */
+  /* ---------- search ---------- */
   var searchInput = document.getElementById('atlas-search');
   var resultHost = document.getElementById('search-results');
   var searchTimer = null;
@@ -1380,12 +1506,11 @@
     results.sort(function (a, b) { return (b.score - a.score) || a.label.localeCompare(b.label); });
     return results.slice(0, 12);
   }
-
   function renderResults(results, query, source) {
     resultHost.textContent = '';
     if (!query) return;
     if (!results.length) {
-      resultHost.appendChild(el('span', 'search-empty', 'No matches — try “rag”, “proxy” or “snow”.'));
+      resultHost.appendChild(el('span', 'search-empty', 'No matches — try “rag”, “proxy” or “sih”.'));
       return;
     }
     results.forEach(function (r) {
@@ -1393,12 +1518,13 @@
       btn.type = 'button';
       btn.style.setProperty('--result', r.color || '#2de7ff');
       btn.appendChild(el('span', null, r.label));
-      btn.appendChild(el('small', null, r.kind + ' · ' + r.subtitle + (source === 'api' ? ' · live' : '')));
+      var body = bodyByKey[r.kind + ':' + r.slug];
+      btn.appendChild(el('small', null, (body ? body.catalog_id + ' · ' : '') + r.kind + ' · ' +
+        r.subtitle + (source === 'api' ? ' · live' : '')));
       btn.addEventListener('click', function () { openRecord(r.kind, r.slug, btn); });
       resultHost.appendChild(btn);
     });
   }
-
   searchInput.addEventListener('input', function () {
     var query = searchInput.value.trim();
     renderResults(localSearch(query), query, 'embedded');
@@ -1413,171 +1539,41 @@
     }, 180);
   });
 
-  /* ---------- live stats with an offline snapshot ---------- */
+  /* ---------- live stats ---------- */
   var statsHost = document.getElementById('live-stats');
   var sourceLabel = document.getElementById('atlas-source');
-
-  function localStats() {
-    var projects = {}, languages = {};
-    WORDS.forEach(function (w) {
-      (w.projects || []).forEach(function (p) { projects[p.id] = true; });
-    });
-    REPOS.forEach(function (r) { languages[r.language] = true; });
-    return {
-      words: WORDS.length, repos: REPOS.length,
-      projects: Object.keys(projects).length,
-      stars: REPOS.reduce(function (sum, r) { return sum + (r.stars || 0); }, 0),
-      languages: Object.keys(languages).length, themes: THEMES.length,
-      snapshot: latestSnapshot()
-    };
-  }
-
   function renderStats(data, live) {
     statsHost.textContent = '';
-    [['words', data.words], ['repos', data.repos], ['projects', data.projects],
-     ['★ stars', data.stars], ['languages', data.languages], ['themes', data.themes]
+    [['worlds', data.bodies], ['orbit bands', data.orbit_bands],
+     ['moons', data.moons], ['ring worlds', data.ring_worlds],
+     ['★ stars', data.stars], ['languages', data.languages]
     ].forEach(function (pair) {
       var pill = el('span', 'stat-pill');
       pill.appendChild(el('b', null, pair[1]));
       pill.appendChild(document.createTextNode(' ' + pair[0]));
       statsHost.appendChild(pill);
     });
-    if (data.snapshot) {
-      document.getElementById('repo-snapshot').textContent =
-        'GitHub metadata snapshot · ' + data.snapshot + ' · ' + data.repos + ' repos';
-    }
     sourceLabel.textContent = live
-      ? 'live Flask API · /api/stats'
-      : 'embedded offline copy · ' + data.repos + ' repos';
+      ? 'live Flask API · /api/solar + /api/stats'
+      : 'embedded offline copy · ' + data.bodies + ' worlds';
   }
+  renderStats(SOLAR.stats, false);
 
-  renderStats(localStats(), false);
+  fetchJson('/api/solar').then(function (data) {
+    if (!data || !data.ok || !data.bodies) return;
+    SOLAR = data;
+    data.bodies.forEach(function (b) { bodyByKey[b.kind + ':' + b.slug] = b; });
+    updateChipMeta();
+    if (window.CustomEvent) {
+      window.dispatchEvent(new CustomEvent('atlas-solar-data', { detail: { bodies: data.bodies } }));
+    }
+  }).catch(function () { /* embedded layout already renders */ });
+
   fetchJson('/api/stats').then(function (data) {
     if (!data || !data.ok) return;
     apiLive = true;
     renderStats(data, true);
   }).catch(function () { /* the embedded snapshot is already rendered */ });
-
-  /* ---------- Christmas theme + snow ---------- */
-  var toggle = document.getElementById('theme-toggle');
-  var storageKey = 'word-atlas-theme';
-  var snowCanvas = document.getElementById('fx-snow');
-  var snowCtx = snowCanvas.getContext('2d');
-  var snowW = 0, snowH = 0, snowDpr = 1;
-  var flakes = [], snowFrame = null, snowOn = false;
-  var snowRGB = '246,255,248';
-  var activeTheme = themeById.aurora;
-
-  /* file:// pages may reset web storage on reload, so the URL hash is the
-     durable preference; storage is still tried first for convenience. */
-  function themeFromUrl() {
-    var hash = (location.hash || '').replace(/^#/, '');
-    var match = /(?:^|&)theme=(aurora|christmas)(?:&|$)/.exec(hash);
-    if (match) return match[1];
-    match = /(?:^|[?&])theme=(aurora|christmas)(?:&|$)/.exec(location.search || '');
-    return match ? match[1] : null;
-  }
-
-  function rememberTheme(id) {
-    try { window.localStorage.setItem(storageKey, id); } catch (e) { /* private mode */ }
-    try { window.sessionStorage.setItem(storageKey, id); } catch (e) { /* private mode */ }
-    try {
-      if (window.history && window.history.replaceState) {
-        window.history.replaceState(null, '', location.href.split('#')[0] + '#theme=' + id);
-      }
-    } catch (e) { /* opaque origin */ }
-  }
-
-  function sizeSnow() {
-    snowDpr = Math.min(window.devicePixelRatio || 1, 2);
-    snowW = Math.max(1, Math.round(window.innerWidth));
-    snowH = Math.max(1, Math.round(window.innerHeight));
-    snowCanvas.width = Math.round(snowW * snowDpr);
-    snowCanvas.height = Math.round(snowH * snowDpr);
-    snowCtx.setTransform(snowDpr, 0, 0, snowDpr, 0, 0);
-  }
-
-  function seedSnow() {
-    flakes = Array.from({ length: 90 }, function (_, i) {
-      return {
-        x: Math.random(), y: Math.random(),
-        r: .8 + Math.random() * 1.8,
-        vy: .0007 + Math.random() * .0014,
-        drift: (Math.random() - .5) * .0005,
-        gold: i % 5 === 0,
-        phase: Math.random() * Math.PI * 2
-      };
-    });
-  }
-
-  function drawSnow() {
-    snowFrame = null;
-    snowCtx.clearRect(0, 0, snowW, snowH);
-    if (!snowOn) return;
-    flakes.forEach(function (f) {
-      f.y += f.vy;
-      f.x += f.drift + Math.sin(f.phase + f.y * 8) * .00035;
-      if (f.y > 1.02) { f.y = -.02; f.x = Math.random(); }
-      if (f.x < -.02) f.x = 1.02;
-      if (f.x > 1.02) f.x = -.02;
-      snowCtx.fillStyle = f.gold ? 'rgba(255,209,102,.85)' : 'rgba(' + snowRGB + ',.75)';
-      snowCtx.beginPath();
-      snowCtx.arc(f.x * snowW, f.y * snowH, f.r, 0, Math.PI * 2);
-      snowCtx.fill();
-    });
-    snowFrame = window.requestAnimationFrame(drawSnow);
-  }
-
-  function setSnow(on) {
-    snowOn = !!on;
-    if (snowOn) {
-      if (!flakes.length) seedSnow();
-      if (snowFrame === null) snowFrame = window.requestAnimationFrame(drawSnow);
-    } else {
-      if (snowFrame !== null) {
-        window.cancelAnimationFrame(snowFrame);
-        snowFrame = null;
-      }
-      snowCtx.clearRect(0, 0, snowW, snowH);
-    }
-  }
-
-  function applyTheme(id, persist) {
-    var theme = themeById[id] || themeById.aurora;
-    activeTheme = theme;
-    document.body.setAttribute('data-theme', theme.id);
-    toggle.textContent = theme.glyph + ' ' + (theme.id === 'christmas' ? 'Christmas' : 'Aurora');
-    toggle.setAttribute('aria-pressed', theme.id === 'christmas' ? 'true' : 'false');
-    toggle.title = theme.tagline;
-    snowRGB = [theme.colors.ice, theme.colors.secondary].map(function (hex) {
-      var n = parseInt(hex.replace('#', ''), 16);
-      return [(n >> 16) & 255, (n >> 8) & 255, n & 255].join(',');
-    })[0];
-    if (window.CustomEvent) {
-      document.dispatchEvent(new CustomEvent('atlas-theme', { detail: theme }));
-    }
-    setSnow(theme.snow && !(window.matchMedia &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches));
-    snowCanvas.style.transition = 'none';
-    snowCanvas.style.opacity = theme.snow ? '0.8' : '0';
-    window.requestAnimationFrame(function () { snowCanvas.style.transition = ''; });
-    if (persist) rememberTheme(theme.id);
-  }
-
-  sizeSnow();
-  window.addEventListener('resize', sizeSnow, { passive: true });
-  var storedTheme = themeFromUrl();
-  if (!storedTheme) {
-    try { storedTheme = window.localStorage.getItem(storageKey); } catch (e) { /* private mode */ }
-  }
-  if (!storedTheme) {
-    try { storedTheme = window.sessionStorage.getItem(storageKey); } catch (e) { /* private mode */ }
-  }
-  var december = new Date().getMonth() === 11;
-  applyTheme(storedTheme || (december ? 'christmas' : 'aurora'), false);
-  toggle.addEventListener('click', function () {
-    applyTheme(activeTheme.id === 'christmas' ? 'aurora' : 'christmas', true);
-  });
 })();
 </script>
 
