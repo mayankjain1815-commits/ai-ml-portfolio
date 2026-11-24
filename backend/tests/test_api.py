@@ -15,8 +15,12 @@ def client():
 def test_health(client):
     r = client.get("/api/health")
     assert r.status_code == 200
-    assert r.json == {"ok": True, "service": "word-atlas", "version": "1.0.0",
-                      "words": 10, "offline": True}
+    assert r.json["ok"] is True
+    assert r.json["service"] == "word-atlas"
+    assert r.json["words"] == 10
+    assert r.json["repos"] == 23
+    assert r.json["themes"] == 2
+    assert r.json["offline"] is True
 
 
 @pytest.mark.parametrize("slug", SLUGS)

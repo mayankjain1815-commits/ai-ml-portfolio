@@ -4,9 +4,12 @@ from pathlib import Path
 
 from word_atlas.app import validate_data
 from word_atlas.data import PALETTE, WORDS, all_words, get_word, related_words
+from word_atlas.repos import CATEGORY_COLORS, REPOS, all_repos
+from word_atlas.themes import all_themes
 
 ROOT = Path(__file__).resolve().parents[2]
 SLUGS = {w["slug"] for w in WORDS}
+REPO_SLUGS = {r["slug"] for r in REPOS}
 
 
 def test_data_validates():
@@ -65,6 +68,50 @@ def test_embedded_fallback_json_matches_data():
         html, re.S,
     ).group(1)
     assert json.loads(blob) == all_words()
+
+
+def test_landing_page_repo_ring_matches_data():
+    html = (ROOT / "index.html").read_text()
+    ring = re.search(r'<div class="repo-ring".*?</div>', html, re.S).group(0)
+    shorts = [s.strip() for s in re.findall(r"<span[^>]*>([^<]+)</span>", ring)]
+    assert shorts == [r["short"] for r in REPOS]
+    assert re.findall(r'data-repo="([^"]+)"', ring) == [r["slug"] for r in REPOS]
+
+
+def test_embedded_repo_fallback_json_matches_data():
+    html = (ROOT / "index.html").read_text()
+    blob = re.search(
+        r'<script type="application/json" id="repo-atlas-data">(.*?)</script>',
+        html, re.S,
+    ).group(1)
+    assert json.loads(blob) == all_repos()
+
+
+def test_embedded_theme_fallback_json_matches_data():
+    html = (ROOT / "index.html").read_text()
+    blob = re.search(
+        r'<script type="application/json" id="theme-atlas-data">(.*?)</script>',
+        html, re.S,
+    ).group(1)
+    assert json.loads(blob) == all_themes()
+
+
+def test_repo_links_and_colors_are_grounded():
+    assert set(CATEGORY_COLORS.values()) <= set(PALETTE.values())
+    for repo in REPOS:
+        assert repo["words"] and set(repo["words"]) <= SLUGS
+        assert set(repo["systems"]) <= {"particles", "globe", "neural"}
+        assert repo["color"] in PALETTE.values()
+        assert repo["short"] and repo["short"] == repo["short"].upper()
+
+
+def test_christmas_theme_has_every_swatch():
+    themes = {t["id"]: t for t in all_themes()}
+    assert set(themes) == {"aurora", "christmas"}
+    assert themes["christmas"]["snow"] is True
+    assert set(themes["christmas"]["colors"]) == {
+        "bg", "bg2", "primary", "secondary", "accent", "violet", "ice",
+    }
 
 
 def test_records_are_deep_enough_to_be_useful():

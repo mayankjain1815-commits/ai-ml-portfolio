@@ -1,9 +1,14 @@
 # Word Atlas — landing page backend
 
-A tiny, read-only Flask API that holds the **full explanation behind every word**
-in the landing page's rotating 3D ring. Click a word on the page and the UI asks
-this service for the details; if the service is not running, the page falls back
-to the same records embedded in `index.html` so nothing breaks offline.
+A tiny, read-only Flask API behind the landing page's **two rotating 3D rings**:
+
+- the outer ring holds the ten concept words (`rag`, `agents`, … `iot`);
+- the inner, counter-rotating ring holds **23 public repositories** from the
+  GitHub account, each with its own full detail record.
+
+Click any word or repo on the page and the UI opens a detail panel. The service
+owns the records; `index.html` carries the same JSON so the page still works
+with the server off, on a static host, or from `file://`.
 
 ## Run it
 
@@ -11,7 +16,7 @@ to the same records embedded in `index.html` so nothing breaks offline.
 cd backend
 python3.13 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python -m word_atlas          # http://127.0.0.1:5110
-.venv/bin/python -m pytest -q           # 36 offline tests, no keys, no network
+.venv/bin/python -m pytest -q           # 76 offline tests, no keys, no network
 ```
 
 Port defaults to **5110** and can be changed with `PORT`. CORS is open because
@@ -20,42 +25,66 @@ static host.
 
 ## Endpoints
 
+### Concept words — outer ring
+
 | Endpoint | What it returns |
 |----------|-----------------|
-| `GET /api/health` | Service status, version, word count. |
+| `GET /api/health` | Status, version, word/repo/theme counts and metadata snapshot. |
 | `GET /api/words` | Summaries for all 10 words. `?q=`, `?category=`, `?limit=` supported. |
-| `GET /api/words/<slug>` | Full record: definition, why it matters, pipeline steps, concepts, projects, real code anchors, commands, an interview answer, pitfalls, tests and related words. |
+| `GET /api/words/<slug>` | Full record plus related words and the repos that use the word. |
 | `GET /api/words/<slug>/related` | Words sharing a category or a project. |
-| `GET /api/categories` | Category counts. |
-| `GET /api/stats` | Record counts and the aurora palette. |
+| `GET /api/words/<slug>/repos` | Full repo records linked to that word. |
+| `GET /api/categories` | Word category counts. |
 
-Every slug from the ring works: `rag`, `agents`, `mlops`, `forecast`, `signals`,
-`skills`, `risk`, `offline`, `demo`, `iot`. Unknown slugs return JSON 404 with
-the list of valid slugs.
+### Repositories — inner ring
 
-Example:
+| Endpoint | What it returns |
+|----------|-----------------|
+| `GET /api/repos` | Repo summaries. `?q=`, `?language=`, `?category=`, `?word=`, `?sort=name|stars|updated|language`, `?limit=` supported. |
+| `GET /api/repos/<slug>` | Full record: description, stack, highlights, linked words, related repos, canvas systems, clone command and GitHub URL. |
+| `GET /api/repos/<slug>/related` | Repos sharing a category, word or canvas system. |
+| `GET /api/languages` | Primary-language counts. |
+| `GET /api/timeline` | Repos ordered by last-updated date. |
+
+### Cross-cutting
+
+| Endpoint | What it returns |
+|----------|-----------------|
+| `GET /api/search?q=` | Results from both rings, scored so prefix matches lead. |
+| `GET /api/themes` | Available visual themes (`aurora`, `christmas`). |
+| `GET /api/themes/<id>` | One theme's palette, tagline and snow/ornament flags. |
+| `GET /api/stats` | Counts, stars, palette and both themes' colours. |
+
+Every word slug from the ring works: `rag`, `agents`, `mlops`, `forecast`,
+`signals`, `skills`, `risk`, `offline`, `demo`, `iot`. Every repo slug from the
+inner ring works too (`slop`, `omniroute`, `sih`, …). Unknown slugs return JSON
+404 with the list of valid slugs. All metadata is a dated snapshot (`2026-11-24`)
+rather than a live GitHub call, so the service stays offline and reproducible.
+
+Examples:
 
 ```bash
 curl -s http://127.0.0.1:5110/api/words/rag | python -m json.tool
-curl -s 'http://127.0.0.1:5110/api/words?q=sqlite&limit=2'
+curl -s 'http://127.0.0.1:5110/api/repos?q=proxy&sort=stars'
+curl -s 'http://127.0.0.1:5110/api/search?q=rag'
+curl -s http://127.0.0.1:5110/api/themes/christmas
 ```
 
 ## Where the data lives
 
-`word_atlas/data.py` is the single source of truth. Each of the ten records has
-17 fields, including:
+Three modules are the source of truth:
 
-- `definition` and `why_it_matters`
-- `how_it_works` — the pipeline, step by step
-- `concepts`, `projects` and their role
-- `code_anchors` — real repository files and symbols
-- `commands` to reproduce the demo and the tests
-- `interview_answer`, `pitfalls` and the relevant test files
+- `word_atlas/data.py` — the ten concept records (definition, pipeline, real
+  code anchors, commands, interview answer, pitfalls, tests).
+- `word_atlas/repos.py` — the 23 repository records, category colours, GitHub
+  URLs, links back to concept words, and the 2026-11-24 metadata snapshot.
+- `word_atlas/themes.py` — the aurora and Christmas palettes. The Christmas
+  theme recolours the three canvas systems and enables snow without changing
+  their code.
 
-The tests check that every anchor and README path actually exists, that all ten
-slugs match the HTML ring, that colours come from the shared palette and that
-related words are symmetric. So an explanation cannot quietly drift away from
-the code it describes.
+`index.html` embeds all three as JSON script tags. Tests assert that the
+embedded objects equal the API objects after parsing, that both HTML rings match
+their modules slug-for-slug, and that every repo link and colour is grounded.
 
 ## Design notes
 
@@ -63,6 +92,12 @@ the code it describes.
   safe to run locally beside any project.
 - **Offline first.** The API has no outbound network calls, and CI runs its
   suite with no API keys.
-- **Fallback in the client.** `index.html` carries the same ten records in a
-  JSON script tag. The UI prefers the API and silently uses the embedded copy
-  when the fetch fails, which keeps the standalone page fully functional.
+- **Fallback in the client.** The UI renders the embedded copy synchronously,
+  then upgrades to the API when the fetch succeeds. Search and stats use the
+  same pattern; a failed probe never removes visible content.
+- **Two rings, one model.** Repos point at concept words, words point back at
+  repos, and related records are computed from shared categories, words,
+  projects or canvas systems rather than hand-maintained lists.
+- **Theme as data.** The Christmas skin is served by `/api/themes` and applied
+  through CSS variables plus a canvas colour event; reduced-motion users get
+  the palette without moving snow.

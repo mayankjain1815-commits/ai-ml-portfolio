@@ -1,13 +1,20 @@
-"""Flask API behind the landing page's rotating 3D words.
+"""Flask API behind the landing page's rotating rings.
 
-Every endpoint is read-only and fully offline. CORS is open because the page is
-meant to work straight from disk (file://) as well as from a static host.
+Read-only and fully offline. CORS is open because the page works straight from
+disk (file://) as well as from a static host. The outer ring is the ten concept
+words; the counter-rotating inner ring is the public repository catalogue.
 """
 
 from flask import Flask, jsonify, request
 
 from . import __version__
 from .data import PALETTE, REQUIRED_FIELDS, WORDS, all_words, get_word, related_words
+from .repos import (
+    REPO_REQUIRED_FIELDS, REPOS, SNAPSHOT, all_repos, get_repo,
+    related_repos, repos_for_word,
+)
+from .themes import PALETTE as THEMES
+from .themes import all_themes, get_theme
 
 
 def create_app():
@@ -30,8 +37,13 @@ def create_app():
             "service": "word-atlas",
             "version": __version__,
             "words": len(WORDS),
+            "repos": len(REPOS),
+            "themes": len(THEMES),
+            "snapshot": SNAPSHOT,
             "offline": True,
         })
+
+    # ---------- concept words (outer ring) ----------
 
     @app.get("/api/words")
     def words():
@@ -74,6 +86,10 @@ def create_app():
                 "available": [w["slug"] for w in WORDS],
             }), 404
         word["related"] = related_words(slug)
+        word["repos"] = [{
+            "slug": r["slug"], "name": r["name"], "short": r["short"],
+            "color": r["color"], "description": r["description"],
+        } for r in repos_for_word(slug)]
         return jsonify({"ok": True, "word": word})
 
     @app.get("/api/words/<slug>/related")
@@ -81,6 +97,13 @@ def create_app():
         if get_word(slug) is None:
             return jsonify({"ok": False, "error": "unknown word"}), 404
         return jsonify({"ok": True, "slug": slug.lower(), "related": related_words(slug)})
+
+    @app.get("/api/words/<slug>/repos")
+    def word_repos(slug):
+        if get_word(slug) is None:
+            return jsonify({"ok": False, "error": "unknown word"}), 404
+        records = repos_for_word(slug)
+        return jsonify({"ok": True, "slug": slug.lower(), "count": len(records), "repos": records})
 
     @app.get("/api/categories")
     def categories():
@@ -93,20 +116,173 @@ def create_app():
                            sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))],
         })
 
+    # ---------- repositories (inner ring) ----------
+
+    @app.get("/api/repos")
+    def repos():
+        query = request.args.get("q", "").strip().lower()
+        language = request.args.get("language", "").strip().lower()
+        category = request.args.get("category", "").strip().lower()
+        word = request.args.get("word", "").strip().lower()
+        sort = request.args.get("sort", "name").strip().lower()
+        try:
+            limit = int(request.args.get("limit", len(REPOS)))
+        except ValueError:
+            return jsonify({"ok": False, "error": "limit must be an integer"}), 400
+        if limit < 1:
+            return jsonify({"ok": False, "error": "limit must be positive"}), 400
+        if sort not in ("name", "stars", "updated", "language"):
+            return jsonify({"ok": False, "error": "unknown sort"}), 400
+
+        records = all_repos()
+        if query:
+            records = [r for r in records if query in " ".join([
+                r["name"], r["description"], r["language"], r["category"],
+                " ".join(r["stack"]), " ".join(r["highlights"]),
+            ]).lower()]
+        if language:
+            records = [r for r in records if r["language"].lower() == language]
+        if category:
+            records = [r for r in records if r["category"].lower() == category]
+        if word:
+            records = [r for r in records if word in r["words"]]
+
+        reverse = sort in ("stars", "updated")
+        records.sort(key=lambda r: r[sort], reverse=reverse)
+        return jsonify({
+            "ok": True,
+            "count": len(records[:limit]),
+            "total": len(records),
+            "snapshot": SNAPSHOT,
+            "sort": sort,
+            "repos": [{
+                "slug": r["slug"], "name": r["name"], "short": r["short"],
+                "description": r["description"], "language": r["language"],
+                "stars": r["stars"], "updated": r["updated"], "url": r["url"],
+                "category": r["category"], "color": r["color"],
+                "words": r["words"], "kind": r["kind"],
+            } for r in records[:limit]],
+        })
+
+    @app.get("/api/repos/<slug>")
+    def repo_detail(slug):
+        repo = get_repo(slug)
+        if repo is None:
+            return jsonify({
+                "ok": False, "error": "unknown repository", "slug": slug.lower(),
+                "available": [r["slug"] for r in REPOS],
+            }), 404
+        repo["related"] = related_repos(slug)
+        repo["linked_words"] = [{
+            "slug": w["slug"], "term": w["term"], "color": w["color"],
+        } for w in WORDS if w["slug"] in repo["words"]]
+        repo["snapshot"] = SNAPSHOT
+        return jsonify({"ok": True, "repo": repo})
+
+    @app.get("/api/repos/<slug>/related")
+    def repo_related(slug):
+        if get_repo(slug) is None:
+            return jsonify({"ok": False, "error": "unknown repository"}), 404
+        return jsonify({"ok": True, "slug": slug.lower(), "related": related_repos(slug)})
+
+    @app.get("/api/languages")
+    def languages():
+        counts = {}
+        for repo in REPOS:
+            counts[repo["language"]] = counts.get(repo["language"], 0) + 1
+        return jsonify({
+            "ok": True, "count": len(counts),
+            "languages": [{"name": name, "repos": count} for name, count in
+                          sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))],
+        })
+
+    @app.get("/api/timeline")
+    def timeline():
+        records = sorted(REPOS, key=lambda r: r["updated"], reverse=True)
+        return jsonify({
+            "ok": True, "count": len(records), "snapshot": SNAPSHOT,
+            "timeline": [{
+                "slug": r["slug"], "name": r["name"], "updated": r["updated"],
+                "category": r["category"], "color": r["color"],
+            } for r in records],
+        })
+
+    # ---------- search, themes and stats ----------
+
+    @app.get("/api/search")
+    def search():
+        query = request.args.get("q", "").strip().lower()
+        try:
+            limit = int(request.args.get("limit", 12))
+        except ValueError:
+            return jsonify({"ok": False, "error": "limit must be an integer"}), 400
+        if not query:
+            return jsonify({"ok": True, "query": "", "count": 0, "results": []})
+        results = []
+        for word in WORDS:
+            haystack = " ".join([
+                word["term"], word["title"], word["tagline"], word["definition"],
+                " ".join(word["concepts"]),
+            ]).lower()
+            if query in haystack:
+                results.append({
+                    "kind": "word", "slug": word["slug"], "label": word["term"],
+                    "subtitle": word["title"], "color": word["color"],
+                    "score": 3 if word["term"].lower().startswith(query) else 1,
+                })
+        for repo in REPOS:
+            haystack = " ".join([
+                repo["name"], repo["short"], repo["description"],
+                repo["language"], repo["category"], " ".join(repo["stack"]),
+                " ".join(repo["highlights"]),
+            ]).lower()
+            if query in haystack:
+                results.append({
+                    "kind": "repo", "slug": repo["slug"], "label": repo["name"],
+                    "subtitle": f"{repo['language']} · {repo['category']}",
+                    "color": repo["color"],
+                    "score": 3 if repo["name"].lower().startswith(query) else 1,
+                })
+        results.sort(key=lambda r: (-r["score"], r["label"]))
+        return jsonify({
+            "ok": True, "query": query, "count": len(results[:limit]),
+            "total": len(results), "results": results[:limit],
+        })
+
+    @app.get("/api/themes")
+    def themes():
+        return jsonify({"ok": True, "count": len(THEMES), "themes": all_themes()})
+
+    @app.get("/api/themes/<theme_id>")
+    def theme_detail(theme_id):
+        theme = get_theme(theme_id)
+        if theme is None:
+            return jsonify({"ok": False, "error": "unknown theme"}), 404
+        return jsonify({"ok": True, "theme": theme})
+
     @app.get("/api/stats")
     def stats():
         anchors = sum(len(w["code_anchors"]) for w in WORDS)
         steps = sum(len(w["how_it_works"]) for w in WORDS)
         pitfalls = sum(len(w["pitfalls"]) for w in WORDS)
+        languages = {r["language"] for r in REPOS}
+        categories = {r["category"] for r in REPOS}
         return jsonify({
             "ok": True,
             "words": len(WORDS),
-            "categories": len({w["category"] for w in WORDS}),
+            "word_categories": len({w["category"] for w in WORDS}),
             "projects": len({p["id"] for w in WORDS for p in w["projects"]}),
             "code_anchors": anchors,
             "pipeline_steps": steps,
             "pitfalls": pitfalls,
+            "repos": len(REPOS),
+            "repo_categories": len(categories),
+            "languages": len(languages),
+            "stars": sum(r["stars"] for r in REPOS),
+            "themes": len(THEMES),
+            "snapshot": SNAPSHOT,
             "palette": PALETTE,
+            "theme_colors": {t["id"]: t["colors"] for t in THEMES.values()},
         })
 
     @app.get("/")
@@ -114,7 +290,12 @@ def create_app():
         return jsonify({
             "ok": True,
             "service": "word-atlas",
-            "docs": "/api/words, /api/words/<slug>, /api/categories, /api/stats, /api/health",
+            "docs": [
+                "/api/words", "/api/words/<slug>", "/api/words/<slug>/repos",
+                "/api/repos", "/api/repos/<slug>", "/api/search",
+                "/api/timeline", "/api/languages", "/api/themes", "/api/stats",
+                "/api/health",
+            ],
         })
 
     @app.errorhandler(404)
@@ -125,13 +306,20 @@ def create_app():
 
 
 def validate_data():
-    """Raise ValueError if any record is missing a field or reuses a slug."""
-    seen = set()
-    for word in WORDS:
-        missing = [field for field in REQUIRED_FIELDS if field not in word]
-        if missing:
-            raise ValueError(f"{word.get('slug', '?')} missing fields: {missing}")
-        if word["slug"] in seen:
-            raise ValueError(f"duplicate slug: {word['slug']}")
-        seen.add(word["slug"])
+    """Raise ValueError if any record is incomplete or reuses a slug."""
+    for collection, fields, label in (
+        (WORDS, REQUIRED_FIELDS, "word"),
+        (REPOS, REPO_REQUIRED_FIELDS, "repo"),
+    ):
+        seen = set()
+        for record in collection:
+            missing = [field for field in fields if field not in record]
+            if missing:
+                raise ValueError(f"{label} {record.get('slug', '?')} missing fields: {missing}")
+            if record["slug"] in seen:
+                raise ValueError(f"duplicate {label} slug: {record['slug']}")
+            seen.add(record["slug"])
+    for theme in all_themes():
+        if not all(key in theme for key in ("id", "name", "colors", "snow", "ornaments")):
+            raise ValueError(f"incomplete theme: {theme.get('id')}")
     return True
